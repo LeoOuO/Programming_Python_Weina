@@ -35,6 +35,9 @@ button.run{font-family:var(--sans);font-size:17px;font-weight:700;padding:10px 2
   background:var(--mint);color:#fff;cursor:pointer;box-shadow:0 3px 0 #1e8a75;transition:.1s}
 button.run:active{transform:translateY(2px);box-shadow:0 1px 0 #1e8a75}
 button.run:disabled{opacity:.5;cursor:wait}
+button.stop{font-family:var(--sans);font-size:17px;font-weight:700;padding:10px 22px;border:none;border-radius:24px;
+  background:#d43d3d;color:#fff;cursor:pointer;box-shadow:0 3px 0 #9c2a2a}
+button.stop[hidden]{display:none}
 button.mini{font-family:var(--sans);font-size:13px;padding:5px 12px;border-radius:16px;border:1.5px solid var(--line);background:var(--panel);cursor:pointer;color:var(--soft)}
 button.mini:hover{border-color:var(--sky);color:var(--sky)}
 #out{min-height:220px;max-height:440px;overflow:auto;padding:14px 16px;font-family:var(--mono);font-size:16px;line-height:1.55;white-space:pre-wrap;word-break:break-word;background:#1f2430;color:#e9edf4}
@@ -64,7 +67,8 @@ button.mini:hover{border-color:var(--sky);color:var(--sky)}
       <div class="bar"><b>✏️ 程式碼</b><span>改改看，然後按執行</span><span class="sp"></span>
         <button class="mini" id="reset">還原這一個</button>
         <button class="mini" id="save">💾 下載我的程式</button>
-        <button class="run" id="run">▶ 執行</button></div>
+        <button class="run" id="run">▶ 執行</button>
+        <button class="stop" id="stop" hidden>■ 停止</button></div>
       <textarea id="code" spellcheck="false"></textarea>
       <div class="hint">小技巧：<b>Ctrl+Enter</b>（Mac 是 <b>⌘+Enter</b>）也可以執行。程式會自動存在這個瀏覽器裡，關掉不會消失。</div>
     </div>
@@ -165,7 +169,10 @@ print("hello")
 // ==========================================================================
 
 const $ = s => document.querySelector(s);
-const codeEl = $("#code"), out = $("#out"), runBtn = $("#run");
+const codeEl = $("#code"), out = $("#out"), runBtn = $("#run"), stopBtn = $("#stop");
+// running-state: `gen` tags each run so output from an aborted run is ignored;
+// `pendingReject` lets 停止 cancel an input() that is still waiting
+let running = false, gen = 0, stopReq = false, pendingReject = null;
 let cur = 0;
 const KEY = i => "pyplay-code-" + i;
 
@@ -189,7 +196,13 @@ function load(i){
 }
 codeEl.addEventListener("input", () => { try{ localStorage.setItem(KEY(cur), codeEl.value); }catch(e){} });
 $("#reset").addEventListener("click", () => { codeEl.value = PRESETS[cur].code; try{ localStorage.removeItem(KEY(cur)); }catch(e){} toast("已還原"); });
-$("#clear").addEventListener("click", () => { out.innerHTML = ""; $("#turtle-canvas").innerHTML = ""; });
+$("#clear").addEventListener("click", () => { if(running) stop(); out.innerHTML = ""; $("#turtle-canvas").innerHTML = ""; });
+function stop(){
+  if(!running) return;
+  stopReq = true;
+  if(pendingReject){ pendingReject(new Error("Stopped")); pendingReject = null; }
+}
+stopBtn.addEventListener("click", stop);
 try{ $("#who").value = localStorage.getItem("pyplay-who") || ""; }catch(e){}
 $("#who").addEventListener("input", () => { try{ localStorage.setItem("pyplay-who", $("#who").value); }catch(e){} });
 
@@ -204,7 +217,8 @@ $("#save").addEventListener("click", () => {
 
 // ---- input()：在結果區出現一個輸入框，等使用者按 Enter ----
 function askInput(prompt){
-  return new Promise(resolve => {
+  return new Promise((resolve, reject) => {
+    pendingReject = reject;
     const row = document.createElement("div"); row.className = "ask";
     const lab = document.createElement("span"); lab.textContent = prompt || "";
     const inp = document.createElement("input"); inp.placeholder = "在這裡輸入，然後按 Enter";
@@ -214,7 +228,7 @@ function askInput(prompt){
       if(e.key !== "Enter") return;
       const v = inp.value;
       row.replaceWith(document.createTextNode((prompt || "") + v + "\n"));
-      resolve(v);
+      pendingReject = null; resolve(v);
     });
   });
 }
@@ -225,31 +239,39 @@ function builtinRead(x){
   return Sk.builtinFiles["files"][x];
 }
 async function run(){
+  if(running) return;
+  const my = ++gen; running = true; stopReq = false; pendingReject = null;
   out.innerHTML = ""; $("#turtle-canvas").innerHTML = "";
-  runBtn.disabled = true; runBtn.textContent = "執行中…";
+  runBtn.disabled = true; runBtn.textContent = "執行中…"; stopBtn.hidden = false;
   Sk.configure({
-    output: t => print(t),
+    output: t => { if(my === gen) print(t); },
     read: builtinRead,
     inputfun: askInput,
     inputfunTakesPrompt: true,
     __future__: Sk.python3,
     execLimit: 20000,           // 20 秒保護，避免無窮迴圈卡死
+    yieldLimit: 100,            // 每 100ms 讓出一次，停止鍵才有機會插進來
   });
   (Sk.TurtleGraphics || (Sk.TurtleGraphics = {})).target = "turtle-canvas";
   Sk.TurtleGraphics.width = 520; Sk.TurtleGraphics.height = 420;
   try{
-    await Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, codeEl.value, true));
-    print("\n（程式結束）", "sys");
+    await Sk.misceval.asyncToPromise(
+      () => Sk.importMainWithBody("<stdin>", false, codeEl.value, true),
+      { "*": () => { if(stopReq) throw new Error("Stopped"); } });
+    if(my === gen) print("\n（程式結束）", "sys");
   }catch(e){
     // 把錯誤翻成看得懂的話
     let msg = e.toString();
-    if(/TimeLimitError/.test(msg)) msg = "程式跑太久被我停下來了（是不是迴圈沒有停下來的條件？）";
+    if(my !== gen) return;
+    if(stopReq || /Stopped/.test(msg)) msg = null;
+    else if(/TimeLimitError/.test(msg)) msg = "程式跑太久被我停下來了（是不是迴圈沒有停下來的條件？）";
     else if(/SyntaxError/.test(msg)) msg = "語法錯誤：有地方打錯了。" + msg.replace(/^SyntaxError:\s*/, "\n→ ");
     else if(/NameError/.test(msg)) msg = "名字錯誤：用到一個還沒定義的名字。" + msg.replace(/^NameError:\s*/, "\n→ ");
     else if(/ValueError.*int/.test(msg)) msg = "轉換錯誤：input() 拿到的不是數字，不能用 int() 轉。\n→ " + msg;
-    print("\n出錯了：" + msg, "err");
+    if(msg === null) print("\n（已停止）", "sys"); else print("\n出錯了：" + msg, "err");
   }
-  runBtn.disabled = false; runBtn.textContent = "▶ 執行";
+  running = false; pendingReject = null;
+  runBtn.disabled = false; runBtn.textContent = "▶ 執行"; stopBtn.hidden = true;
 }
 runBtn.addEventListener("click", run);
 document.addEventListener("keydown", e => { if((e.metaKey || e.ctrlKey) && e.key === "Enter"){ e.preventDefault(); run(); } });
