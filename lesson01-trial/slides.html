@@ -282,7 +282,8 @@ body.ov #hud{display:none}
   </table>
   <aside class="notes">120 分鐘含 5 分休息。休息點放在第 13 頁（input 與盒子）之後、Part 4 之前——休息前她已經寫過程式，休息後直接用嘴玩猜數字，重新暖機很快。
   <br>時間有餘（她動作快）：第 17 頁追蹤器不要跳過、第 21 和 22 兩個加碼都做。時間不夠：砍第 8、9 頁（程式是說明書、真實例子）→ 砍追蹤器 → 加碼只做一個。
-  <br>最後 10 分鐘（下載＋秀給家人＋路線圖）不能被壓縮，寧可 Part 4 早點停。</aside>
+  <br>最後 10 分鐘（下載＋秀給家人＋路線圖）不能被壓縮，寧可 Part 4 早點停。
+  <br>Part 6（第 26–30 頁）是備用的 30 分鐘：前面全走完還有時間才用，放在「今天到這裡」前面。</aside>
 </section>
 
 <!-- ========== Part 1 ========== -->
@@ -406,7 +407,7 @@ if salty == "是":
   <aside class="notes">這一頁把工坊嵌進來只是方便展示，<b>實際操作請按右上角「另開視窗」</b>，畫面才夠大，也才能用 ⌘+Enter。
   工坊完全離線、不用安裝：瀏覽器打開 <code>playground.html</code> 就能跑 Python（用 Skulpt 在瀏覽器裡執行）。
   <br>先讓她在最上面填名字，之後每個作品都會顯示「這是 ○○ 的作品」。
-  <br>五個按鈕：①讓電腦跟你說話 ②猜數字 ③彩虹螺旋 ④心理測驗 ⑤空白。程式會自動存在這個瀏覽器，關掉不會消失；「還原這一個」可以回到原版。右上角「測試模式」給你課前試用：開著時不會存任何東西，關掉就回到她的存檔（也可用 <code>playground.html?test=1</code> 開）。執行中會出現紅色「■ 停止」，程式在等輸入或跑不完時按它（按「清除」也會先停止）。</aside>
+  <br>七個按鈕：①讓電腦跟你說話 ②猜數字 ③彩虹螺旋 ④心理測驗 ⑤空白 ⑥剪刀石頭布 ⑦抽籤機（⑥⑦ 是備用段落用的）。程式會自動存在這個瀏覽器，關掉不會消失；「還原這一個」可以回到原版。右上角「測試模式」給你課前試用：開著時不會存任何東西，關掉就回到她的存檔（也可用 <code>playground.html?test=1</code> 開）。執行中會出現紅色「■ 停止」，程式在等輸入或跑不完時按它（按「清除」也會先停止）。</aside>
 </section>
 
 <section class="slide">
@@ -655,6 +656,106 @@ else:
   <aside class="notes">給家長看的頁。承諾的是「每一站有可玩的成品」，<b>不要承諾堂數和上架</b>。
   <br>如果家長問「為什麼不直接學做手機遊戲」：回到第 7 頁的腳踏車比喻，Godot 的 GDScript 語法幾乎是 Python，先把 Python 學好，換工具只要一兩堂。
   <br>「回家可以玩」刻意不叫作業：試教階段先讓她想做，第二堂之後再談規律練習。</aside>
+</section>
+
+<!-- ========== Part 6（備用 30 分鐘） ========== -->
+<section class="slide lead"><h1>Part 6</h1><h2>還有時間的話</h2><p>再做一個遊戲，然後看看還可以去哪裡玩。</p>
+  <aside class="notes"><b>備用段落，約 30 分鐘</b>。前面全部走完還有 20 分鐘以上才進來；不到 20 分鐘就只講第 30 頁（課外資源）當結尾。
+  <br>順序建議：剪刀石頭布（15 分）→ 抽籤機（8 分）→ 課外資源（5 分）。如果她在 Part 4 改造那頁玩得很起勁，寧可讓她繼續改猜數字，不要為了進度切過來。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>剪刀石頭布</h2>
+  <div class="pg">切到工坊 <span class="k">⑥ 剪刀石頭布</span><b>先玩五局，再看程式</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
+  <div class="cols">
+    <div>
+<pre><code>import random
+choices = ["剪刀", "石頭", "布"]
+computer = random.choice(choices)
+me = input("你出什麼？")
+print("電腦出：" + computer)
+if me == computer:
+    print("平手")
+elif me == "剪刀" and computer == "布":
+    print("你贏了")
+elif me == "石頭" and computer == "剪刀":
+    print("你贏了")
+elif me == "布" and computer == "石頭":
+    print("你贏了")
+else:
+    print("你輸了")</code></pre>
+    </div>
+    <div>
+      <div class="box ac"><h3>新東西只有一個</h3><p><code>["剪刀", "石頭", "布"]</code> 是一個<b>清單</b>：把好幾個東西排在一起。<br><code>random.choice(...)</code> 從裡面隨機拿一個。</p></div>
+      <div class="box gd"><h3>其他都學過了</h3><p><code>input</code> 問你、<code>if / elif / else</code> 判斷誰贏——跟猜數字一樣，只是條件變多。</p></div>
+      <details class="reveal"><summary>為什麼要寫三個「你贏了」？</summary>
+        <div class="body"><p>因為贏的情況有三種，電腦要一種一種比。少寫一種，那種情況就會跑到最後的 <code>else</code>，被判成輸。</p></div>
+      </details>
+    </div>
+  </div>
+  <aside class="notes">重點是讓她發現「這支程式我幾乎都看得懂」——清單是唯一的新概念，用「一排盒子」講就好。
+  <br>先玩五局。她大概會問「電腦怎麼知道我出什麼」→ 指 <code>me = input(...)</code>；「電腦是不是作弊」→ 指 <code>random.choice</code> 是在你輸入<b>之前</b>就決定了，可以把 <code>print("電腦出：")</code> 搬到 input 前面證明。
+  <br>常見錯誤：輸入「剪刀 」多一個空格、或輸入「剪」→ 四個條件都不符 → 印「你輸了」。這是講「電腦只認完全一樣的字」的好機會，備註不用主動講，等她遇到。</aside>
+</section>
+
+<section class="slide">
+  <h2>改一改</h2>
+  <div class="pg">切到工坊 <span class="k">⑥ 剪刀石頭布</span><b>挑一個改，改完玩幾局</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
+  <ul class="check two">
+    <li><div><b>輸入錯字時提醒</b><small>如果 me 不在清單裡，印「請輸入剪刀、石頭或布」</small></div></li>
+    <li><div><b>玩三局</b><small>用 for 把整段包起來，重複 3 次</small></div></li>
+    <li><div><b>算分</b><small>贏一局 +1，最後印「你贏了 N 局」</small></div></li>
+    <li><div><b>加第四種拳</b><small>自己發明一種，規則你決定</small></div></li>
+  </ul>
+  <aside class="notes">參考解法（卡住才逐步提示）：
+  <br>· 輸入檢查：<code>if me not in choices: print("請輸入剪刀、石頭或布")</code>，放在比較之前；<code>not in</code> 直接念成中文就懂
+  <br>· 三局：<code>for i in range(3):</code> 然後整段往右縮 4 格——工坊裡選取多行按 Tab 會一起縮，可以示範
+  <br>· 算分：開頭 <code>win = 0</code>，每個「你贏了」下面加 <code>win = win + 1</code>，迴圈結束後 <code>print("你贏了", win, "局")</code>
+  <br>· 第四種拳：她自己想規則，會發現 elif 要多寫好幾條——這是之後講「用表格／字典存規則」的伏筆，今天不展開。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>抽籤機</h2>
+  <div class="pg">切到工坊 <span class="k">⑦ 抽籤機</span><b>把清單換成你自己的</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
+  <div class="cols">
+    <div>
+<pre><code>import random
+dinner = ["滷肉飯", "拉麵", "披薩", "水餃", "咖哩"]
+print("今天晚餐吃：" + random.choice(dinner))
+
+for i in range(3):
+    print("第", i + 1, "次抽到：" + random.choice(dinner))</code></pre>
+      <p><small>清單裡放什麼都可以：要看的影片、假日要去哪、誰先洗碗。</small></p>
+    </div>
+    <div class="box">
+      <h3>改成你的</h3>
+      <ul>
+        <li>把清單換成你自己的選項（幾個都行）</li>
+        <li>改成抽 10 次</li>
+        <li>做兩個清單：一個「吃什麼」、一個「在哪吃」，各抽一個印成一句話</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes">這頁很短，目的是讓她帶一個「真的會用到」的小工具回家。兩個清單那題答案：
+  <pre><code>place = ["家裡", "學校旁邊", "夜市"]
+print("今天在" + random.choice(place) + "吃" + random.choice(dinner))</code></pre>
+  順便講一下 <code>+</code> 接字串時中間不會自動加空格，所以中文句子要自己排好。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>課外可以去玩的地方</h2>
+  <table>
+    <tr><th>網站</th><th>是什麼</th><th>適合什麼時候</th></tr>
+    <tr><td><b>hedy.org</b></td><td>一關一關慢慢加語法的 Python 教學，有繁體中文</td><td>想自己往下學、又怕一次太多語法</td></tr>
+    <tr><td><b>codecombat.com</b></td><td>用寫 Python 指令操控角色過關的遊戲</td><td>想邊玩遊戲邊練習</td></tr>
+    <tr><td><b>code.org</b></td><td>Hour of Code：一小時做出小遊戲的教學</td><td>想快速做出有畫面的東西</td></tr>
+    <tr><td><b>scratch.mit.edu</b></td><td>拖拉積木做遊戲和動畫</td><td>想先專心做遊戲、不管文字語法</td></tr>
+    <tr><td><b>godotengine.org</b></td><td>我們之後要用的遊戲引擎，可以先看看別人做的作品</td><td>想知道「手機遊戲」長什麼樣</td></tr>
+  </table>
+  <p><small>都是免費的。工坊也可以繼續玩：⑤ 空白可以寫任何東西。</small></p>
+  <aside class="notes">五個都是真實存在、免費、不用信用卡的網站；hedy.org 有繁中介面，其他多為英文（CodeCombat 有部分中文）。
+  <br>不要一次推五個，問她剛剛哪一頁最有感：喜歡改猜數字 → Hedy；喜歡畫圖 → Scratch 或 code.org；問手機遊戲 → Godot 的作品展示頁。<b>只推一個</b>，並說「下次告訴我你玩到哪」。
+  <br>影片類（YouTube 教學頻道）你自己挑過再給，我沒有辦法替你確認哪個頻道現在還適合她。</aside>
 </section>
 
 <section class="slide punch">

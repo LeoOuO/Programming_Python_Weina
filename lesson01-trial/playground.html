@@ -175,6 +175,39 @@ else:
 `# 在這裡寫你自己的程式
 print("hello")
 ` },
+{ name: "⑥ 剪刀石頭布", code:
+`# 剪刀石頭布：電腦隨機出拳，你輸入你的
+import random
+
+choices = ["剪刀", "石頭", "布"]
+computer = random.choice(choices)      # 電腦從清單裡隨機挑一個
+me = input("你出什麼？（剪刀 / 石頭 / 布）")
+
+print("電腦出：" + computer)
+
+if me == computer:
+    print("平手")
+elif me == "剪刀" and computer == "布":
+    print("你贏了")
+elif me == "石頭" and computer == "剪刀":
+    print("你贏了")
+elif me == "布" and computer == "石頭":
+    print("你贏了")
+else:
+    print("你輸了")
+` },
+{ name: "⑦ 抽籤機", code:
+`# 抽籤機：把選項放進清單，讓電腦幫你決定
+import random
+
+dinner = ["滷肉飯", "拉麵", "披薩", "水餃", "咖哩"]
+
+print("今天晚餐吃：" + random.choice(dinner))
+
+# 想抽三次就用重複做
+for i in range(3):
+    print("第", i + 1, "次抽到：" + random.choice(dinner))
+` },
 ];
 // ==========================================================================
 
@@ -240,7 +273,7 @@ $("#testbtn").addEventListener("click", () => {
 // ---- 下載 .py ----
 $("#save").addEventListener("click", () => {
   const who = ($("#who").value || "我").trim();
-  const name = who + "-" + PRESETS[cur].name.replace(/^[①②③④⑤]\s*/, "").replace(/[（）()\s]/g, "") + ".py";
+  const name = who + "-" + PRESETS[cur].name.replace(/^[①②③④⑤⑥⑦]\s*/, "").replace(/[（）()\s]/g, "") + ".py";
   const blob = new Blob(["# " + who + " 的作品\n" + codeEl.value], {type:"text/x-python"});
   const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = name;
   document.body.appendChild(a); a.click(); a.remove(); toast("已下載 " + name);
