@@ -1,0 +1,908 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python 第 1 堂 · 做一個會動的東西</title>
+
+<!--
+================================================================
+  怎麼改這份簡報
+  ----------------------------------------------------------------
+  · 一張投影片 = 一個 <section class="slide">…</section>
+  · 教師備註寫在 <aside class="notes">…</aside>，簡報時按 N 顯示/隱藏
+  · 「遊戲工坊」= 同資料夾的 playground.html，第 9 頁會用 iframe 嵌進來，
+    也可以按右上角按鈕另開分頁（建議另開分頁，畫面比較大）
+  · 可用的互動元件：
+      <details class="reveal">   點一下展開
+      <div class="tracer">       程式碼逐步追蹤
+      <div class="quiz">         現場作答
+      <div class="tabs">         分頁切換
+      <ul class="check">         可勾選的清單
+  ----------------------------------------------------------------
+  操作鍵：→/空白 下一頁　←上一頁　O 總覽　N 教師備註　F 全螢幕
+================================================================
+-->
+
+<style>
+:root{
+  --ink:#2a2233; --soft:#6b6376; --bg:#fff8f3; --panel:#fff; --line:#efe1d8;
+  --brand:#6a3fd6; --brand2:#5630b8; --brand-soft:#efe9fc; --brand-dim:#b09ae8;
+  --accent:#ff6b3d; --accent-soft:#fff0e8;
+  --pink:#ff5c8a; --sun:#ffb347;
+  --g:#1f9d6a; --gbg:#e6f6ee; --gl:#b9e4cd;
+  --r:#d43d3d; --rbg:#fbe9e9; --rl:#f0c4c4;
+  --code:#faf6fd;
+  --mono:"SF Mono","JetBrains Mono",Menlo,Consolas,"Noto Sans Mono CJK TC",monospace;
+  --sans:"Helvetica Neue","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1a1426;font-family:var(--sans);color:var(--ink);
+  -webkit-text-size-adjust:100%}
+
+/* ---------- deck / stage ---------- */
+#stage{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden}
+#deck{width:1280px;height:720px;transform-origin:center center;position:relative}
+.slide{position:absolute;inset:0;background:var(--bg);padding:54px 66px 60px;
+  display:none;flex-direction:column;justify-content:center;overflow:hidden}
+.slide.on{display:flex}
+.slide::after{content:attr(data-n);position:absolute;right:38px;bottom:20px;
+  font-size:14px;color:var(--soft)}
+.slide::before{content:attr(data-part);position:absolute;left:66px;bottom:20px;
+  font-size:14px;color:var(--soft);letter-spacing:.05em}
+
+/* ---------- typography ---------- */
+.slide h1{font-size:46px;color:var(--brand);margin:0 0 8px;line-height:1.25}
+.slide h2{font-size:36px;color:var(--brand);margin:0 0 18px;padding-bottom:10px;
+  border-bottom:3px solid var(--line);line-height:1.3}
+.slide h3{font-size:26px;margin:16px 0 6px;line-height:1.35}
+.slide h4{font-size:20px;color:var(--soft);margin:14px 0 4px;font-weight:600}
+.slide p{font-size:24px;line-height:1.55;margin:8px 0}
+.slide ul,.slide ol{font-size:24px;line-height:1.55;margin:6px 0 6px 1.15em;padding:0}
+.slide li{margin:8px 0}
+.slide li li{font-size:.88em;color:var(--soft)}
+.slide b,.slide strong{color:var(--brand)}
+.slide em{color:var(--accent);font-style:normal;font-weight:700}
+.slide small{font-size:17px;color:var(--soft)}
+.slide.sm p,.slide.sm ul,.slide.sm ol{font-size:21px}
+.slide.sm h2{font-size:31px;margin-bottom:14px}
+.slide.xs p,.slide.xs ul,.slide.xs ol,.slide.xs td,.slide.xs th{font-size:18px}
+.slide.xs h2{font-size:28px;margin-bottom:12px}
+.slide.top{justify-content:flex-start}
+.big{font-size:34px!important;line-height:1.4!important}
+
+/* ---------- title / divider slides ---------- */
+.slide.lead{background:linear-gradient(135deg,#6a3fd6 0%,#ff5c8a 60%,#ffb347 100%);color:#fff;justify-content:center}
+.slide.lead h1{color:#fff;font-size:60px;border:none;text-shadow:0 2px 10px rgba(0,0,0,.18)}
+.slide.lead h2{color:#fff3f7;border:none;font-size:30px;font-weight:400;padding:0;margin-top:6px}
+.slide.lead p{color:#fff3f7;font-size:22px}
+.slide.lead b,.slide.lead strong{color:#fff3b0}
+.slide.lead::after,.slide.lead::before{color:rgba(255,255,255,.6)}
+.slide.punch{background:linear-gradient(135deg,#6a3fd6,#ff5c8a);color:#fff;text-align:center;align-items:center}
+.slide.punch h1{color:#fff;font-size:58px;line-height:1.3;border:none}
+.slide.punch p{color:#fff3f7;font-size:24px;margin-top:18px}
+.slide.punch b{color:#fff3b0}
+
+/* ---------- code ---------- */
+.slide code{font-family:var(--mono);font-size:.86em;background:var(--code);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.slide pre{background:var(--code);border:1px solid var(--line);border-left:5px solid var(--brand-dim);
+  border-radius:9px;padding:14px 18px;margin:12px 0;overflow:auto}
+.slide pre code{font-size:21px;line-height:1.5;background:none;border:none;padding:0;
+  display:block;white-space:pre}
+.slide.sm pre code{font-size:19px}
+.slide.xs pre code{font-size:17px}
+.k{color:#c2255c} .n{color:#5b3fd6} .s{color:#1f9d6a} .c{color:#9a91a6}
+
+/* ---------- tables ---------- */
+.slide table{border-collapse:collapse;margin:10px 0;width:100%;font-size:20px}
+.slide th{background:var(--brand-soft);color:var(--brand);font-weight:700;text-align:left;
+  padding:9px 14px;border:1px solid var(--line)}
+.slide td{padding:9px 14px;border:1px solid var(--line);vertical-align:top;background:#fff}
+.slide tr.hi td{background:var(--accent-soft);font-weight:600}
+.slide table.narrow{width:auto}
+
+/* ---------- callout ---------- */
+.slide blockquote,.callout{background:var(--brand-soft);border-left:5px solid var(--accent);
+  margin:14px 0;padding:11px 18px;font-size:20px;color:var(--soft);border-radius:0 8px 8px 0}
+.callout b{color:var(--ink)}
+
+/* ---------- reveal ---------- */
+details.reveal{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:9px;
+  background:var(--panel);margin:10px 0;overflow:hidden}
+details.reveal>summary{cursor:pointer;list-style:none;padding:11px 18px;font-size:21px;
+  color:var(--accent);font-weight:700;user-select:none;background:var(--accent-soft)}
+details.reveal>summary::-webkit-details-marker{display:none}
+details.reveal>summary::before{content:"▸ ";display:inline-block}
+details.reveal[open]>summary::before{content:"▾ "}
+details.reveal .body{padding:12px 18px 14px;font-size:20px;line-height:1.55}
+details.reveal .body p{font-size:20px;margin:6px 0}
+details.reveal .body pre code{font-size:17px}
+
+/* ---------- tracer ---------- */
+.tracer{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin:10px 0}
+.tracer .tcode{background:var(--code);border:1px solid var(--line);border-radius:9px;
+  padding:12px 0;font-family:var(--mono);font-size:18px;line-height:1.62}
+.tracer .tcode div{padding:1px 16px;white-space:pre;border-left:4px solid transparent}
+.tracer .tcode div.lit{background:#fff1d6;border-left-color:var(--accent)}
+.tracer .tside{display:flex;flex-direction:column;gap:10px}
+.tracer table{margin:0;font-size:17px}
+.tracer th,.tracer td{padding:5px 11px}
+.tracer tbody tr:last-child td{background:var(--accent-soft);font-weight:600}
+.tracer .say{font-size:18px;color:var(--soft);min-height:1.6em;background:var(--panel);
+  border:1px dashed var(--line);border-radius:6px;padding:8px 12px}
+.tracer .tbtns{display:flex;gap:8px;align-items:center}
+.tracer .step{font-size:16px;color:var(--soft);margin-left:auto}
+button{font-family:var(--sans);cursor:pointer;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);border-radius:9px;padding:8px 15px;font-size:17px;transition:.15s}
+button:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+button.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+button.pri:hover:not(:disabled){background:var(--brand2);color:#fff}
+button:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- quiz ---------- */
+.quiz{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:13px 17px;margin:12px 0}
+.quiz .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.quiz input{flex:1;min-width:150px;font-family:var(--mono);font-size:19px;padding:9px 12px;
+  border:1.5px solid var(--line);border-radius:6px;background:#fcfdfe;color:var(--ink)}
+.quiz input:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+.quiz .fb{margin-top:9px;font-size:19px;display:none}
+.quiz .fb.on{display:block}
+.quiz .fb.ok{color:var(--g)} .quiz .fb.no{color:var(--r)}
+.quiz .q{font-size:20px;margin:0 0 9px}
+
+/* ---------- tabs ---------- */
+.tabs .tabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tabs .tabbar button{font-size:16px;padding:6px 13px}
+.tabs .tabbar button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.tabs .pane{display:none} .tabs .pane.on{display:block}
+
+/* ---------- checklist ---------- */
+ul.check{list-style:none;margin:6px 0;padding:0}
+ul.check li{border:1px solid var(--line);background:var(--panel);border-radius:9px;
+  padding:9px 14px;margin:7px 0;cursor:pointer;font-size:21px;user-select:none;
+  display:flex;gap:11px;align-items:flex-start;transition:.13s}
+ul.check li::before{content:"○";color:var(--brand-dim);flex:0 0 auto;font-size:19px;line-height:1.5}
+ul.check li.done{background:var(--gbg);border-color:var(--gl);color:var(--g)}
+ul.check li.done::before{content:"●";color:var(--g)}
+ul.check li small{display:block;color:var(--soft);font-size:16px;margin-top:2px}
+ul.check.two{column-count:2;column-gap:14px}
+ul.check.two li{break-inside:avoid;font-size:18px;padding:7px 12px;margin:0 0 8px}
+ul.check.two li small{font-size:14px}
+ul.check li.done small{color:var(--g);opacity:.85}
+
+/* ---------- columns / boxes ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.cols.w3{grid-template-columns:1fr 1fr 1fr}
+.cols.w4{grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 17px;
+  box-shadow:0 2px 8px rgba(106,63,214,.06)}
+.box h3{margin:0 0 6px;font-size:22px;color:var(--brand)}
+.box p,.box ul{font-size:18px;margin:5px 0}
+.box.ac{border-top:5px solid var(--accent)}
+.box.gd{border-top:5px solid var(--g)}
+.box.pk{border-top:5px solid var(--pink)}
+.box.sn{border-top:5px solid var(--sun)}
+.box .ico{font-size:40px;line-height:1;margin-bottom:6px}
+
+/* ---------- flow diagram ---------- */
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+.flow .st{background:#fff;border:2px solid var(--brand-dim);border-radius:12px;padding:12px 18px;
+  font-size:20px;text-align:center;min-width:150px}
+.flow .st.d{border-color:var(--accent);background:var(--accent-soft);border-radius:30px}
+.flow .st.e{border-color:var(--g);background:var(--gbg)}
+.flow .ar{font-size:28px;color:var(--brand-dim)}
+
+/* ---------- playground frame ---------- */
+.pgwrap{position:relative;width:100%;height:600px;border:2px solid var(--line);border-radius:12px;
+  overflow:hidden;background:#fff}
+.pgwrap iframe{width:100%;height:100%;border:0}
+.pgopen{position:absolute;right:12px;top:10px;z-index:2;background:var(--brand);color:#fff;
+  border-radius:20px;padding:6px 14px;font-size:15px;text-decoration:none}
+
+/* ---------- notes ---------- */
+aside.notes{display:none;position:absolute;left:0;right:0;bottom:0;background:#2a2238;color:#ece6f5;
+  padding:14px 66px 16px;font-size:17px;line-height:1.5;border-top:3px solid var(--accent);
+  max-height:58%;overflow:auto}
+body.notes aside.notes{display:block}
+aside.notes b,aside.notes strong{color:#ffd9a8}
+aside.notes em{color:#9fe3c0;font-style:normal;font-weight:600}
+aside.notes a{color:#c8b6ff}
+aside.notes code{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);
+  color:#ffe6c2;border-radius:4px;padding:1px 6px;font-size:.92em}
+aside.notes pre{background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.18);
+  border-left:4px solid var(--accent);border-radius:6px;padding:9px 13px;margin:7px 0;overflow:auto}
+aside.notes pre code{background:none;border:none;padding:0;color:#ece6f5;font-size:15px;
+  line-height:1.5;display:block;white-space:pre}
+aside.notes pre code .k{color:#ff9d9d} aside.notes pre code .n{color:#c8b6ff}
+aside.notes pre code .s{color:#9fe3c0} aside.notes pre code .c{color:#a99fb8}
+aside.notes::before{content:"教師備註";display:block;font-size:13px;letter-spacing:.1em;
+  color:#a99fb8;margin-bottom:5px}
+
+/* ---------- chrome ---------- */
+#bar{position:fixed;left:0;top:0;height:4px;background:var(--accent);width:0;z-index:50;
+  transition:width .25s;pointer-events:none}
+#hud{position:fixed;right:14px;top:12px;z-index:50;color:#b3a9c4;font-size:13px;
+  letter-spacing:.04em;background:rgba(26,20,38,.8);padding:5px 12px;border-radius:14px;
+  opacity:1;transition:opacity .5s;pointer-events:none}
+#hud.fade{opacity:0}
+#hud b{color:#ffd9a8}
+
+/* ---------- overview ---------- */
+.thumb{display:contents}
+body.ov #stage{overflow:auto;place-items:start;padding:24px}
+body.ov #deck{width:auto;height:auto;transform:none!important;display:grid;
+  grid-template-columns:repeat(auto-fill,256px);gap:16px;justify-content:center;
+  max-width:1560px;margin:0 auto}
+body.ov .thumb{display:block;position:relative;width:256px;height:144px;overflow:hidden;
+  border:2px solid #3b2f52;border-radius:7px;cursor:pointer;background:var(--bg);
+  box-shadow:0 2px 10px rgba(0,0,0,.35);transition:border-color .15s,transform .15s}
+body.ov .thumb:hover{border-color:#8a72c4;transform:translateY(-2px)}
+body.ov .thumb.here{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+body.ov .thumb::after{content:attr(data-i);position:absolute;right:4px;top:3px;z-index:3;
+  background:rgba(26,20,38,.72);color:#ffd9a8;font-size:10px;padding:1px 6px;border-radius:9px}
+body.ov .slide{position:absolute;top:0;left:0;inset:auto;width:1280px;height:720px;
+  display:flex!important;transform:scale(.2);transform-origin:top left;pointer-events:none}
+body.ov aside.notes{display:none!important}
+body.ov #hud{display:none}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="stage"><div id="deck">
+
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>🎮 做一個會動的東西</h1>
+  <h2>Python 第 1 堂 · 從「玩遊戲」到「做遊戲」</h2>
+  <p>今天結束前，你會做出一個<b>自己的小遊戲</b>，而且可以拿給家人玩。</p>
+  <aside class="notes">按 <b>→</b> 或空白鍵翻頁，<b>O</b> 看總覽，<b>N</b> 開關這排備註，<b>F</b> 全螢幕。
+  <br>試教的成功標準只有兩個：<b>① 她下課時想繼續</b>、<b>② 她帶走一個能秀的東西</b>。
+  進度完全不重要，有哪一頁她卡住就停在那裡陪她玩，後面的頁面全部可以砍。
+  <br>開場前先把 <code>playground.html</code> 在瀏覽器另一個分頁打開、測一次「執行」，確定這台電腦能跑。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 先聊聊</td><td>10 分</td><td>你玩什麼、想做什麼</td></tr>
+    <tr><td>2. 遊戲是怎麼做出來的</td><td>15 分</td><td>把一個遊戲拆開來看，做遊戲要學什麼</td></tr>
+    <tr><td>3. 第一次寫程式</td><td>15 分</td><td>讓電腦講話、讓電腦記住你的名字</td></tr>
+    <tr class="hi"><td>4. 做一個小遊戲</td><td>30 分</td><td>猜數字遊戲 → 改成你的版本</td></tr>
+    <tr><td>5. 加碼 &amp; 收尾</td><td>15 分</td><td>畫彩虹、心理測驗、秀給家人看</td></tr>
+  </table>
+  <aside class="notes">以 90 分鐘排的。若只有 60 分鐘：第 2 段砍到 8 分（只留「拆開一個遊戲」和「要學什麼」兩頁），第 5 段只做「秀給家人看」。
+  若不到 60 分鐘，第 3 段直接在工坊裡做，不看投影片。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>先聊聊</h2></section>
+
+<section class="slide xs top">
+  <h2>我想先認識你</h2>
+  <p><small>沒有標準答案，想到什麼講什麼。講完一題我會勾掉一題。</small></p>
+  <ul class="check two">
+    <li><div><b>你最近在玩什麼遊戲？手機還是電腦？</b><small>最喜歡它哪一點？畫面？劇情？跟朋友一起玩？</small></div></li>
+    <li><div><b>手機裡最常打開的 app 是什麼？</b><small>有沒有哪個 app 你覺得「要是能改成…就好了」？</small></div></li>
+    <li><div><b>有碰過 Scratch、micro:bit 或任何程式嗎？</b><small>學校資訊課做過什麼？</small></div></li>
+    <li><div><b>為什麼想學 Python？</b><small>是自己想的，還是誰建議的？想做出什麼？</small></div></li>
+    <li><div><b>你平常用哪台電腦？Mac 還是 Windows？</b><small>家裡有可以自己用的電腦嗎？</small></div></li>
+    <li><div><b>除了遊戲，你還喜歡什麼？</b><small>畫畫、音樂、寫故事…這些做遊戲都用得到</small></div></li>
+  </ul>
+  <aside class="notes">問完就<b>閉嘴聽</b>，不要糾正、不要急著接話。點一下勾掉問過的題。
+  <br>各題在探什麼：① 她喜歡的遊戲類型 → 後面「拆開一個遊戲」直接拿<b>她講的那個遊戲</b>當例子，不要用我的預設例子
+  ② app 的想法 → 記下來，之後的專題方向 ③ 有 Scratch 經驗的話「積木 → 文字」的比喻可以用，第 3 段可以走快
+  ④ 動機來源（自己 vs 家長）決定要多用力「激起興趣」 ⑤ <b>作業系統一定要問到</b>，回家練習環境要靠這個
+  ⑥ 找到「程式以外的才能」，在第 5 頁（做遊戲要學什麼）把它接上：「你會畫畫 → 你已經有一半了」。
+  <br><b>把她的原話記下來</b>，下課後寫進學生筆記。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>遊戲是怎麼做出來的？</h2></section>
+
+<section class="slide sm">
+  <h2>把一個遊戲拆開來看</h2>
+  <p>拿你剛剛講的那個遊戲，我們一起拆：</p>
+  <div class="cols w4">
+    <div class="box pk"><div class="ico">🎨</div><h3>你看到的</h3><p>角色、背景、按鈕、特效</p><p><small>→ 美術</small></p></div>
+    <div class="box sn"><div class="ico">🔊</div><h3>你聽到的</h3><p>音樂、音效、配音</p><p><small>→ 音樂</small></p></div>
+    <div class="box ac"><div class="ico">⚙️</div><h3>它怎麼反應</h3><p>點一下會怎樣、撞到會怎樣、什麼時候贏</p><p><small>→ <em>程式</em></small></p></div>
+    <div class="box gd"><div class="ico">🧩</div><h3>好不好玩</h3><p>關卡、難度、獎勵、劇情</p><p><small>→ 遊戲設計</small></p></div>
+  </div>
+  <details class="reveal"><summary>那「程式」在遊戲裡到底負責什麼？</summary>
+    <div class="body"><p>負責<b>所有的「規則」</b>：碰到牆會怎樣、分數怎麼算、什麼時候出現下一關、存檔怎麼存……
+    沒有程式，畫面再漂亮也只是一張圖，<em>不會動、不會回應你</em>。</p></div>
+  </details>
+  <aside class="notes">用<b>她說的遊戲</b>一格一格對照，每格都問她「這個遊戲的○○是什麼？」讓她自己填。
+  例：貪食蛇 → 看到的：蛇、食物；聽到的：吃到的音效；反應：撞牆就結束、吃到會變長；設計：越吃越快。
+  <br>目的：讓她發現「做遊戲」不是一個神祕的東西，是四塊拼圖，而程式只是其中一塊——但是<b>讓東西動起來的那一塊</b>。
+  <br>如果她第 4 頁說了會畫畫／音樂，這裡要接：「所以你其實已經有一塊了，我們今天補那個⚙️。」</aside>
+</section>
+
+<section class="slide sm">
+  <h2>那做手機遊戲要學什麼？</h2>
+  <div class="cols w3">
+    <div class="box ac"><h3>1️⃣ 程式怎麼想</h3>
+      <p>怎麼把「規則」講給電腦聽：<br><b>記東西</b>、<b>做判斷</b>、<b>重複做</b></p>
+      <p><small>👉 今天就開始，用 Python 學最快</small></p></div>
+    <div class="box pk"><h3>2️⃣ 遊戲引擎</h3>
+      <p>幫你把畫面、聲音、觸控都準備好的工具</p>
+      <p><small>Godot、Unity … 學會 1️⃣ 之後再學，會很快</small></p></div>
+    <div class="box sn"><h3>3️⃣ 上架</h3>
+      <p>把遊戲放到 App Store / Google Play</p>
+      <p><small>最後一步，反而最簡單</small></p></div>
+  </div>
+  <div class="callout"><b>老實說：</b>Python 本身不太拿來直接做手機 app。但 1️⃣ 是三件事裡<em>最難、也最重要</em>的，
+  而且學會之後換任何工具都一樣——就像學會騎腳踏車之後，換一台車也會騎。</div>
+  <aside class="notes">這頁是<b>誠實的路線圖</b>，也是給家長聽的（如果家長在旁邊）。不要騙她「學 Python 就能做手機遊戲」，
+  但要讓她知道 Python 是正確的第一步：
+  <br>· 程式思維（變數／判斷／迴圈／清單／函式）在所有語言都一樣，Python 語法最少、最快上手
+  <br>· Godot 的腳本語言 GDScript <b>長得幾乎跟 Python 一樣</b>，這是之後銜接手機遊戲最自然的路（免費、可輸出 iOS/Android）
+  <br>· 中間可以用 pygame 在電腦上做 2D 小遊戲，直接練 1️⃣ 的內容
+  <br>暫定路線：Python 基礎（8～10 堂）→ pygame 電腦小遊戲（一個專題）→ Godot（手機）。這個要跟家長確認，不要在課堂上承諾堂數。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>程式到底是什麼？</h2>
+  <p class="big">程式 = 寫給電腦看的<b>步驟說明書</b></p>
+  <div class="cols">
+    <div class="box">
+      <h3>🍜 泡麵說明書（給人看）</h3>
+      <ol style="font-size:19px">
+        <li>把水煮開</li>
+        <li>放麵、放調味包</li>
+        <li>等 3 分鐘</li>
+        <li>如果太鹹，加一點水</li>
+      </ol>
+    </div>
+    <div class="box">
+      <h3>🐍 程式（給電腦看）</h3>
+<pre><code>print("水煮開了")
+name = input("你叫什麼？")
+for i in range(3):
+    print("等一下…")
+if name == "老師":
+    print("加一點水")</code></pre>
+    </div>
+  </div>
+  <p><small>電腦很聽話、但很笨：你寫什麼它就照做什麼，<em>一個字都不會自己補</em>。</small></p>
+  <aside class="notes">重點只有一句：<b>程式就是一步一步的指令</b>。右邊的程式碼不用解釋每一行，只要指出「這行是在等 3 次」「這行是在判斷」，
+  讓她看到左右兩邊長得像。她如果問「為什麼要加括號」之類的，回答「等一下你自己打的時候就知道了」，不要在這裡展開語法。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>這些東西，都是有人寫程式做出來的</h2>
+  <div class="cols w3">
+    <div class="box pk"><div class="ico">🐦</div><h3>Flappy Bird</h3><p>一個人、幾天做出來的，全世界幾億人玩過</p></div>
+    <div class="box gd"><div class="ico">⛏️</div><h3>Minecraft</h3><p>一開始也是<b>一個人</b>在家裡寫的</p></div>
+    <div class="box sn"><div class="ico">🎬</div><h3>Instagram · YouTube · Netflix</h3><p>它們背後都有大量 <b>Python</b></p></div>
+  </div>
+  <div class="callout">做出東西的人不是「天才」，他們只是<em>先開始</em>，然後一直改。今天你也要開始。</div>
+  <aside class="notes">激勵頁。事實查核：Flappy Bird 由 Dong Nguyen 一人開發（2013）；Minecraft 最初由 Markus Persson 一人開發（2009）；
+  Instagram 後端使用 Python/Django、YouTube 大量使用 Python、Netflix 使用 Python 做資料與工具——這些都是公開資訊。
+  <br>如果她剛剛講的遊戲你知道背景，換成她的遊戲更有力。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>第一次寫程式</h2><p>從現在開始，換你的手動。</p></section>
+
+<section class="slide top" style="padding-top:40px">
+  <h2 style="margin-bottom:8px">🎮 Python 遊戲工坊</h2>
+  <div class="pgwrap">
+    <a class="pgopen" href="playground.html" target="_blank">另開視窗 ↗</a>
+    <iframe src="playground.html" title="Python 遊戲工坊"></iframe>
+  </div>
+  <aside class="notes">這一頁把工坊嵌進來只是方便展示，<b>實際操作請按右上角「另開視窗」</b>，畫面才夠大，也才能用 ⌘+Enter。
+  工坊完全離線、不用安裝：瀏覽器打開 <code>playground.html</code> 就能跑 Python（用 Skulpt 在瀏覽器裡執行）。
+  <br>先讓她在最上面填名字，之後每個作品都會顯示「這是 ○○ 的作品」。
+  <br>五個按鈕：①讓電腦跟你說話 ②猜數字 ③彩虹螺旋 ④心理測驗 ⑤空白。程式會自動存在這個瀏覽器，關掉不會消失；「還原這一個」可以回到原版。</aside>
+</section>
+
+<section class="slide">
+  <h2>第 1 行：讓電腦說話</h2>
+  <pre><code>print("哈囉，我是 Python")</code></pre>
+  <p>按「執行」，看右邊發生什麼事。然後——</p>
+  <ul class="check">
+    <li>把「Python」改成<b>你的名字</b>，再執行一次</li>
+    <li>再加一行，讓它多說一句話（任何話都可以）</li>
+    <li>試試看加個表情符號 🎉（對，它可以印表情符號）</li>
+    <li>故意把後面的 <code>)</code> 刪掉再執行，看電腦會說什麼</li>
+  </ul>
+  <aside class="notes">用工坊的「⑤空白」讓她<b>自己從零打這一行</b>（按鈕①是下一頁用的完整版）。她自己打字，你不要碰鍵盤。打錯了就讓它錯，錯誤訊息工坊會翻成中文（例如「少了引號或括號」），
+  這是故意的：<b>讓她第一次就知道錯誤很正常、看得懂、改得掉</b>。
+  <br>講解要點只有：<code>print</code> = 印出來；引號裡面 = 要說的話，一個字不差地印。「括號」「引號」這兩個詞先建立起來就好。
+  <br>第 4 個勾勾是重點，故意製造錯誤 → 看訊息 → 修好，這個循環要做一次。</aside>
+</section>
+
+<section class="slide">
+  <h2>第 2 步：讓電腦記住你</h2>
+  <pre><code>name = input("你叫什麼名字？")
+print("嗨，" + name + "！很高興認識你")</code></pre>
+  <div class="cols">
+    <div class="box ac"><h3>input(...)</h3><p>電腦停下來<b>等你打字</b>，你打的東西它就收下來</p></div>
+    <div class="box gd"><h3>name = ...</h3><p>把收下來的東西<b>放進一個盒子</b>，盒子叫 <code>name</code>，之後隨時可以拿出來用</p></div>
+  </div>
+  <details class="reveal"><summary>小挑戰：再問一個問題</summary>
+    <div class="body"><p>讓它再問「你最喜歡的食物？」，然後印出「<i>名字</i> 最喜歡吃 <i>食物</i>」。
+    提示：需要第二個盒子。</p></div>
+  </details>
+  <aside class="notes">工坊按鈕①的程式碼已經是這個版本，直接改。
+  <br>「盒子」的比喻要一直用到後面：變數 = 有名字的盒子。不要說「變數」這個詞太多次，先用「盒子」。
+  <br>小挑戰參考答案（她卡住才給，先只給提示）：
+  <pre><code>food = input("你最喜歡的食物？")
+print(name + " 最喜歡吃 " + food)</code></pre>
+  常見卡點：忘了引號 → 錯誤訊息會說；用中文全形引號「“”」→ 提醒切英文輸入法；<code>+</code> 兩邊少空格不影響，但中文和變數黏在一起讀起來怪，可以順便講「引號裡的空格也會印出來」。</aside>
+</section>
+
+<!-- ========== Part 4 ========== -->
+<section class="slide lead"><h1>Part 4</h1><h2>做一個小遊戲</h2><p>遊戲 = 規則 + 判斷 + 一直重複</p></section>
+
+<section class="slide sm">
+  <h2>猜數字遊戲，長什麼樣？</h2>
+  <p>先不寫程式，用嘴巴玩一次：我心裡想一個 1～20 的數字，你猜。</p>
+  <div class="flow">
+    <div class="st">電腦偷偷選一個數字</div><div class="ar">→</div>
+    <div class="st">你猜一個</div><div class="ar">→</div>
+    <div class="st d">太大？太小？猜中？</div><div class="ar">→</div>
+    <div class="st e">猜中：恭喜！🎉</div>
+  </div>
+  <p style="text-align:center"><small>沒猜中 → 回到「你猜一個」，<em>一直重複</em>直到猜中為止</small></p>
+  <div class="cols w3">
+    <div class="box ac"><h3>記東西</h3><p>答案是幾？猜了幾次？</p></div>
+    <div class="box pk"><h3>做判斷</h3><p>太大、太小、還是猜中</p></div>
+    <div class="box sn"><h3>重複做</h3><p>沒猜中就再來一次</p></div>
+  </div>
+  <aside class="notes">先<b>真的玩</b>一局（你想數字，她猜；再換她想、你猜）。你猜的時候故意用「對半猜」（10 → 15 → 12…），玩完問她「你有發現我怎麼猜的嗎？」——這是二分搜尋的種子，不用講名字。
+  <br>然後指著流程圖說：「這就是這個遊戲的<b>全部規則</b>，四格。程式就是把這四格打出來。」
+  <br>下面三個盒子對應第 6 頁「程式怎麼想」的三件事，讓她看到：一個遊戲 = 這三件事的組合。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>把它變成程式</h2>
+  <div class="tabs">
+    <div class="pane"><h4>1) 整支程式</h4>
+<pre><code>import random
+answer = random.randint(1, 20)   # 電腦偷偷選
+count = 0
+
+while True:                        # 一直重複
+    guess = int(input("猜一個 1~20 的數字："))
+    count = count + 1
+    if guess > answer:
+        print("太大了！")
+    elif guess < answer:
+        print("太小了！")
+    else:
+        print("猜中了！你猜了", count, "次 🎉")
+        break                      # 結束重複</code></pre>
+    </div>
+    <div class="pane"><h4>2) 每一行在做什麼</h4>
+      <table>
+        <tr><th>程式</th><th>白話</th></tr>
+        <tr><td><code>random.randint(1, 20)</code></td><td>從 1～20 隨機抽一個</td></tr>
+        <tr><td><code>while True:</code></td><td>「一直重複下面縮排的部分」</td></tr>
+        <tr><td><code>int(input(...))</code></td><td>問你、然後把你打的<b>當成數字</b></td></tr>
+        <tr><td><code>if / elif / else</code></td><td>如果…／不然如果…／不然就…</td></tr>
+        <tr><td><code>break</code></td><td>跳出重複，遊戲結束</td></tr>
+      </table>
+    </div>
+  </div>
+  <aside class="notes">工坊按鈕②就是這支程式（加了註解）。先讓她<b>玩三局</b>再看程式，玩過再看會覺得每一行都「理所當然」。
+  <br>講的順序：對照流程圖四格 → 找出每格在程式的哪一行。不要逐行講語法，只講「這行 = 流程圖的哪一格」。
+  <br>縮排要點一下：「縮進去的這幾行是『重複的內容』，Python 用縮排看誰是誰的小弟。」
+  <br><code>int(...)</code> 她一定會問或忽略：input 收到的是「字」，要變成「數字」才能比大小——用「"5" 是一個符號，5 才是數量」帶過即可。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>電腦是怎麼一步一步跑的？</h2>
+  <p><small>假設電腦選到 7，你依序猜 5、9、7。按「下一步」看盒子裡的東西怎麼變。</small></p>
+  <div class="tracer"><script type="application/json">{
+    "code": [
+      "answer = 7",
+      "count = 0",
+      "while True:",
+      "    guess = int(input())",
+      "    count = count + 1",
+      "    if guess > answer:",
+      "        print(\"太大了！\")",
+      "    elif guess < answer:",
+      "        print(\"太小了！\")",
+      "    else:",
+      "        print(\"猜中了！\", count, \"次\")",
+      "        break"
+    ],
+    "cols": ["answer", "guess", "count", "印出"],
+    "steps": [
+      {"hl":[1,2], "row":["7","—","0",""], "say":"電腦選了 7，猜的次數從 0 開始"},
+      {"hl":[4,5], "row":["7","5","1",""], "say":"第一次猜 5，次數變 1"},
+      {"hl":[6,8,9], "row":["7","5","1","太小了！"], "say":"5 > 7？不對。5 < 7？對 → 印「太小了」"},
+      {"hl":[3], "say":"沒有 break，回到 while，再來一次"},
+      {"hl":[4,5], "row":["7","9","2",""], "say":"第二次猜 9，次數變 2"},
+      {"hl":[6,7], "row":["7","9","2","太大了！"], "say":"9 > 7？對 → 印「太大了」"},
+      {"hl":[3], "say":"還是沒有 break，再一次"},
+      {"hl":[4,5], "row":["7","7","3",""], "say":"第三次猜 7，次數變 3"},
+      {"hl":[6,8,10,11], "row":["7","7","3","猜中了！ 3 次"], "say":"不是太大也不是太小 → else → 印「猜中了」"},
+      {"hl":[12], "say":"break：跳出重複，程式結束 🎉"}
+    ]
+  }</script></div>
+  <aside class="notes">選用頁。如果她在前一頁已經看懂、而且時間不夠，直接跳過。
+  如果她問「電腦怎麼知道要回去再猜」，這頁就很有用：讓她自己按下一步，看 count 怎麼加、看黃色那行怎麼跳。
+  <br>不要讓她填表，只是看。填表是之後的功課，不是試教的事。</aside>
+</section>
+
+<section class="slide">
+  <h2>現在改成你的版本</h2>
+  <p>挑幾個做做看，做完一個勾一個：</p>
+  <ul class="check two">
+    <li><div><b>改範圍</b><small>1～100，變難；或 1～5，變簡單</small></div></li>
+    <li><div><b>改台詞</b><small>「太大了」改成你自己的說法，加表情符號</small></div></li>
+    <li><div><b>猜太多次會被笑</b><small>如果超過 5 次，印「你也太弱了吧 😆」</small></div></li>
+    <li><div><b>秀出「差多少」</b><small>差 1 就說「超接近！」</small></div></li>
+    <li><div><b>猜中時放煙火</b><small>印一堆 🎆🎆🎆（用重複做！）</small></div></li>
+    <li><div><b>兩人對戰</b><small>先問玩家名字，猜中時印「○○ 獲勝」</small></div></li>
+  </ul>
+  <aside class="notes">這 20 分鐘是試教的核心，讓她<b>擁有</b>這支程式。她想改什麼就改什麼，清單只是沒靈感時的菜單。
+  <br>參考解法（只在她卡住時逐步提示，不要直接打給她）：
+  <br>· 改範圍：<code>randint(1, 100)</code>，提示字也要改
+  <br>· 猜太多次：在 else 裡加 <code>if count > 5: print("你也太弱了吧 😆")</code>
+  <br>· 差多少：在 if 之前 <code>if abs(guess - answer) == 1: print("超接近！")</code>（abs 可以先說「距離」）
+  <br>· 煙火：<code>for i in range(5): print("🎆" * 10)</code>（順便看到字串乘法，她會很喜歡）
+  <br>· 兩人：開頭 <code>player = input("玩家名字：")</code>，猜中印 <code>player + " 獲勝"</code>
+  <br>做到一半時間到就停，<b>先存好、先秀</b>，不要為了做完而趕。</aside>
+</section>
+
+<!-- ========== Part 5 ========== -->
+<section class="slide lead"><h1>Part 5</h1><h2>加碼 &amp; 收尾</h2></section>
+
+<section class="slide sm">
+  <h2>加碼 ①：讓程式畫圖 🌈</h2>
+  <div class="cols">
+    <div>
+<pre><code>import turtle
+t = turtle.Turtle()
+t.speed(0)
+colors = ["red", "orange", "yellow",
+          "green", "blue", "purple"]
+for i in range(120):
+    t.pencolor(colors[i % 6])
+    t.forward(i * 2)
+    t.left(59)</code></pre>
+    </div>
+    <div>
+      <p>工坊按鈕 ③。執行後試著改：</p>
+      <ul>
+        <li><code>left(59)</code> → 改成 <b>90</b>、<b>121</b>、<b>178</b> 看看</li>
+        <li>把顏色換成你喜歡的（<code>"pink"</code>、<code>"gold"</code>、<code>"cyan"</code>）</li>
+        <li><code>range(120)</code> → 改成 300</li>
+      </ul>
+      <p><small>遊戲畫面就是這樣一筆一筆畫出來的，只是快到你看不見。</small></p>
+    </div>
+  </div>
+  <aside class="notes">視覺回饋最強的一頁，如果前面她有點累，這頁會把注意力拉回來。角度 90 → 正方形螺旋；121 → 三角形風車；178 → 幾乎是一條線來回。
+  讓她猜「改成 90 會變什麼形狀」再執行。
+  <br>畫圖需要幾秒鐘（120 步），畫的時候下面會慢慢出現，不是當機。<b>不要</b>在這裡解釋 <code>%</code>，只說「六個顏色輪流用」。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>加碼 ②：出一個你自己的心理測驗 🔮</h2>
+<pre><code>print("=== 你是哪種動物？===")
+score = 0
+a = input("假日你比較想？ 1) 出去玩  2) 在家耍廢 → ")
+if a == "1":
+    score = score + 1
+a = input("朋友生氣了，你會？ 1) 馬上去問  2) 等她冷靜 → ")
+if a == "1":
+    score = score + 1
+if score == 2:
+    print("你是 🐶 小狗：熱情、愛交朋友")
+else:
+    print("你是 🐱 小貓：安靜、有自己的步調")</code></pre>
+  <p><small>工坊按鈕 ④。把題目換成你想問的、把動物換成你想要的，然後給家人做！</small></p>
+  <aside class="notes">這一頁很適合當「帶回家的作品」，因為<b>題目和結果都是她自己寫的</b>，秀給家長時有話講。
+  <br>她可能想加第三題／第三種結果，讓她試：多一個 <code>elif score == 1:</code> 即可。
+  <br>如果時間只夠做一個加碼：她偏視覺 → ①；她偏跟人互動 → ②。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天你做到了</h2>
+  <ul class="check">
+    <li>寫了人生第一行程式，而且看得懂錯誤訊息</li>
+    <li>知道「盒子」（變數）是什麼，讓電腦記住你的名字</li>
+    <li>做出一個猜數字遊戲，還改成自己的版本</li>
+    <li>知道做一個遊戲要哪四塊拼圖，程式是哪一塊</li>
+  </ul>
+  <div class="callout"><b>下一步：</b>按「💾 下載我的程式」，把作品存下來 → 現在就秀給家人玩一局。</div>
+  <aside class="notes">讓她自己勾，勾的時候請她用一句話說「這個是什麼」——這就是她等下跟家長講的台詞。
+  <br>下載的 <code>.py</code> 檔案回家在工坊「⑤空白」貼上就能再跑。若家裡電腦要正式裝 Python，下一堂再帶（Mac 內建沒有 Python 3 可用時，用 python.org 官方安裝檔；Windows 同）。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>接下來的路 🗺️</h2>
+  <div class="flow">
+    <div class="st e">今天<br><small>會說話、會記、會判斷、會重複</small></div><div class="ar">→</div>
+    <div class="st">Python 基礎<br><small>清單、函式、把想法變程式</small></div><div class="ar">→</div>
+    <div class="st">電腦小遊戲<br><small>pygame：真的有畫面、會動</small></div><div class="ar">→</div>
+    <div class="st d">手機遊戲<br><small>Godot 引擎，語法跟 Python 很像</small></div>
+  </div>
+  <p style="text-align:center"><small>每一站都會做出一個<b>可以玩的東西</b>，不會只有練習題。</small></p>
+  <details class="reveal"><summary>回家可以玩的（不是作業）</summary>
+    <div class="body"><p>把心理測驗改成 <b>3 題、3 種結果</b>，給家人做一次，下次告訴我他們是什麼動物。</p></div>
+  </details>
+  <aside class="notes">給家長看的頁。承諾的是「每一站有可玩的成品」，<b>不要承諾堂數和上架</b>。
+  <br>如果家長問「為什麼不直接學做手機遊戲」：回到第 7 頁的腳踏車比喻，Godot 的 GDScript 語法幾乎是 Python，先把 Python 學好，換工具只要一兩堂。
+  <br>「回家可以玩」刻意不叫作業：試教階段先讓她想做，第二堂之後再談規律練習。</aside>
+</section>
+
+<section class="slide punch">
+  <h1>你今天做出了<br>一個會動的東西。</h1>
+  <p>下次，我們讓它<b>有畫面</b>。</p>
+  <aside class="notes">結尾停在這頁，把工坊切到她的作品讓家長玩一局。
+  <br>下課後 5 分鐘內記下：她的原話（第 4 頁）、她卡住的地方、她最有反應的一頁、她電腦的作業系統與瀏覽器。</aside>
+</section>
+
+</div></div>
+<div id="hud">← → 翻頁 · <b>O</b> 總覽 · <b>N</b> 備註 · <b>F</b> 全螢幕</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. Python syntax highlighting (runs on plain text in <pre><code>)
+   ============================================================ */
+const KW = new Set(["and","or","not","if","elif","else","for","while","in","def","return",
+  "break","continue","import","from","as","True","False","None","global","pass","lambda","is"]);
+const BI = new Set(["print","input","int","float","str","len","range","list","map","sum","max",
+  "min","sorted","abs","append","pop","split","join","upper","lower","ord","chr","type","set","dict",
+  "random","randint","turtle","Turtle","speed","pencolor","forward","left","right"]);
+
+function esc(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function highlight(text){
+  let out = "";
+  const lines = text.split("\n");
+  lines.forEach((line, li) => {
+    let i = 0, buf = "";
+    while(i < line.length){
+      const ch = line[i];
+      if(ch === "#"){ buf += '<span class="c">' + esc(line.slice(i)) + "</span>"; i = line.length; continue; }
+      if(ch === '"' || ch === "'"){
+        let j = i + 1;
+        while(j < line.length && line[j] !== ch) j++;
+        buf += '<span class="s">' + esc(line.slice(i, j + 1)) + "</span>";
+        i = j + 1; continue;
+      }
+      if(/[A-Za-z_]/.test(ch)){
+        let j = i;
+        while(j < line.length && /[A-Za-z0-9_]/.test(line[j])) j++;
+        const w = line.slice(i, j);
+        buf += KW.has(w) ? '<span class="k">' + w + "</span>"
+             : BI.has(w) ? '<span class="n">' + w + "</span>" : esc(w);
+        i = j; continue;
+      }
+      if(/[0-9]/.test(ch)){
+        let j = i;
+        while(j < line.length && /[0-9.]/.test(line[j])) j++;
+        buf += '<span class="n">' + line.slice(i, j) + "</span>";
+        i = j; continue;
+      }
+      buf += esc(ch); i++;
+    }
+    out += buf + (li < lines.length - 1 ? "\n" : "");
+  });
+  return out;
+}
+document.querySelectorAll("pre > code").forEach(c => { c.innerHTML = highlight(c.textContent); });
+
+/* ============================================================
+   2. Interactive: code tracer
+   ============================================================ */
+document.querySelectorAll(".tracer").forEach(box => {
+  const cfgEl = box.querySelector('script[type="application/json"]');
+  if(!cfgEl) return;
+  let cfg;
+  try{ cfg = JSON.parse(cfgEl.textContent); }
+  catch(e){ box.innerHTML = '<p style="color:#d43d3d">追蹤器設定格式有誤</p>'; return; }
+
+  box.innerHTML = `
+    <div class="tcode">${cfg.code.map(l => "<div>" + highlight(l) + "</div>").join("")}</div>
+    <div class="tside">
+      <table><thead><tr>${cfg.cols.map(c => "<th>" + esc(c) + "</th>").join("")}</tr></thead><tbody></tbody></table>
+      <div class="say"></div>
+      <div class="tbtns">
+        <button data-prev>← 上一步</button>
+        <button class="pri" data-next>下一步 →</button>
+        <button data-rst>重來</button>
+        <span class="step"></span>
+      </div>
+    </div>`;
+
+  const lines = [...box.querySelectorAll(".tcode div")];
+  const tb = box.querySelector("tbody");
+  const say = box.querySelector(".say");
+  const stepLbl = box.querySelector(".step");
+  const bPrev = box.querySelector("[data-prev]"), bNext = box.querySelector("[data-next]");
+  let at = 0;
+
+  function render(){
+    lines.forEach(l => l.classList.remove("lit"));
+    tb.innerHTML = "";
+    let lastSay = "";
+    for(let k = 0; k < at; k++){
+      const st = cfg.steps[k];
+      if(st.row){
+        const tr = document.createElement("tr");
+        tr.innerHTML = st.row.map(v => "<td>" + esc(v) + "</td>").join("");
+        tb.appendChild(tr);
+      }
+      if(st.say) lastSay = st.say;
+    }
+    if(at > 0){
+      const cur = cfg.steps[at - 1];
+      (cur.hl || []).forEach(n => lines[n - 1] && lines[n - 1].classList.add("lit"));
+      say.textContent = cur.say || (cur.row ? "把這一列填進表格" : lastSay);
+    }else{
+      say.textContent = "按「下一步」開始一行一行看。";
+    }
+    stepLbl.textContent = at + " / " + cfg.steps.length;
+    bPrev.disabled = at === 0;
+    bNext.disabled = at === cfg.steps.length;
+  }
+  bNext.addEventListener("click", () => { if(at < cfg.steps.length){ at++; render(); } });
+  bPrev.addEventListener("click", () => { if(at > 0){ at--; render(); } });
+  box.querySelector("[data-rst]").addEventListener("click", () => { at = 0; render(); });
+  render();
+});
+
+/* ============================================================
+   3. Interactive: quiz
+   ============================================================ */
+function normAns(s){
+  return String(s).trim().replace(/\s*,\s*/g, ",").replace(/[ \t]+/g, " ").replace(/^['"]|['"]$/g, "");
+}
+document.querySelectorAll(".quiz").forEach(q => {
+  const want = q.dataset.answer || "";
+  const input = q.querySelector("input");
+  const btn = q.querySelector("button");
+  const fb = q.querySelector(".fb");
+  function check(){
+    const ok = normAns(input.value).toLowerCase() === normAns(want).toLowerCase();
+    fb.className = "fb on " + (ok ? "ok" : "no");
+    fb.textContent = ok ? "✓ 對了" : "✗ 再想一下";
+  }
+  btn.addEventListener("click", check);
+  input.addEventListener("keydown", e => { if(e.key === "Enter"){ e.stopPropagation(); check(); } });
+  input.addEventListener("keyup", e => e.stopPropagation());
+});
+
+/* ============================================================
+   4. Interactive: tabs
+   ============================================================ */
+document.querySelectorAll(".tabs").forEach(t => {
+  const bar = document.createElement("div");
+  bar.className = "tabbar";
+  t.insertBefore(bar, t.firstChild);
+  const panes = [...t.querySelectorAll(".pane")];
+  panes.forEach((p, i) => {
+    const b = document.createElement("button");
+    const h = p.querySelector("h4");
+    b.textContent = h ? h.textContent.replace(/^\d+\)\s*/, "") : "第 " + (i + 1) + " 個";
+    if(h) h.style.display = "none";
+    b.addEventListener("click", () => {
+      panes.forEach(x => x.classList.remove("on"));
+      [...bar.children].forEach(x => x.classList.remove("on"));
+      p.classList.add("on"); b.classList.add("on");
+    });
+    bar.appendChild(b);
+  });
+  if(panes.length){ panes[0].classList.add("on"); bar.children[0].classList.add("on"); }
+});
+
+/* ============================================================
+   5. Interactive: checklist
+   ============================================================ */
+document.querySelectorAll("ul.check > li").forEach(li => {
+  li.addEventListener("click", () => li.classList.toggle("done"));
+});
+
+/* ============================================================
+   6. Deck engine: scaling, navigation, overview, notes
+   ============================================================ */
+const deck = document.getElementById("deck");
+const slides = [...document.querySelectorAll(".slide")];
+let part = "";
+slides.forEach((s, i) => {
+  s.dataset.n = (i + 1) + " / " + slides.length;
+  const h1 = s.querySelector("h1");
+  if(s.classList.contains("lead") && h1 && /^Part/.test(h1.textContent)){
+    const h2 = s.querySelector("h2");
+    part = h1.textContent.trim() + (h2 ? " · " + h2.textContent.trim() : "");
+  }
+  s.dataset.part = part || "Python 第 1 堂";
+});
+
+const thumbs = slides.map((s, i) => {
+  const w = document.createElement("div");
+  w.className = "thumb";
+  w.dataset.i = i + 1;
+  s.parentNode.insertBefore(w, s);
+  w.appendChild(s);
+  w.addEventListener("click", () => {
+    if(document.body.classList.contains("ov")){ go(i); toggleOv(false); }
+  });
+  return w;
+});
+
+let cur = 0;
+function go(i){
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.classList.toggle("on", k === cur));
+  document.getElementById("bar").style.width = ((cur + 1) / slides.length * 100) + "%";
+  if(history.replaceState) history.replaceState(null, "", "#" + (cur + 1));
+}
+function fit(){
+  if(document.body.classList.contains("ov")){ deck.style.transform = ""; return; }
+  const k = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+  deck.style.transform = "scale(" + k + ")";
+}
+function toggleOv(force){
+  const on = force === undefined ? !document.body.classList.contains("ov") : force;
+  document.body.classList.toggle("ov", on);
+  if(on) slides.forEach(s => s.classList.add("on"));
+  else slides.forEach((s, k) => s.classList.toggle("on", k === cur));
+  thumbs.forEach((t, k) => t.classList.toggle("here", on && k === cur));
+  fit();
+  if(on && thumbs[cur]) thumbs[cur].scrollIntoView({block:"center"});
+}
+
+addEventListener("resize", fit);
+addEventListener("keydown", e => {
+  if(/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const k = e.key;
+  if(k === "ArrowRight" || k === " " || k === "PageDown"){ e.preventDefault(); toggleOv(false); go(cur + 1); }
+  else if(k === "ArrowLeft" || k === "PageUp"){ e.preventDefault(); toggleOv(false); go(cur - 1); }
+  else if(k === "Home"){ go(0); }
+  else if(k === "End"){ go(slides.length - 1); }
+  else if(k === "o" || k === "O"){ toggleOv(); }
+  else if(k === "n" || k === "N"){ document.body.classList.toggle("notes"); }
+  else if(k === "f" || k === "F"){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  }
+  else if(k === "Escape"){ toggleOv(false); }
+});
+
+const hud = document.getElementById("hud");
+let hudT;
+function pokeHud(){
+  hud.classList.remove("fade");
+  clearTimeout(hudT);
+  hudT = setTimeout(() => hud.classList.add("fade"), 4000);
+}
+addEventListener("mousemove", pokeHud);
+addEventListener("keydown", pokeHud);
+pokeHud();
+
+/* dev self-check: flag slides whose content would be clipped by the 1280x720 frame */
+(function overflowCheck(){
+  const bad = [];
+  slides.forEach((s, i) => {
+    const was = s.classList.contains("on");
+    s.classList.add("on");
+    if(s.scrollHeight > 722 || s.scrollWidth > 1282) bad.push(i + 1);
+    if(!was) s.classList.remove("on");
+  });
+  if(bad.length) console.warn("[slides] 這幾頁內容超出版面，需要縮減或改用 sm / xs：", bad.join(", "));
+  else console.info("[slides] 版面檢查通過，" + slides.length + " 頁都在框內。");
+})();
+
+function fromHash(){
+  const n = parseInt((location.hash || "").slice(1), 10);
+  return isFinite(n) && n > 0 ? n - 1 : 0;
+}
+addEventListener("hashchange", () => { const n = fromHash(); if(n !== cur) go(n); });
+go(fromHash());
+fit();
+</script>
+</body>
+</html>
