@@ -14,7 +14,7 @@
 
 ## 上課前 2 分鐘檢查
 
-1. 用 Chrome / Safari / Edge 直接開 `lesson01-trial/playground.html`，按「▶ 執行」，右邊出現字就 OK。
+1. 用 Chrome / Safari / Edge 直接開 `lesson01-trial/playground.html`，**先按右上角「測試模式」**（試用不會存檔，不會動到學生的程式），再按「▶ 執行」，右邊出現字就 OK。試完記得把測試模式關掉。
 2. 開 `lesson01-trial/slides.html`，按 **N** 確認備註看得到，按 **F** 全螢幕。
 3. 工坊「③彩虹螺旋」執行一次（畫圖需 3～5 秒，正常）。
 

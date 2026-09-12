@@ -193,6 +193,13 @@ ul.check li.done small{color:var(--g);opacity:.85}
 .flow .st.e{border-color:var(--g);background:var(--gbg)}
 .flow .ar{font-size:28px;color:var(--brand-dim)}
 
+/* ---------- playground cue: tells everyone which workshop button to use now ---------- */
+.pg{display:inline-flex;align-items:center;gap:10px;background:#1f2937;color:#fff;border-radius:10px;
+  padding:8px 16px;font-size:18px;margin:0 0 12px}
+.pg b{color:#ffd166;font-weight:700}
+.pg .k{display:inline-block;background:#ff5c8a;color:#fff;border-radius:16px;padding:1px 12px;font-size:16px;font-weight:700}
+.pg a{color:#8fc7ea;font-size:15px;margin-left:6px}
+
 /* ---------- playground frame ---------- */
 .pgwrap{position:relative;width:100%;height:600px;border:2px solid var(--line);border-radius:12px;
   overflow:hidden;background:#fff}
@@ -399,11 +406,12 @@ if salty == "是":
   <aside class="notes">這一頁把工坊嵌進來只是方便展示，<b>實際操作請按右上角「另開視窗」</b>，畫面才夠大，也才能用 ⌘+Enter。
   工坊完全離線、不用安裝：瀏覽器打開 <code>playground.html</code> 就能跑 Python（用 Skulpt 在瀏覽器裡執行）。
   <br>先讓她在最上面填名字，之後每個作品都會顯示「這是 ○○ 的作品」。
-  <br>五個按鈕：①讓電腦跟你說話 ②猜數字 ③彩虹螺旋 ④心理測驗 ⑤空白。程式會自動存在這個瀏覽器，關掉不會消失；「還原這一個」可以回到原版。執行中會出現紅色「■ 停止」，程式在等輸入或跑不完時按它（按「清除」也會先停止）。</aside>
+  <br>五個按鈕：①讓電腦跟你說話 ②猜數字 ③彩虹螺旋 ④心理測驗 ⑤空白。程式會自動存在這個瀏覽器，關掉不會消失；「還原這一個」可以回到原版。右上角「測試模式」給你課前試用：開著時不會存任何東西，關掉就回到她的存檔（也可用 <code>playground.html?test=1</code> 開）。執行中會出現紅色「■ 停止」，程式在等輸入或跑不完時按它（按「清除」也會先停止）。</aside>
 </section>
 
 <section class="slide">
   <h2>第一行</h2>
+  <div class="pg">切到工坊 <span class="k">⑤ 空白</span><b>自己把這一行打進去，按執行</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
   <pre><code>print("哈囉，我是 Python")</code></pre>
   <p>打完按「執行」，看右邊出現什麼。然後試試：</p>
   <ul class="check">
@@ -420,6 +428,7 @@ if salty == "是":
 
 <section class="slide">
   <h2>讓電腦問你問題</h2>
+  <div class="pg">切到工坊 <span class="k">① 讓電腦跟你說話</span><b>裡面已經有這幾行，直接改</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
   <pre><code>name = input("你叫什麼名字？")
 print("嗨，" + name + "！很高興認識你")</code></pre>
   <div class="cols">
@@ -469,6 +478,7 @@ print(name + " 最喜歡吃 " + food)</code></pre>
 
 <section class="slide sm">
   <h2>寫成程式</h2>
+  <div class="pg">切到工坊 <span class="k">② 猜數字遊戲</span><b>先玩三局，再回來看程式</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
   <div class="tabs">
     <div class="pane"><h4>1) 整支程式</h4>
 <pre><code>import random
@@ -542,6 +552,7 @@ while True:                        # 一直重複
 
 <section class="slide">
   <h2>改成你的版本</h2>
+  <div class="pg">切到工坊 <span class="k">② 猜數字遊戲</span><b>改完按執行試玩，做完一個勾一個</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
   <p>從這裡挑，或自己想：</p>
   <ul class="check two">
     <li><div><b>改範圍</b><small>1～100，變難；或 1～5，變簡單</small></div></li>
@@ -566,6 +577,7 @@ while True:                        # 一直重複
 
 <section class="slide sm">
   <h2>讓程式畫圖</h2>
+  <div class="pg">切到工坊 <span class="k">③ 彩虹螺旋</span><b>先執行一次看圖，再改角度和顏色</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
   <div class="cols">
     <div>
 <pre><code>import turtle
@@ -595,6 +607,7 @@ for i in range(120):
 
 <section class="slide sm">
   <h2>自己出一個心理測驗</h2>
+  <div class="pg">切到工坊 <span class="k">④ 我的心理測驗</span><b>把題目和結果換成你自己的</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
 <pre><code>print("你是哪種動物？")
 score = 0
 a = input("假日你比較想？ 1) 出去玩  2) 在家耍廢 → ")
@@ -621,7 +634,8 @@ else:
     <li>做了猜數字，改成自己的版本</li>
     <li>知道做一個遊戲要哪些東西，程式負責哪一塊</li>
   </ul>
-  <div class="callout">按「下載我的程式」存起來，回家可以再改。</div>
+  <div class="pg">切到工坊 <span class="k">你最喜歡的那一個</span><b>按「💾 下載我的程式」存成 .py</b><a href="playground.html" target="_blank">開工坊 ↗</a></div>
+  <div class="callout">存起來的檔案回家用工坊「⑤ 空白」貼上就能再跑。</div>
   <aside class="notes">讓她自己勾，勾的時候請她用一句話說「這個是什麼」——這就是她等下跟家長講的台詞。
   <br>下載的 <code>.py</code> 檔案回家在工坊「⑤空白」貼上就能再跑。若家裡電腦要正式裝 Python，下一堂再帶（Mac 內建沒有 Python 3 可用時，用 python.org 官方安裝檔；Windows 同）。</aside>
 </section>

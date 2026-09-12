@@ -16,6 +16,12 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line
 header{background:linear-gradient(135deg,#ff8fb8,#ffb347);color:#fff;padding:16px 24px;display:flex;align-items:center;gap:16px;flex-wrap:wrap}
 header h1{margin:0;font-size:24px;letter-spacing:.02em}
 header .who{font-size:15px;opacity:.95}
+header .sp{flex:1}
+#testbtn{font-family:var(--sans);font-size:13px;padding:5px 12px;border-radius:16px;border:1.5px solid rgba(255,255,255,.7);
+  background:transparent;color:#fff;cursor:pointer}
+body.test #testbtn{background:#fff;color:#c2255c;border-color:#fff}
+#testbar{display:none;background:#fff3cd;color:#7a4b00;font-size:14px;padding:6px 24px;border-bottom:1px solid #f0d78a}
+body.test #testbar{display:block}
 header input{font-size:16px;padding:6px 12px;border:none;border-radius:20px;width:150px;font-family:var(--sans)}
 .wrap{max-width:1300px;margin:0 auto;padding:16px 20px 60px}
 .presets{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}
@@ -58,7 +64,10 @@ button.mini:hover{border-color:var(--sky);color:var(--sky)}
 <header>
   <h1>Python 工坊</h1>
   <span class="who">這是 <input id="who" placeholder="你的名字" autocomplete="off"> 的作品</span>
+  <span class="sp"></span>
+  <button id="testbtn" title="老師試用：不儲存任何東西">測試模式</button>
 </header>
+<div id="testbar">測試模式：程式碼和名字都不會儲存，關掉這個模式後會回到學生的存檔。</div>
 
 <div class="wrap">
   <div class="presets" id="presets"></div>
@@ -176,6 +185,14 @@ const codeEl = $("#code"), out = $("#out"), runBtn = $("#run"), stopBtn = $("#st
 let running = false, gen = 0, stopReq = false, pendingReject = null;
 let cur = 0;
 const KEY = i => "pyplay-code-" + i;
+// 測試模式（老師試用）：所有 localStorage 讀寫都跳過，學生的存檔不會被動到。
+// 開啟方式：右上角按鈕，或網址加 ?test=1
+let TEST = /[?&]test=1/.test(location.search);
+const store = {
+  get: k => { if(TEST) return null; try{ return localStorage.getItem(k); }catch(e){ return null; } },
+  set: (k, v) => { if(TEST) return; try{ localStorage.setItem(k, v); }catch(e){} },
+  del: k => { if(TEST) return; try{ localStorage.removeItem(k); }catch(e){} },
+};
 
 function toast(m){ const t=$("#toast"); t.textContent=m; t.classList.add("show"); setTimeout(()=>t.classList.remove("show"),1500); }
 function print(text, cls){
@@ -191,12 +208,12 @@ PRESETS.forEach((p, i) => {
 function load(i){
   cur = i;
   [...$("#presets").children].forEach((b, k) => b.classList.toggle("on", k === i));
-  let saved = null; try{ saved = localStorage.getItem(KEY(i)); }catch(e){}
+  const saved = store.get(KEY(i));
   codeEl.value = saved !== null ? saved : PRESETS[i].code;
   out.innerHTML = ""; $("#turtle-canvas").innerHTML = "";
 }
-codeEl.addEventListener("input", () => { try{ localStorage.setItem(KEY(cur), codeEl.value); }catch(e){} });
-$("#reset").addEventListener("click", () => { codeEl.value = PRESETS[cur].code; try{ localStorage.removeItem(KEY(cur)); }catch(e){} toast("已還原"); });
+codeEl.addEventListener("input", () => store.set(KEY(cur), codeEl.value));
+$("#reset").addEventListener("click", () => { codeEl.value = PRESETS[cur].code; store.del(KEY(cur)); toast("已還原"); });
 $("#clear").addEventListener("click", () => { if(running) stop(); out.innerHTML = ""; $("#turtle-canvas").innerHTML = ""; });
 function stop(){
   if(!running) return;
@@ -204,8 +221,21 @@ function stop(){
   if(pendingReject){ pendingReject(new Error("Stopped")); pendingReject = null; }
 }
 stopBtn.addEventListener("click", stop);
-try{ $("#who").value = localStorage.getItem("pyplay-who") || ""; }catch(e){}
-$("#who").addEventListener("input", () => { try{ localStorage.setItem("pyplay-who", $("#who").value); }catch(e){} });
+$("#who").value = store.get("pyplay-who") || "";
+$("#who").addEventListener("input", () => store.set("pyplay-who", $("#who").value));
+
+// ---- 測試模式切換 ----
+function applyTest(){
+  document.body.classList.toggle("test", TEST);
+  $("#testbtn").textContent = TEST ? "測試模式：開" : "測試模式";
+  $("#who").value = store.get("pyplay-who") || "";
+  load(cur);   // 開：載入原始範例；關：載回學生存檔
+}
+$("#testbtn").addEventListener("click", () => {
+  if(running) stop();
+  TEST = !TEST; applyTest();
+  toast(TEST ? "測試模式：不會儲存任何東西" : "已回到一般模式");
+});
 
 // ---- 下載 .py ----
 $("#save").addEventListener("click", () => {
@@ -296,6 +326,7 @@ codeEl.addEventListener("keydown", e => {   // Tab 縮排四格
     codeEl.selectionStart = codeEl.selectionEnd = s + 4; codeEl.dispatchEvent(new Event("input")); }
 });
 load(0);
+applyTest();
 </script>
 </body>
 </html>
