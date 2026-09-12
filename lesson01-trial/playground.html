@@ -41,6 +41,7 @@ button.stop[hidden]{display:none}
 button.mini{font-family:var(--sans);font-size:13px;padding:5px 12px;border-radius:16px;border:1.5px solid var(--line);background:var(--panel);cursor:pointer;color:var(--soft)}
 button.mini:hover{border-color:var(--sky);color:var(--sky)}
 #out{min-height:220px;max-height:440px;overflow:auto;padding:14px 16px;font-family:var(--mono);font-size:16px;line-height:1.55;white-space:pre-wrap;word-break:break-word;background:#1f2430;color:#e9edf4}
+#out .raw{color:#b9c2cf;font-size:13px;opacity:.9}
 #out .err{color:#ff8a8a}
 #out .sys{color:#8fa8c8}
 #out .ask{display:flex;gap:8px;align-items:center;margin:6px 0}
@@ -260,15 +261,29 @@ async function run(){
       { "*": () => { if(stopReq) throw new Error("Stopped"); } });
     if(my === gen) print("\n（程式結束）", "sys");
   }catch(e){
-    // 把錯誤翻成看得懂的話
-    let msg = e.toString();
+    // 先用一句中文說是哪一類問題，下面再附 Python 原本的完整錯誤（含行號／traceback）
+    const raw = (e && e.toString) ? e.toString() : String(e);
+    let line = "", lineno = 0;
+    try{ if(e.traceback && e.traceback.length){ lineno = e.traceback[0].lineno; line = "（第 " + lineno + " 行）"; } }catch(x){}
+    // Skulpt reports a missing indent after "if/for/while ...:" as a plain SyntaxError; detect it ourselves
+    const prev = lineno > 1 ? (codeEl.value.split("\n")[lineno - 2] || "").trim() : "";
+    const afterColon = /SyntaxError/.test(raw) && prev.endsWith(":");
     if(my !== gen) return;
-    if(stopReq || /Stopped/.test(msg)) msg = null;
-    else if(/TimeLimitError/.test(msg)) msg = "程式跑太久被我停下來了（是不是迴圈沒有停下來的條件？）";
-    else if(/SyntaxError/.test(msg)) msg = "語法錯誤：有地方打錯了。" + msg.replace(/^SyntaxError:\s*/, "\n→ ");
-    else if(/NameError/.test(msg)) msg = "名字錯誤：用到一個還沒定義的名字。" + msg.replace(/^NameError:\s*/, "\n→ ");
-    else if(/ValueError.*int/.test(msg)) msg = "轉換錯誤：input() 拿到的不是數字，不能用 int() 轉。\n→ " + msg;
-    if(msg === null) print("\n（已停止）", "sys"); else print("\n出錯了：" + msg, "err");
+    let msg;
+    if(stopReq || /Stopped/.test(raw)) msg = null;
+    else if(/TimeLimitError/.test(raw)) msg = "程式跑太久被停下來了" + line + "，是不是迴圈沒有停下來的條件？";
+    else if(/IndentationError/.test(raw)) msg = "縮排錯誤" + line + "：這一行前面的空格數不對。";
+    else if(afterColon) msg = "縮排錯誤" + line + "：上一行以冒號結尾，這一行前面要空 4 格。";
+    else if(/SyntaxError/.test(raw)) msg = "語法錯誤" + line + "：有地方打錯了，常見是少了引號、括號或冒號。";
+    else if(/NameError/.test(raw)) msg = "名字錯誤" + line + "：用到一個還沒定義（或拼錯）的名字。";
+    else if(/ValueError.*int/.test(raw)) msg = "轉換錯誤" + line + "：int() 拿到的不是數字（如果是 input() 來的，檢查你輸入了什麼）。";
+    else if(/TypeError/.test(raw)) msg = "型別錯誤" + line + "：把兩種不同的東西混在一起了，例如文字 + 數字。";
+    else if(/ZeroDivisionError/.test(raw)) msg = "除以零" + line + "：不能除以 0。";
+    else if(/IndexError/.test(raw)) msg = "索引錯誤" + line + "：清單裡沒有這個位置。";
+    else if(/ImportError|找不到模組/.test(raw)) msg = "找不到模組" + line + "：import 的名字打錯了，或這裡沒有這個模組。";
+    else msg = "程式出錯了" + line + "。";
+    if(msg === null) print("\n（已停止）", "sys");
+    else{ print("\n出錯了：" + msg + "\n", "err"); print("Python 原始錯誤訊息：\n" + raw + "\n", "raw"); }
   }
   running = false; pendingReject = null;
   runBtn.disabled = false; runBtn.textContent = "▶ 執行"; stopBtn.hidden = true;
