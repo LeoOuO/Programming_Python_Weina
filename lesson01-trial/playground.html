@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Python 遊戲工坊</title>
+<title>Python 工坊</title>
 <script src="_vendor/skulpt.min.js"></script>
 <script src="_vendor/skulpt-stdlib.js"></script>
 <style>
@@ -52,7 +52,7 @@ button.mini:hover{border-color:var(--sky);color:var(--sky)}
 </head>
 <body>
 <header>
-  <h1>🎮 Python 遊戲工坊</h1>
+  <h1>Python 工坊</h1>
   <span class="who">這是 <input id="who" placeholder="你的名字" autocomplete="off"> 的作品</span>
 </header>
 
@@ -83,14 +83,14 @@ button.mini:hover{border-color:var(--sky);color:var(--sky)}
 const PRESETS = [
 { name: "① 讓電腦跟你說話", code:
 `# 第一支程式：電腦會照你寫的說話
-print("哈囉！我是你的電腦")
-print("今天要一起做遊戲喔 🎮")
+print("哈囉")
+print("這是我的第一支程式")
 
 name = input("你叫什麼名字？")
-print("嗨，" + name + "！很高興認識你")
+print("嗨，" + name)
 
 age = input("你幾歲？")
-print("哇，" + age + " 歲就會寫程式了！")
+print(name + " 今年 " + age + " 歲")
 ` },
 { name: "② 猜數字遊戲", code:
 `# 電腦偷偷想一個數字，你來猜
@@ -99,17 +99,17 @@ import random
 answer = random.randint(1, 20)   # 1 到 20 之間
 count = 0
 
-print("我想了一個 1～20 的數字，你猜猜看！")
+print("我想了一個 1～20 的數字，猜猜看")
 
 while True:
     guess = int(input("你猜："))
     count = count + 1
     if guess < answer:
-        print("太小了，再大一點！")
+        print("太小了")
     elif guess > answer:
-        print("太大了，再小一點！")
+        print("太大了")
     else:
-        print("答對了！你猜了 " + str(count) + " 次 🎉")
+        print("猜中了，你猜了 " + str(count) + " 次")
         break
 ` },
 { name: "③ 彩虹螺旋", code:
@@ -128,7 +128,7 @@ for i in range(120):
 ` },
 { name: "④ 我的心理測驗", code:
 `# 自己出題目的心理測驗（把問題和答案換成你的！）
-print("=== 你是哪一種動物？ ===")
+print("你是哪一種動物？")
 score = 0
 
 a = input("放假想做什麼？ 1:睡覺  2:出去玩  3:看影片  ")
@@ -151,15 +151,15 @@ elif c == "3":
 
 print("")
 if score >= 5:
-    print("你是：🐶 小狗！熱情又愛玩")
+    print("小狗：熱情又愛玩")
 elif score >= 3:
-    print("你是：🐱 貓咪！有自己的想法")
+    print("貓咪：有自己的想法")
 else:
-    print("你是：🐢 烏龜！慢慢來但很穩")
+    print("烏龜：慢慢來但很穩")
 ` },
 { name: "⑤ 空白（自己寫）", code:
 `# 在這裡寫你自己的程式
-print("我會寫程式了！")
+print("hello")
 ` },
 ];
 // ==========================================================================
@@ -239,7 +239,7 @@ async function run(){
   Sk.TurtleGraphics.width = 520; Sk.TurtleGraphics.height = 420;
   try{
     await Sk.misceval.asyncToPromise(() => Sk.importMainWithBody("<stdin>", false, codeEl.value, true));
-    print("\n✅ 程式跑完了", "sys");
+    print("\n（程式結束）", "sys");
   }catch(e){
     // 把錯誤翻成看得懂的話
     let msg = e.toString();
@@ -247,7 +247,7 @@ async function run(){
     else if(/SyntaxError/.test(msg)) msg = "語法錯誤：有地方打錯了。" + msg.replace(/^SyntaxError:\s*/, "\n→ ");
     else if(/NameError/.test(msg)) msg = "名字錯誤：用到一個還沒定義的名字。" + msg.replace(/^NameError:\s*/, "\n→ ");
     else if(/ValueError.*int/.test(msg)) msg = "轉換錯誤：input() 拿到的不是數字，不能用 int() 轉。\n→ " + msg;
-    print("\n❌ " + msg, "err");
+    print("\n出錯了：" + msg, "err");
   }
   runBtn.disabled = false; runBtn.textContent = "▶ 執行";
 }

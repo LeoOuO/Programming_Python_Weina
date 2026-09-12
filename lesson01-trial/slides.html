@@ -11,7 +11,7 @@
   ----------------------------------------------------------------
   · 一張投影片 = 一個 <section class="slide">…</section>
   · 教師備註寫在 <aside class="notes">…</aside>，簡報時按 N 顯示/隱藏
-  · 「遊戲工坊」= 同資料夾的 playground.html，第 9 頁會用 iframe 嵌進來，
+  · 「遊戲工坊」= 同資料夾的 playground.html，第 11 頁會用 iframe 嵌進來，
     也可以按右上角按鈕另開分頁（建議另開分頁，畫面比較大）
   · 可用的互動元件：
       <details class="reveal">   點一下展開
@@ -253,9 +253,9 @@ body.ov #hud{display:none}
 
 <!-- ========== 封面 ========== -->
 <section class="slide lead">
-  <h1>🎮 做一個會動的東西</h1>
-  <h2>Python 第 1 堂 · 從「玩遊戲」到「做遊戲」</h2>
-  <p>今天結束前，你會做出一個<b>自己的小遊戲</b>，而且可以拿給家人玩。</p>
+  <h1>Python 第 1 堂</h1>
+  <h2>遊戲是怎麼做出來的，以及你的第一支程式</h2>
+  <p>今天會一起寫一個小遊戲，下課帶回去。</p>
   <aside class="notes">按 <b>→</b> 或空白鍵翻頁，<b>O</b> 看總覽，<b>N</b> 開關這排備註，<b>F</b> 全螢幕。
   <br>試教的成功標準只有兩個：<b>① 她下課時想繼續</b>、<b>② 她帶走一個能秀的東西</b>。
   進度完全不重要，有哪一頁她卡住就停在那裡陪她玩，後面的頁面全部可以砍。
@@ -266,12 +266,12 @@ body.ov #hud{display:none}
   <h2>今天要做的事</h2>
   <table>
     <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
-    <tr><td>1. 先聊聊</td><td>15 分</td><td>你玩什麼、想做什麼</td></tr>
+    <tr><td>1. 先聊聊</td><td>15 分</td><td>你平常玩什麼、想做什麼</td></tr>
     <tr><td>2. 遊戲是怎麼做出來的</td><td>20 分</td><td>把一個遊戲拆開來看，做遊戲要學什麼</td></tr>
-    <tr><td>3. 第一次寫程式</td><td>20 分</td><td>讓電腦講話、讓電腦記住你的名字</td></tr>
-    <tr><td colspan="3" style="text-align:center;color:var(--soft)">☕ 休息 5 分鐘</td></tr>
+    <tr><td>3. 第一次寫程式</td><td>20 分</td><td>print 和 input</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
     <tr class="hi"><td>4. 做一個小遊戲</td><td>35 分</td><td>猜數字遊戲 → 改成你的版本</td></tr>
-    <tr><td>5. 加碼 &amp; 收尾</td><td>25 分</td><td>畫彩虹、心理測驗、秀給家人看</td></tr>
+    <tr><td>5. 再玩一點、收尾</td><td>25 分</td><td>畫圖、心理測驗、存檔</td></tr>
   </table>
   <aside class="notes">120 分鐘含 5 分休息。休息點放在第 13 頁（input 與盒子）之後、Part 4 之前——休息前她已經寫過程式，休息後直接用嘴玩猜數字，重新暖機很快。
   <br>時間有餘（她動作快）：第 17 頁追蹤器不要跳過、第 21 和 22 兩個加碼都做。時間不夠：砍第 8、9 頁（程式是說明書、真實例子）→ 砍追蹤器 → 加碼只做一個。
@@ -282,15 +282,15 @@ body.ov #hud{display:none}
 <section class="slide lead"><h1>Part 1</h1><h2>先聊聊</h2></section>
 
 <section class="slide xs top">
-  <h2>我想先認識你</h2>
-  <p><small>沒有標準答案，想到什麼講什麼。講完一題我會勾掉一題。</small></p>
+  <h2>先聊幾個問題</h2>
+  <p><small>隨便聊就好，沒有對錯。</small></p>
   <ul class="check two">
     <li><div><b>你最近在玩什麼遊戲？手機還是電腦？</b><small>最喜歡它哪一點？畫面？劇情？跟朋友一起玩？</small></div></li>
     <li><div><b>手機裡最常打開的 app 是什麼？</b><small>有沒有哪個 app 你覺得「要是能改成…就好了」？</small></div></li>
     <li><div><b>有碰過 Scratch、micro:bit 或任何程式嗎？</b><small>學校資訊課做過什麼？</small></div></li>
     <li><div><b>為什麼想學 Python？</b><small>是自己想的，還是誰建議的？想做出什麼？</small></div></li>
     <li><div><b>你平常用哪台電腦？Mac 還是 Windows？</b><small>家裡有可以自己用的電腦嗎？</small></div></li>
-    <li><div><b>除了遊戲，你還喜歡什麼？</b><small>畫畫、音樂、寫故事…這些做遊戲都用得到</small></div></li>
+    <li><div><b>除了遊戲，平常還喜歡做什麼？</b><small>畫畫、音樂、寫東西都算</small></div></li>
   </ul>
   <aside class="notes">問完就<b>閉嘴聽</b>，不要糾正、不要急著接話。點一下勾掉問過的題。
   <br>各題在探什麼：① 她喜歡的遊戲類型 → 後面「拆開一個遊戲」直接拿<b>她講的那個遊戲</b>當例子，不要用我的預設例子
@@ -305,16 +305,16 @@ body.ov #hud{display:none}
 
 <section class="slide sm">
   <h2>把一個遊戲拆開來看</h2>
-  <p>拿你剛剛講的那個遊戲，我們一起拆：</p>
+  <p>拿你剛剛說的那個遊戲來看，它大概由四種東西組成：</p>
   <div class="cols w4">
-    <div class="box pk"><div class="ico">🎨</div><h3>你看到的</h3><p>角色、背景、按鈕、特效</p><p><small>→ 美術</small></p></div>
-    <div class="box sn"><div class="ico">🔊</div><h3>你聽到的</h3><p>音樂、音效、配音</p><p><small>→ 音樂</small></p></div>
-    <div class="box ac"><div class="ico">⚙️</div><h3>它怎麼反應</h3><p>點一下會怎樣、撞到會怎樣、什麼時候贏</p><p><small>→ <em>程式</em></small></p></div>
-    <div class="box gd"><div class="ico">🧩</div><h3>好不好玩</h3><p>關卡、難度、獎勵、劇情</p><p><small>→ 遊戲設計</small></p></div>
+    <div class="box pk"><h3>看到的</h3><p>角色、背景、按鈕、特效</p><p><small>→ 美術</small></p></div>
+    <div class="box sn"><h3>聽到的</h3><p>音樂、音效、配音</p><p><small>→ 音樂</small></p></div>
+    <div class="box ac"><h3>怎麼反應</h3><p>點一下會怎樣、撞到會怎樣、什麼時候贏</p><p><small>→ <em>程式</em></small></p></div>
+    <div class="box gd"><h3>好不好玩</h3><p>關卡、難度、獎勵、劇情</p><p><small>→ 遊戲設計</small></p></div>
   </div>
-  <details class="reveal"><summary>那「程式」在遊戲裡到底負責什麼？</summary>
+  <details class="reveal"><summary>程式負責的是哪一部分？</summary>
     <div class="body"><p>負責<b>所有的「規則」</b>：碰到牆會怎樣、分數怎麼算、什麼時候出現下一關、存檔怎麼存……
-    沒有程式，畫面再漂亮也只是一張圖，<em>不會動、不會回應你</em>。</p></div>
+    沒有程式的話，畫面只是一張圖，不會動、也不會理你。</p></div>
   </details>
   <aside class="notes">用<b>她說的遊戲</b>一格一格對照，每格都問她「這個遊戲的○○是什麼？」讓她自己填。
   例：貪食蛇 → 看到的：蛇、食物；聽到的：吃到的音效；反應：撞牆就結束、吃到會變長；設計：越吃越快。
@@ -323,20 +323,20 @@ body.ov #hud{display:none}
 </section>
 
 <section class="slide sm">
-  <h2>那做手機遊戲要學什麼？</h2>
+  <h2>做手機遊戲要學什麼</h2>
   <div class="cols w3">
-    <div class="box ac"><h3>1️⃣ 程式怎麼想</h3>
-      <p>怎麼把「規則」講給電腦聽：<br><b>記東西</b>、<b>做判斷</b>、<b>重複做</b></p>
-      <p><small>👉 今天就開始，用 Python 學最快</small></p></div>
-    <div class="box pk"><h3>2️⃣ 遊戲引擎</h3>
-      <p>幫你把畫面、聲音、觸控都準備好的工具</p>
-      <p><small>Godot、Unity … 學會 1️⃣ 之後再學，會很快</small></p></div>
-    <div class="box sn"><h3>3️⃣ 上架</h3>
-      <p>把遊戲放到 App Store / Google Play</p>
-      <p><small>最後一步，反而最簡單</small></p></div>
+    <div class="box ac"><h3>1. 寫程式的基本功</h3>
+      <p>把規則講給電腦聽：<br><b>記東西</b>、<b>做判斷</b>、<b>重複做</b></p>
+      <p><small>今天從這裡開始，用 Python</small></p></div>
+    <div class="box pk"><h3>2. 遊戲引擎</h3>
+      <p>處理畫面、聲音、觸控的現成工具</p>
+      <p><small>Godot、Unity 之類，有了 1 之後再學</small></p></div>
+    <div class="box sn"><h3>3. 放到手機上</h3>
+      <p>打包、送到 App Store / Google Play</p>
+      <p><small>最後才需要，步驟固定</small></p></div>
   </div>
-  <div class="callout"><b>老實說：</b>Python 本身不太拿來直接做手機 app。但 1️⃣ 是三件事裡<em>最難、也最重要</em>的，
-  而且學會之後換任何工具都一樣——就像學會騎腳踏車之後，換一台車也會騎。</div>
+  <div class="callout"><b>先說清楚：</b>Python 本身不太拿來直接做手機 app。我們先用它學第 1 項，因為這一項最花時間，
+  而且學會之後換到遊戲引擎，寫法差不多，只是工具不同。</div>
   <aside class="notes">這頁是<b>誠實的路線圖</b>，也是給家長聽的（如果家長在旁邊）。不要騙她「學 Python 就能做手機遊戲」，
   但要讓她知道 Python 是正確的第一步：
   <br>· 程式思維（變數／判斷／迴圈／清單／函式）在所有語言都一樣，Python 語法最少、最快上手
@@ -346,11 +346,11 @@ body.ov #hud{display:none}
 </section>
 
 <section class="slide sm">
-  <h2>程式到底是什麼？</h2>
-  <p class="big">程式 = 寫給電腦看的<b>步驟說明書</b></p>
+  <h2>程式是什麼</h2>
+  <p class="big">寫給電腦看的<b>步驟說明</b></p>
   <div class="cols">
     <div class="box">
-      <h3>🍜 泡麵說明書（給人看）</h3>
+      <h3>泡麵說明（給人看）</h3>
       <ol style="font-size:19px">
         <li>把水煮開</li>
         <li>放麵、放調味包</li>
@@ -359,7 +359,7 @@ body.ov #hud{display:none}
       </ol>
     </div>
     <div class="box">
-      <h3>🐍 程式（給電腦看）</h3>
+      <h3>程式（給電腦看）</h3>
 <pre><code>print("水煮開了")
 name = input("你叫什麼？")
 for i in range(3):
@@ -368,32 +368,32 @@ if name == "老師":
     print("加一點水")</code></pre>
     </div>
   </div>
-  <p><small>電腦很聽話、但很笨：你寫什麼它就照做什麼，<em>一個字都不會自己補</em>。</small></p>
+  <p><small>差別是：電腦只會照字面做，你少寫一步它就不做那一步。</small></p>
   <aside class="notes">重點只有一句：<b>程式就是一步一步的指令</b>。右邊的程式碼不用解釋每一行，只要指出「這行是在等 3 次」「這行是在判斷」，
   讓她看到左右兩邊長得像。她如果問「為什麼要加括號」之類的，回答「等一下你自己打的時候就知道了」，不要在這裡展開語法。</aside>
 </section>
 
 <section class="slide sm">
-  <h2>這些東西，都是有人寫程式做出來的</h2>
+  <h2>幾個例子</h2>
   <div class="cols w3">
-    <div class="box pk"><div class="ico">🐦</div><h3>Flappy Bird</h3><p>一個人、幾天做出來的，全世界幾億人玩過</p></div>
-    <div class="box gd"><div class="ico">⛏️</div><h3>Minecraft</h3><p>一開始也是<b>一個人</b>在家裡寫的</p></div>
-    <div class="box sn"><div class="ico">🎬</div><h3>Instagram · YouTube · Netflix</h3><p>它們背後都有大量 <b>Python</b></p></div>
+    <div class="box pk"><h3>Flappy Bird</h3><p>一個人做的，程式其實很短</p></div>
+    <div class="box gd"><h3>Minecraft</h3><p>最早的版本也是一個人寫的</p></div>
+    <div class="box sn"><h3>Instagram、YouTube</h3><p>後台有很多部分是用 Python 寫的</p></div>
   </div>
-  <div class="callout">做出東西的人不是「天才」，他們只是<em>先開始</em>，然後一直改。今天你也要開始。</div>
-  <aside class="notes">激勵頁。事實查核：Flappy Bird 由 Dong Nguyen 一人開發（2013）；Minecraft 最初由 Markus Persson 一人開發（2009）；
+  <div class="callout">這些一開始都很小，先做出能跑的版本，再慢慢加東西。我們今天也是這樣做。</div>
+  <aside class="notes">事實查核：Flappy Bird 由 Dong Nguyen 一人開發（2013）；Minecraft 最初由 Markus Persson 一人開發（2009）；
   Instagram 後端使用 Python/Django、YouTube 大量使用 Python、Netflix 使用 Python 做資料與工具——這些都是公開資訊。
   <br>如果她剛剛講的遊戲你知道背景，換成她的遊戲更有力。</aside>
 </section>
 
 <!-- ========== Part 3 ========== -->
-<section class="slide lead"><h1>Part 3</h1><h2>第一次寫程式</h2><p>從現在開始，換你的手動。</p></section>
+<section class="slide lead"><h1>Part 3</h1><h2>第一次寫程式</h2></section>
 
 <section class="slide top" style="padding-top:40px">
-  <h2 style="margin-bottom:8px">🎮 Python 遊戲工坊</h2>
+  <h2 style="margin-bottom:8px">Python 工坊</h2>
   <div class="pgwrap">
     <a class="pgopen" href="playground.html" target="_blank">另開視窗 ↗</a>
-    <iframe src="playground.html" title="Python 遊戲工坊"></iframe>
+    <iframe src="playground.html" title="Python 工坊"></iframe>
   </div>
   <aside class="notes">這一頁把工坊嵌進來只是方便展示，<b>實際操作請按右上角「另開視窗」</b>，畫面才夠大，也才能用 ⌘+Enter。
   工坊完全離線、不用安裝：瀏覽器打開 <code>playground.html</code> 就能跑 Python（用 Skulpt 在瀏覽器裡執行）。
@@ -402,14 +402,14 @@ if name == "老師":
 </section>
 
 <section class="slide">
-  <h2>第 1 行：讓電腦說話</h2>
+  <h2>第一行</h2>
   <pre><code>print("哈囉，我是 Python")</code></pre>
-  <p>按「執行」，看右邊發生什麼事。然後——</p>
+  <p>打完按「執行」，看右邊出現什麼。然後試試：</p>
   <ul class="check">
     <li>把「Python」改成<b>你的名字</b>，再執行一次</li>
-    <li>再加一行，讓它多說一句話（任何話都可以）</li>
-    <li>試試看加個表情符號 🎉（對，它可以印表情符號）</li>
-    <li>故意把後面的 <code>)</code> 刪掉再執行，看電腦會說什麼</li>
+    <li>再加一行，印別的句子</li>
+    <li>放個表情符號進去看看會不會印</li>
+    <li>把最後的 <code>)</code> 刪掉再執行，看它怎麼反應</li>
   </ul>
   <aside class="notes">用工坊的「⑤空白」讓她<b>自己從零打這一行</b>（按鈕①是下一頁用的完整版）。她自己打字，你不要碰鍵盤。打錯了就讓它錯，錯誤訊息工坊會翻成中文（例如「少了引號或括號」），
   這是故意的：<b>讓她第一次就知道錯誤很正常、看得懂、改得掉</b>。
@@ -418,14 +418,14 @@ if name == "老師":
 </section>
 
 <section class="slide">
-  <h2>第 2 步：讓電腦記住你</h2>
+  <h2>讓電腦問你問題</h2>
   <pre><code>name = input("你叫什麼名字？")
 print("嗨，" + name + "！很高興認識你")</code></pre>
   <div class="cols">
-    <div class="box ac"><h3>input(...)</h3><p>電腦停下來<b>等你打字</b>，你打的東西它就收下來</p></div>
-    <div class="box gd"><h3>name = ...</h3><p>把收下來的東西<b>放進一個盒子</b>，盒子叫 <code>name</code>，之後隨時可以拿出來用</p></div>
+    <div class="box ac"><h3>input(...)</h3><p>程式停下來<b>等你打字</b>，按 Enter 之後把你打的收下來</p></div>
+    <div class="box gd"><h3>name = ...</h3><p>把收下來的東西放進一個叫 <code>name</code> 的<b>盒子</b>，後面要用再拿出來</p></div>
   </div>
-  <details class="reveal"><summary>小挑戰：再問一個問題</summary>
+  <details class="reveal"><summary>試試看：再問一個問題</summary>
     <div class="body"><p>讓它再問「你最喜歡的食物？」，然後印出「<i>名字</i> 最喜歡吃 <i>食物</i>」。
     提示：需要第二個盒子。</p></div>
   </details>
@@ -438,24 +438,24 @@ print(name + " 最喜歡吃 " + food)</code></pre>
 </section>
 
 <section class="slide punch">
-  <h1>☕ 休息 5 分鐘</h1>
-  <p>回來之後，我們來做<b>一個真的遊戲</b>。</p>
+  <h1>休息 5 分鐘</h1>
+  <p>回來之後做猜數字遊戲。</p>
   <aside class="notes">休息時你做兩件事：① 把工坊切到「②猜數字」但先不要給她看；② 快速記下前半段她的原話與反應。</aside>
 </section>
 
 <!-- ========== Part 4 ========== -->
-<section class="slide lead"><h1>Part 4</h1><h2>做一個小遊戲</h2><p>遊戲 = 規則 + 判斷 + 一直重複</p></section>
+<section class="slide lead"><h1>Part 4</h1><h2>做一個小遊戲</h2></section>
 
 <section class="slide sm">
-  <h2>猜數字遊戲，長什麼樣？</h2>
-  <p>先不寫程式，用嘴巴玩一次：我心裡想一個 1～20 的數字，你猜。</p>
+  <h2>猜數字</h2>
+  <p>先不寫程式，直接玩一局：我想一個 1～20 的數字，你猜。</p>
   <div class="flow">
     <div class="st">電腦偷偷選一個數字</div><div class="ar">→</div>
     <div class="st">你猜一個</div><div class="ar">→</div>
     <div class="st d">太大？太小？猜中？</div><div class="ar">→</div>
-    <div class="st e">猜中：恭喜！🎉</div>
+    <div class="st e">猜中，結束</div>
   </div>
-  <p style="text-align:center"><small>沒猜中 → 回到「你猜一個」，<em>一直重複</em>直到猜中為止</small></p>
+  <p style="text-align:center"><small>沒猜中就回到「你猜一個」，重複到猜中為止</small></p>
   <div class="cols w3">
     <div class="box ac"><h3>記東西</h3><p>答案是幾？猜了幾次？</p></div>
     <div class="box pk"><h3>做判斷</h3><p>太大、太小、還是猜中</p></div>
@@ -467,7 +467,7 @@ print(name + " 最喜歡吃 " + food)</code></pre>
 </section>
 
 <section class="slide sm">
-  <h2>把它變成程式</h2>
+  <h2>寫成程式</h2>
   <div class="tabs">
     <div class="pane"><h4>1) 整支程式</h4>
 <pre><code>import random
@@ -482,7 +482,7 @@ while True:                        # 一直重複
     elif guess < answer:
         print("太小了！")
     else:
-        print("猜中了！你猜了", count, "次 🎉")
+        print("猜中了，你猜了", count, "次")
         break                      # 結束重複</code></pre>
     </div>
     <div class="pane"><h4>2) 每一行在做什麼</h4>
@@ -503,8 +503,8 @@ while True:                        # 一直重複
 </section>
 
 <section class="slide sm">
-  <h2>電腦是怎麼一步一步跑的？</h2>
-  <p><small>假設電腦選到 7，你依序猜 5、9、7。按「下一步」看盒子裡的東西怎麼變。</small></p>
+  <h2>電腦是怎麼跑這支程式的</h2>
+  <p><small>假設它選到 7，你依序猜 5、9、7。按「下一步」看每個盒子的值怎麼變。</small></p>
   <div class="tracer"><script type="application/json">{
     "code": [
       "answer = 7",
@@ -540,31 +540,31 @@ while True:                        # 一直重複
 </section>
 
 <section class="slide">
-  <h2>現在改成你的版本</h2>
-  <p>挑幾個做做看，做完一個勾一個：</p>
+  <h2>改成你的版本</h2>
+  <p>從這裡挑，或自己想：</p>
   <ul class="check two">
     <li><div><b>改範圍</b><small>1～100，變難；或 1～5，變簡單</small></div></li>
-    <li><div><b>改台詞</b><small>「太大了」改成你自己的說法，加表情符號</small></div></li>
-    <li><div><b>猜太多次會被笑</b><small>如果超過 5 次，印「你也太弱了吧 😆」</small></div></li>
-    <li><div><b>秀出「差多少」</b><small>差 1 就說「超接近！」</small></div></li>
-    <li><div><b>猜中時放煙火</b><small>印一堆 🎆🎆🎆（用重複做！）</small></div></li>
-    <li><div><b>兩人對戰</b><small>先問玩家名字，猜中時印「○○ 獲勝」</small></div></li>
+    <li><div><b>改台詞</b><small>「太大了」換成你自己的講法</small></div></li>
+    <li><div><b>猜太多次有反應</b><small>超過 5 次的話，多印一句話</small></div></li>
+    <li><div><b>差 1 的時候提示</b><small>印「很接近了」</small></div></li>
+    <li><div><b>猜中時多印幾行</b><small>用重複做，印 5 行星號</small></div></li>
+    <li><div><b>先問名字</b><small>猜中時印「○○ 猜對了」</small></div></li>
   </ul>
   <aside class="notes">這 20 分鐘是試教的核心，讓她<b>擁有</b>這支程式。她想改什麼就改什麼，清單只是沒靈感時的菜單。
   <br>參考解法（只在她卡住時逐步提示，不要直接打給她）：
   <br>· 改範圍：<code>randint(1, 100)</code>，提示字也要改
-  <br>· 猜太多次：在 else 裡加 <code>if count > 5: print("你也太弱了吧 😆")</code>
-  <br>· 差多少：在 if 之前 <code>if abs(guess - answer) == 1: print("超接近！")</code>（abs 可以先說「距離」）
-  <br>· 煙火：<code>for i in range(5): print("🎆" * 10)</code>（順便看到字串乘法，她會很喜歡）
-  <br>· 兩人：開頭 <code>player = input("玩家名字：")</code>，猜中印 <code>player + " 獲勝"</code>
+  <br>· 猜太多次：在 else 裡加 <code>if count > 5: print("猜了不少次")</code>
+  <br>· 差 1：在 if 之前 <code>if abs(guess - answer) == 1: print("很接近了")</code>（abs 先說「距離」就好）
+  <br>· 多印幾行：<code>for i in range(5): print("*" * 10)</code>（順便看到字串乘法）
+  <br>· 名字：開頭 <code>player = input("你的名字：")</code>，猜中印 <code>player + " 猜對了"</code>
   <br>做到一半時間到就停，<b>先存好、先秀</b>，不要為了做完而趕。</aside>
 </section>
 
 <!-- ========== Part 5 ========== -->
-<section class="slide lead"><h1>Part 5</h1><h2>加碼 &amp; 收尾</h2></section>
+<section class="slide lead"><h1>Part 5</h1><h2>再玩一點、收尾</h2></section>
 
 <section class="slide sm">
-  <h2>加碼 ①：讓程式畫圖 🌈</h2>
+  <h2>讓程式畫圖</h2>
   <div class="cols">
     <div>
 <pre><code>import turtle
@@ -584,7 +584,7 @@ for i in range(120):
         <li>把顏色換成你喜歡的（<code>"pink"</code>、<code>"gold"</code>、<code>"cyan"</code>）</li>
         <li><code>range(120)</code> → 改成 300</li>
       </ul>
-      <p><small>遊戲畫面就是這樣一筆一筆畫出來的，只是快到你看不見。</small></p>
+      <p><small>遊戲畫面基本上也是這樣一筆一筆畫的，只是速度快很多。</small></p>
     </div>
   </div>
   <aside class="notes">視覺回饋最強的一頁，如果前面她有點累，這頁會把注意力拉回來。角度 90 → 正方形螺旋；121 → 三角形風車；178 → 幾乎是一條線來回。
@@ -593,8 +593,8 @@ for i in range(120):
 </section>
 
 <section class="slide sm">
-  <h2>加碼 ②：出一個你自己的心理測驗 🔮</h2>
-<pre><code>print("=== 你是哪種動物？===")
+  <h2>自己出一個心理測驗</h2>
+<pre><code>print("你是哪種動物？")
 score = 0
 a = input("假日你比較想？ 1) 出去玩  2) 在家耍廢 → ")
 if a == "1":
@@ -603,39 +603,39 @@ a = input("朋友生氣了，你會？ 1) 馬上去問  2) 等她冷靜 → ")
 if a == "1":
     score = score + 1
 if score == 2:
-    print("你是 🐶 小狗：熱情、愛交朋友")
+    print("小狗：熱情、愛交朋友")
 else:
-    print("你是 🐱 小貓：安靜、有自己的步調")</code></pre>
-  <p><small>工坊按鈕 ④。把題目換成你想問的、把動物換成你想要的，然後給家人做！</small></p>
+    print("小貓：安靜、有自己的步調")</code></pre>
+  <p><small>工坊按鈕 ④。題目和結果都可以換成你自己的。</small></p>
   <aside class="notes">這一頁很適合當「帶回家的作品」，因為<b>題目和結果都是她自己寫的</b>，秀給家長時有話講。
   <br>她可能想加第三題／第三種結果，讓她試：多一個 <code>elif score == 1:</code> 即可。
   <br>如果時間只夠做一個加碼：她偏視覺 → ①；她偏跟人互動 → ②。</aside>
 </section>
 
 <section class="slide">
-  <h2>今天你做到了</h2>
+  <h2>今天做了什麼</h2>
   <ul class="check">
-    <li>寫了人生第一行程式，而且看得懂錯誤訊息</li>
-    <li>知道「盒子」（變數）是什麼，讓電腦記住你的名字</li>
-    <li>做出一個猜數字遊戲，還改成自己的版本</li>
-    <li>知道做一個遊戲要哪四塊拼圖，程式是哪一塊</li>
+    <li>寫了程式、弄壞過、也修好了</li>
+    <li>用盒子（變數）存東西</li>
+    <li>做了猜數字，改成自己的版本</li>
+    <li>知道做一個遊戲要哪些東西，程式負責哪一塊</li>
   </ul>
-  <div class="callout"><b>下一步：</b>按「💾 下載我的程式」，把作品存下來 → 現在就秀給家人玩一局。</div>
+  <div class="callout">按「下載我的程式」存起來，回家可以再改。</div>
   <aside class="notes">讓她自己勾，勾的時候請她用一句話說「這個是什麼」——這就是她等下跟家長講的台詞。
   <br>下載的 <code>.py</code> 檔案回家在工坊「⑤空白」貼上就能再跑。若家裡電腦要正式裝 Python，下一堂再帶（Mac 內建沒有 Python 3 可用時，用 python.org 官方安裝檔；Windows 同）。</aside>
 </section>
 
 <section class="slide sm">
-  <h2>接下來的路 🗺️</h2>
+  <h2>接下來</h2>
   <div class="flow">
-    <div class="st e">今天<br><small>會說話、會記、會判斷、會重複</small></div><div class="ar">→</div>
+    <div class="st e">今天<br><small>print、input、判斷、重複</small></div><div class="ar">→</div>
     <div class="st">Python 基礎<br><small>清單、函式、把想法變程式</small></div><div class="ar">→</div>
-    <div class="st">電腦小遊戲<br><small>pygame：真的有畫面、會動</small></div><div class="ar">→</div>
+    <div class="st">電腦小遊戲<br><small>pygame，有畫面會動的那種</small></div><div class="ar">→</div>
     <div class="st d">手機遊戲<br><small>Godot 引擎，語法跟 Python 很像</small></div>
   </div>
-  <p style="text-align:center"><small>每一站都會做出一個<b>可以玩的東西</b>，不會只有練習題。</small></p>
-  <details class="reveal"><summary>回家可以玩的（不是作業）</summary>
-    <div class="body"><p>把心理測驗改成 <b>3 題、3 種結果</b>，給家人做一次，下次告訴我他們是什麼動物。</p></div>
+  <p style="text-align:center"><small>每個階段都會做一個可以玩的東西。</small></p>
+  <details class="reveal"><summary>回家有空的話</summary>
+    <div class="body"><p>把心理測驗改成 3 題、3 種結果，找人做做看。</p></div>
   </details>
   <aside class="notes">給家長看的頁。承諾的是「每一站有可玩的成品」，<b>不要承諾堂數和上架</b>。
   <br>如果家長問「為什麼不直接學做手機遊戲」：回到第 7 頁的腳踏車比喻，Godot 的 GDScript 語法幾乎是 Python，先把 Python 學好，換工具只要一兩堂。
@@ -643,8 +643,8 @@ else:
 </section>
 
 <section class="slide punch">
-  <h1>你今天做出了<br>一個會動的東西。</h1>
-  <p>下次，我們讓它<b>有畫面</b>。</p>
+  <h1>今天到這裡</h1>
+  <p>下次從有畫面的開始。</p>
   <aside class="notes">結尾停在這頁，把工坊切到她的作品讓家長玩一局。
   <br>下課後 5 分鐘內記下：她的原話（第 4 頁）、她卡住的地方、她最有反應的一頁、她電腦的作業系統與瀏覽器。</aside>
 </section>
