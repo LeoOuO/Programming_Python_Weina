@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python 第 1 堂 · 做一個會動的東西</title>
+
+<!--
+================================================================
+  怎麼改這份簡報
+  ----------------------------------------------------------------
+  · 一張投影片 = 一個 <section class="slide">…</section>
+  · 教師備註寫在 <aside class="notes">…</aside>，簡報時按 N 顯示/隱藏
+  · 要學生打開檔案時，用 <div class="pg"> 提示條（見各頁）
+  · 可用的互動元件：
+      <details class="reveal">   點一下展開
+      <div class="tracer">       程式碼逐步追蹤
+      <div class="quiz">         現場作答
+      <div class="tabs">         分頁切換
+      <ul class="check">         可勾選的清單
+  ----------------------------------------------------------------
+  操作鍵：→/空白 下一頁　←上一頁　O 總覽　N 教師備註　F 全螢幕
+================================================================
+-->
+
+<style>
+:root{
+  --ink:#2a2233; --soft:#6b6376; --bg:#fff8f3; --panel:#fff; --line:#efe1d8;
+  --brand:#6a3fd6; --brand2:#5630b8; --brand-soft:#efe9fc; --brand-dim:#b09ae8;
+  --accent:#ff6b3d; --accent-soft:#fff0e8;
+  --pink:#ff5c8a; --sun:#ffb347;
+  --g:#1f9d6a; --gbg:#e6f6ee; --gl:#b9e4cd;
+  --r:#d43d3d; --rbg:#fbe9e9; --rl:#f0c4c4;
+  --code:#faf6fd;
+  --mono:"SF Mono","JetBrains Mono",Menlo,Consolas,"Noto Sans Mono CJK TC",monospace;
+  --sans:"Helvetica Neue","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1a1426;font-family:var(--sans);color:var(--ink);
+  -webkit-text-size-adjust:100%}
+
+/* ---------- deck / stage ---------- */
+#stage{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden}
+#deck{width:1280px;height:720px;transform-origin:center center;position:relative}
+.slide{position:absolute;inset:0;background:var(--bg);padding:54px 66px 60px;
+  display:none;flex-direction:column;justify-content:center;overflow:hidden}
+.slide.on{display:flex}
+.slide::after{content:attr(data-n);position:absolute;right:38px;bottom:20px;
+  font-size:14px;color:var(--soft)}
+.slide::before{content:attr(data-part);position:absolute;left:66px;bottom:20px;
+  font-size:14px;color:var(--soft);letter-spacing:.05em}
+
+/* ---------- typography ---------- */
+.slide h1{font-size:46px;color:var(--brand);margin:0 0 8px;line-height:1.25}
+.slide h2{font-size:36px;color:var(--brand);margin:0 0 18px;padding-bottom:10px;
+  border-bottom:3px solid var(--line);line-height:1.3}
+.slide h3{font-size:26px;margin:16px 0 6px;line-height:1.35}
+.slide h4{font-size:20px;color:var(--soft);margin:14px 0 4px;font-weight:600}
+.slide p{font-size:24px;line-height:1.55;margin:8px 0}
+.slide ul,.slide ol{font-size:24px;line-height:1.55;margin:6px 0 6px 1.15em;padding:0}
+.slide li{margin:8px 0}
+.slide li li{font-size:.88em;color:var(--soft)}
+.slide b,.slide strong{color:var(--brand)}
+.slide em{color:var(--accent);font-style:normal;font-weight:700}
+.slide small{font-size:17px;color:var(--soft)}
+.slide.sm p,.slide.sm ul,.slide.sm ol{font-size:21px}
+.slide.sm h2{font-size:31px;margin-bottom:14px}
+.slide.xs p,.slide.xs ul,.slide.xs ol,.slide.xs td,.slide.xs th{font-size:18px}
+.slide.xs h2{font-size:28px;margin-bottom:12px}
+.slide.top{justify-content:flex-start}
+.big{font-size:34px!important;line-height:1.4!important}
+
+/* ---------- title / divider slides ---------- */
+.slide.lead{background:linear-gradient(135deg,#6a3fd6 0%,#ff5c8a 60%,#ffb347 100%);color:#fff;justify-content:center}
+.slide.lead h1{color:#fff;font-size:60px;border:none;text-shadow:0 2px 10px rgba(0,0,0,.18)}
+.slide.lead h2{color:#fff3f7;border:none;font-size:30px;font-weight:400;padding:0;margin-top:6px}
+.slide.lead p{color:#fff3f7;font-size:22px}
+.slide.lead b,.slide.lead strong{color:#fff3b0}
+.slide.lead::after,.slide.lead::before{color:rgba(255,255,255,.6)}
+.slide.punch{background:linear-gradient(135deg,#6a3fd6,#ff5c8a);color:#fff;text-align:center;align-items:center}
+.slide.punch h1{color:#fff;font-size:58px;line-height:1.3;border:none}
+.slide.punch p{color:#fff3f7;font-size:24px;margin-top:18px}
+.slide.punch b{color:#fff3b0}
+
+/* ---------- code ---------- */
+.slide code{font-family:var(--mono);font-size:.86em;background:var(--code);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.slide pre{background:var(--code);border:1px solid var(--line);border-left:5px solid var(--brand-dim);
+  border-radius:9px;padding:14px 18px;margin:12px 0;overflow:auto}
+.slide pre code{font-size:21px;line-height:1.5;background:none;border:none;padding:0;
+  display:block;white-space:pre}
+.slide.sm pre code{font-size:19px}
+.slide.xs pre code{font-size:17px}
+.k{color:#c2255c} .n{color:#5b3fd6} .s{color:#1f9d6a} .c{color:#9a91a6}
+
+/* ---------- tables ---------- */
+.slide table{border-collapse:collapse;margin:10px 0;width:100%;font-size:20px}
+.slide th{background:var(--brand-soft);color:var(--brand);font-weight:700;text-align:left;
+  padding:9px 14px;border:1px solid var(--line)}
+.slide td{padding:9px 14px;border:1px solid var(--line);vertical-align:top;background:#fff}
+.slide tr.hi td{background:var(--accent-soft);font-weight:600}
+.slide table.narrow{width:auto}
+
+/* ---------- callout ---------- */
+.slide blockquote,.callout{background:var(--brand-soft);border-left:5px solid var(--accent);
+  margin:14px 0;padding:11px 18px;font-size:20px;color:var(--soft);border-radius:0 8px 8px 0}
+.callout b{color:var(--ink)}
+
+/* ---------- reveal ---------- */
+details.reveal{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:9px;
+  background:var(--panel);margin:10px 0;overflow:hidden}
+details.reveal>summary{cursor:pointer;list-style:none;padding:11px 18px;font-size:21px;
+  color:var(--accent);font-weight:700;user-select:none;background:var(--accent-soft)}
+details.reveal>summary::-webkit-details-marker{display:none}
+details.reveal>summary::before{content:"▸ ";display:inline-block}
+details.reveal[open]>summary::before{content:"▾ "}
+details.reveal .body{padding:12px 18px 14px;font-size:20px;line-height:1.55}
+details.reveal .body p{font-size:20px;margin:6px 0}
+details.reveal .body pre code{font-size:17px}
+
+/* ---------- tracer ---------- */
+.tracer{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin:10px 0}
+.tracer .tcode{background:var(--code);border:1px solid var(--line);border-radius:9px;
+  padding:12px 0;font-family:var(--mono);font-size:18px;line-height:1.62}
+.tracer .tcode div{padding:1px 16px;white-space:pre;border-left:4px solid transparent}
+.tracer .tcode div.lit{background:#fff1d6;border-left-color:var(--accent)}
+.tracer .tside{display:flex;flex-direction:column;gap:10px}
+.tracer table{margin:0;font-size:17px}
+.tracer th,.tracer td{padding:5px 11px}
+.tracer tbody tr:last-child td{background:var(--accent-soft);font-weight:600}
+.tracer .say{font-size:18px;color:var(--soft);min-height:1.6em;background:var(--panel);
+  border:1px dashed var(--line);border-radius:6px;padding:8px 12px}
+.tracer .tbtns{display:flex;gap:8px;align-items:center}
+.tracer .step{font-size:16px;color:var(--soft);margin-left:auto}
+button{font-family:var(--sans);cursor:pointer;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);border-radius:9px;padding:8px 15px;font-size:17px;transition:.15s}
+button:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+button.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+button.pri:hover:not(:disabled){background:var(--brand2);color:#fff}
+button:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- quiz ---------- */
+.quiz{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:13px 17px;margin:12px 0}
+.quiz .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.quiz input{flex:1;min-width:150px;font-family:var(--mono);font-size:19px;padding:9px 12px;
+  border:1.5px solid var(--line);border-radius:6px;background:#fcfdfe;color:var(--ink)}
+.quiz input:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+.quiz .fb{margin-top:9px;font-size:19px;display:none}
+.quiz .fb.on{display:block}
+.quiz .fb.ok{color:var(--g)} .quiz .fb.no{color:var(--r)}
+.quiz .q{font-size:20px;margin:0 0 9px}
+
+/* ---------- tabs ---------- */
+.tabs .tabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tabs .tabbar button{font-size:16px;padding:6px 13px}
+.tabs .tabbar button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.tabs .pane{display:none} .tabs .pane.on{display:block}
+
+/* ---------- checklist ---------- */
+ul.check{list-style:none;margin:6px 0;padding:0}
+ul.check li{border:1px solid var(--line);background:var(--panel);border-radius:9px;
+  padding:9px 14px;margin:7px 0;cursor:pointer;font-size:21px;user-select:none;
+  display:flex;gap:11px;align-items:flex-start;transition:.13s}
+ul.check li::before{content:"○";color:var(--brand-dim);flex:0 0 auto;font-size:19px;line-height:1.5}
+ul.check li.done{background:var(--gbg);border-color:var(--gl);color:var(--g)}
+ul.check li.done::before{content:"●";color:var(--g)}
+ul.check li small{display:block;color:var(--soft);font-size:16px;margin-top:2px}
+ul.check.two{column-count:2;column-gap:14px}
+ul.check.two li{break-inside:avoid;font-size:18px;padding:7px 12px;margin:0 0 8px}
+ul.check.two li small{font-size:14px}
+ul.check li.done small{color:var(--g);opacity:.85}
+
+/* ---------- columns / boxes ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.cols.w3{grid-template-columns:1fr 1fr 1fr}
+.cols.w4{grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 17px;
+  box-shadow:0 2px 8px rgba(106,63,214,.06)}
+.box h3{margin:0 0 6px;font-size:22px;color:var(--brand)}
+.box p,.box ul{font-size:18px;margin:5px 0}
+.box.ac{border-top:5px solid var(--accent)}
+.box.gd{border-top:5px solid var(--g)}
+.box.pk{border-top:5px solid var(--pink)}
+.box.sn{border-top:5px solid var(--sun)}
+.box .ico{font-size:40px;line-height:1;margin-bottom:6px}
+
+/* ---------- flow diagram ---------- */
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+.flow .st{background:#fff;border:2px solid var(--brand-dim);border-radius:12px;padding:12px 18px;
+  font-size:20px;text-align:center;min-width:150px}
+.flow .st.d{border-color:var(--accent);background:var(--accent-soft);border-radius:30px}
+.flow .st.e{border-color:var(--g);background:var(--gbg)}
+.flow .ar{font-size:28px;color:var(--brand-dim)}
+
+/* ---------- file cue: tells everyone which .py file to open now ---------- */
+.pg{display:inline-flex;align-items:center;gap:10px;background:#1f2937;color:#fff;border-radius:10px;
+  padding:8px 16px;font-size:18px;margin:0 0 12px}
+.pg b{color:#ffd166;font-weight:700}
+.pg .k{display:inline-block;background:#ff5c8a;color:#fff;border-radius:16px;padding:1px 12px;font-size:16px;font-weight:700}
+.pg a{color:#8fc7ea;font-size:15px;margin-left:6px}
+
+/* ---------- terminal mock ---------- */
+.term{background:#1b1b24;color:#e8e8f0;border-radius:10px;padding:14px 18px;margin:12px 0;
+  font-family:var(--mono);font-size:19px;line-height:1.5;white-space:pre;overflow:auto}
+.term b{color:#ffd166}
+.term .dim{color:#8b8b9e}
+
+/* ---------- notes ---------- */
+aside.notes{display:none;position:absolute;left:0;right:0;bottom:0;background:#2a2238;color:#ece6f5;
+  padding:14px 66px 16px;font-size:17px;line-height:1.5;border-top:3px solid var(--accent);
+  max-height:58%;overflow:auto}
+body.notes aside.notes{display:block}
+aside.notes b,aside.notes strong{color:#ffd9a8}
+aside.notes em{color:#9fe3c0;font-style:normal;font-weight:600}
+aside.notes a{color:#c8b6ff}
+aside.notes code{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);
+  color:#ffe6c2;border-radius:4px;padding:1px 6px;font-size:.92em}
+aside.notes pre{background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.18);
+  border-left:4px solid var(--accent);border-radius:6px;padding:9px 13px;margin:7px 0;overflow:auto}
+aside.notes pre code{background:none;border:none;padding:0;color:#ece6f5;font-size:15px;
+  line-height:1.5;display:block;white-space:pre}
+aside.notes pre code .k{color:#ff9d9d} aside.notes pre code .n{color:#c8b6ff}
+aside.notes pre code .s{color:#9fe3c0} aside.notes pre code .c{color:#a99fb8}
+aside.notes::before{content:"教師備註";display:block;font-size:13px;letter-spacing:.1em;
+  color:#a99fb8;margin-bottom:5px}
+
+/* ---------- chrome ---------- */
+#bar{position:fixed;left:0;top:0;height:4px;background:var(--accent);width:0;z-index:50;
+  transition:width .25s;pointer-events:none}
+#hud{position:fixed;right:14px;top:12px;z-index:50;color:#b3a9c4;font-size:13px;
+  letter-spacing:.04em;background:rgba(26,20,38,.8);padding:5px 12px;border-radius:14px;
+  opacity:1;transition:opacity .5s;pointer-events:none}
+#hud.fade{opacity:0}
+#hud b{color:#ffd9a8}
+
+/* ---------- overview ---------- */
+.thumb{display:contents}
+body.ov #stage{overflow:auto;place-items:start;padding:24px}
+body.ov #deck{width:auto;height:auto;transform:none!important;display:grid;
+  grid-template-columns:repeat(auto-fill,256px);gap:16px;justify-content:center;
+  max-width:1560px;margin:0 auto}
+body.ov .thumb{display:block;position:relative;width:256px;height:144px;overflow:hidden;
+  border:2px solid #3b2f52;border-radius:7px;cursor:pointer;background:var(--bg);
+  box-shadow:0 2px 10px rgba(0,0,0,.35);transition:border-color .15s,transform .15s}
+body.ov .thumb:hover{border-color:#8a72c4;transform:translateY(-2px)}
+body.ov .thumb.here{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+body.ov .thumb::after{content:attr(data-i);position:absolute;right:4px;top:3px;z-index:3;
+  background:rgba(26,20,38,.72);color:#ffd9a8;font-size:10px;padding:1px 6px;border-radius:9px}
+body.ov .slide{position:absolute;top:0;left:0;inset:auto;width:1280px;height:720px;
+  display:flex!important;transform:scale(.2);transform-origin:top left;pointer-events:none}
+body.ov aside.notes{display:none!important}
+body.ov #hud{display:none}
+</style>
+</head>
+<body>
+<div id="bar"></div>

@@ -1,0 +1,837 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python 第 1 堂 · 角色與傷害</title>
+
+<!--
+================================================================
+  怎麼改這份簡報
+  ----------------------------------------------------------------
+  · 一張投影片 = 一個 <section class="slide">…</section>
+  · 教師備註寫在 <aside class="notes">…</aside>，簡報時按 N 顯示/隱藏
+  · 要學生打開檔案時，用 <div class="pg"> 提示條（見各頁）
+  · 可用的互動元件：
+      <details class="reveal">   點一下展開
+      <div class="tracer">       程式碼逐步追蹤
+      <div class="quiz">         現場作答
+      <div class="tabs">         分頁切換
+      <ul class="check">         可勾選的清單
+  ----------------------------------------------------------------
+  操作鍵：→/空白 下一頁　←上一頁　O 總覽　N 教師備註　F 全螢幕
+================================================================
+-->
+
+<style>
+:root{
+  --ink:#2a2233; --soft:#6b6376; --bg:#fff8f3; --panel:#fff; --line:#efe1d8;
+  --brand:#6a3fd6; --brand2:#5630b8; --brand-soft:#efe9fc; --brand-dim:#b09ae8;
+  --accent:#ff6b3d; --accent-soft:#fff0e8;
+  --pink:#ff5c8a; --sun:#ffb347;
+  --g:#1f9d6a; --gbg:#e6f6ee; --gl:#b9e4cd;
+  --r:#d43d3d; --rbg:#fbe9e9; --rl:#f0c4c4;
+  --code:#faf6fd;
+  --mono:"SF Mono","JetBrains Mono",Menlo,Consolas,"Noto Sans Mono CJK TC",monospace;
+  --sans:"Helvetica Neue","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1a1426;font-family:var(--sans);color:var(--ink);
+  -webkit-text-size-adjust:100%}
+
+/* ---------- deck / stage ---------- */
+#stage{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden}
+#deck{width:1280px;height:720px;transform-origin:center center;position:relative}
+.slide{position:absolute;inset:0;background:var(--bg);padding:54px 66px 60px;
+  display:none;flex-direction:column;justify-content:center;overflow:hidden}
+.slide.on{display:flex}
+.slide::after{content:attr(data-n);position:absolute;right:38px;bottom:20px;
+  font-size:14px;color:var(--soft)}
+.slide::before{content:attr(data-part);position:absolute;left:66px;bottom:20px;
+  font-size:14px;color:var(--soft);letter-spacing:.05em}
+
+/* ---------- typography ---------- */
+.slide h1{font-size:46px;color:var(--brand);margin:0 0 8px;line-height:1.25}
+.slide h2{font-size:36px;color:var(--brand);margin:0 0 18px;padding-bottom:10px;
+  border-bottom:3px solid var(--line);line-height:1.3}
+.slide h3{font-size:26px;margin:16px 0 6px;line-height:1.35}
+.slide h4{font-size:20px;color:var(--soft);margin:14px 0 4px;font-weight:600}
+.slide p{font-size:24px;line-height:1.55;margin:8px 0}
+.slide ul,.slide ol{font-size:24px;line-height:1.55;margin:6px 0 6px 1.15em;padding:0}
+.slide li{margin:8px 0}
+.slide li li{font-size:.88em;color:var(--soft)}
+.slide b,.slide strong{color:var(--brand)}
+.slide em{color:var(--accent);font-style:normal;font-weight:700}
+.slide small{font-size:17px;color:var(--soft)}
+.slide.sm p,.slide.sm ul,.slide.sm ol{font-size:21px}
+.slide.sm h2{font-size:31px;margin-bottom:14px}
+.slide.xs p,.slide.xs ul,.slide.xs ol,.slide.xs td,.slide.xs th{font-size:18px}
+.slide.xs h2{font-size:28px;margin-bottom:12px}
+.slide.top{justify-content:flex-start}
+.big{font-size:34px!important;line-height:1.4!important}
+
+/* ---------- title / divider slides ---------- */
+.slide.lead{background:linear-gradient(135deg,#6a3fd6 0%,#ff5c8a 60%,#ffb347 100%);color:#fff;justify-content:center}
+.slide.lead h1{color:#fff;font-size:60px;border:none;text-shadow:0 2px 10px rgba(0,0,0,.18)}
+.slide.lead h2{color:#fff3f7;border:none;font-size:30px;font-weight:400;padding:0;margin-top:6px}
+.slide.lead p{color:#fff3f7;font-size:22px}
+.slide.lead b,.slide.lead strong{color:#fff3b0}
+.slide.lead::after,.slide.lead::before{color:rgba(255,255,255,.6)}
+.slide.punch{background:linear-gradient(135deg,#6a3fd6,#ff5c8a);color:#fff;text-align:center;align-items:center}
+.slide.punch h1{color:#fff;font-size:58px;line-height:1.3;border:none}
+.slide.punch p{color:#fff3f7;font-size:24px;margin-top:18px}
+.slide.punch b{color:#fff3b0}
+
+/* ---------- code ---------- */
+.slide code{font-family:var(--mono);font-size:.86em;background:var(--code);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.slide pre{background:var(--code);border:1px solid var(--line);border-left:5px solid var(--brand-dim);
+  border-radius:9px;padding:14px 18px;margin:12px 0;overflow:auto}
+.slide pre code{font-size:21px;line-height:1.5;background:none;border:none;padding:0;
+  display:block;white-space:pre}
+.slide.sm pre code{font-size:19px}
+.slide.xs pre code{font-size:17px}
+.k{color:#c2255c} .n{color:#5b3fd6} .s{color:#1f9d6a} .c{color:#9a91a6}
+
+/* ---------- tables ---------- */
+.slide table{border-collapse:collapse;margin:10px 0;width:100%;font-size:20px}
+.slide th{background:var(--brand-soft);color:var(--brand);font-weight:700;text-align:left;
+  padding:9px 14px;border:1px solid var(--line)}
+.slide td{padding:9px 14px;border:1px solid var(--line);vertical-align:top;background:#fff}
+.slide tr.hi td{background:var(--accent-soft);font-weight:600}
+.slide table.narrow{width:auto}
+
+/* ---------- callout ---------- */
+.slide blockquote,.callout{background:var(--brand-soft);border-left:5px solid var(--accent);
+  margin:14px 0;padding:11px 18px;font-size:20px;color:var(--soft);border-radius:0 8px 8px 0}
+.callout b{color:var(--ink)}
+
+/* ---------- reveal ---------- */
+details.reveal{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:9px;
+  background:var(--panel);margin:10px 0;overflow:hidden}
+details.reveal>summary{cursor:pointer;list-style:none;padding:11px 18px;font-size:21px;
+  color:var(--accent);font-weight:700;user-select:none;background:var(--accent-soft)}
+details.reveal>summary::-webkit-details-marker{display:none}
+details.reveal>summary::before{content:"▸ ";display:inline-block}
+details.reveal[open]>summary::before{content:"▾ "}
+details.reveal .body{padding:12px 18px 14px;font-size:20px;line-height:1.55}
+details.reveal .body p{font-size:20px;margin:6px 0}
+details.reveal .body pre code{font-size:17px}
+
+/* ---------- tracer ---------- */
+.tracer{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin:10px 0}
+.tracer .tcode{background:var(--code);border:1px solid var(--line);border-radius:9px;
+  padding:12px 0;font-family:var(--mono);font-size:18px;line-height:1.62}
+.tracer .tcode div{padding:1px 16px;white-space:pre;border-left:4px solid transparent}
+.tracer .tcode div.lit{background:#fff1d6;border-left-color:var(--accent)}
+.tracer .tside{display:flex;flex-direction:column;gap:10px}
+.tracer table{margin:0;font-size:17px}
+.tracer th,.tracer td{padding:5px 11px}
+.tracer tbody tr:last-child td{background:var(--accent-soft);font-weight:600}
+.tracer .say{font-size:18px;color:var(--soft);min-height:1.6em;background:var(--panel);
+  border:1px dashed var(--line);border-radius:6px;padding:8px 12px}
+.tracer .tbtns{display:flex;gap:8px;align-items:center}
+.tracer .step{font-size:16px;color:var(--soft);margin-left:auto}
+button{font-family:var(--sans);cursor:pointer;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);border-radius:9px;padding:8px 15px;font-size:17px;transition:.15s}
+button:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+button.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+button.pri:hover:not(:disabled){background:var(--brand2);color:#fff}
+button:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- quiz ---------- */
+.quiz{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:13px 17px;margin:12px 0}
+.quiz .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.quiz input{flex:1;min-width:150px;font-family:var(--mono);font-size:19px;padding:9px 12px;
+  border:1.5px solid var(--line);border-radius:6px;background:#fcfdfe;color:var(--ink)}
+.quiz input:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+.quiz .fb{margin-top:9px;font-size:19px;display:none}
+.quiz .fb.on{display:block}
+.quiz .fb.ok{color:var(--g)} .quiz .fb.no{color:var(--r)}
+.quiz .q{font-size:20px;margin:0 0 9px}
+
+/* ---------- tabs ---------- */
+.tabs .tabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tabs .tabbar button{font-size:16px;padding:6px 13px}
+.tabs .tabbar button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.tabs .pane{display:none} .tabs .pane.on{display:block}
+
+/* ---------- checklist ---------- */
+ul.check{list-style:none;margin:6px 0;padding:0}
+ul.check li{border:1px solid var(--line);background:var(--panel);border-radius:9px;
+  padding:9px 14px;margin:7px 0;cursor:pointer;font-size:21px;user-select:none;
+  display:flex;gap:11px;align-items:flex-start;transition:.13s}
+ul.check li::before{content:"○";color:var(--brand-dim);flex:0 0 auto;font-size:19px;line-height:1.5}
+ul.check li.done{background:var(--gbg);border-color:var(--gl);color:var(--g)}
+ul.check li.done::before{content:"●";color:var(--g)}
+ul.check li small{display:block;color:var(--soft);font-size:16px;margin-top:2px}
+ul.check.two{column-count:2;column-gap:14px}
+ul.check.two li{break-inside:avoid;font-size:18px;padding:7px 12px;margin:0 0 8px}
+ul.check.two li small{font-size:14px}
+ul.check li.done small{color:var(--g);opacity:.85}
+
+/* ---------- columns / boxes ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.cols.w3{grid-template-columns:1fr 1fr 1fr}
+.cols.w4{grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 17px;
+  box-shadow:0 2px 8px rgba(106,63,214,.06)}
+.box h3{margin:0 0 6px;font-size:22px;color:var(--brand)}
+.box p,.box ul{font-size:18px;margin:5px 0}
+.box.ac{border-top:5px solid var(--accent)}
+.box.gd{border-top:5px solid var(--g)}
+.box.pk{border-top:5px solid var(--pink)}
+.box.sn{border-top:5px solid var(--sun)}
+.box .ico{font-size:40px;line-height:1;margin-bottom:6px}
+
+/* ---------- flow diagram ---------- */
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+.flow .st{background:#fff;border:2px solid var(--brand-dim);border-radius:12px;padding:12px 18px;
+  font-size:20px;text-align:center;min-width:150px}
+.flow .st.d{border-color:var(--accent);background:var(--accent-soft);border-radius:30px}
+.flow .st.e{border-color:var(--g);background:var(--gbg)}
+.flow .ar{font-size:28px;color:var(--brand-dim)}
+
+/* ---------- file cue: tells everyone which .py file to open now ---------- */
+.pg{display:inline-flex;align-items:center;gap:10px;background:#1f2937;color:#fff;border-radius:10px;
+  padding:8px 16px;font-size:18px;margin:0 0 12px}
+.pg b{color:#ffd166;font-weight:700}
+.pg .k{display:inline-block;background:#ff5c8a;color:#fff;border-radius:16px;padding:1px 12px;font-size:16px;font-weight:700}
+.pg a{color:#8fc7ea;font-size:15px;margin-left:6px}
+
+/* ---------- terminal mock ---------- */
+.term{background:#1b1b24;color:#e8e8f0;border-radius:10px;padding:14px 18px;margin:12px 0;
+  font-family:var(--mono);font-size:19px;line-height:1.5;white-space:pre;overflow:auto}
+.term b{color:#ffd166}
+.term .dim{color:#8b8b9e}
+
+/* ---------- notes ---------- */
+aside.notes{display:none;position:absolute;left:0;right:0;bottom:0;background:#2a2238;color:#ece6f5;
+  padding:14px 66px 16px;font-size:17px;line-height:1.5;border-top:3px solid var(--accent);
+  max-height:58%;overflow:auto}
+body.notes aside.notes{display:block}
+aside.notes b,aside.notes strong{color:#ffd9a8}
+aside.notes em{color:#9fe3c0;font-style:normal;font-weight:600}
+aside.notes a{color:#c8b6ff}
+aside.notes code{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);
+  color:#ffe6c2;border-radius:4px;padding:1px 6px;font-size:.92em}
+aside.notes pre{background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.18);
+  border-left:4px solid var(--accent);border-radius:6px;padding:9px 13px;margin:7px 0;overflow:auto}
+aside.notes pre code{background:none;border:none;padding:0;color:#ece6f5;font-size:15px;
+  line-height:1.5;display:block;white-space:pre}
+aside.notes pre code .k{color:#ff9d9d} aside.notes pre code .n{color:#c8b6ff}
+aside.notes pre code .s{color:#9fe3c0} aside.notes pre code .c{color:#a99fb8}
+aside.notes::before{content:"教師備註";display:block;font-size:13px;letter-spacing:.1em;
+  color:#a99fb8;margin-bottom:5px}
+
+/* ---------- chrome ---------- */
+#bar{position:fixed;left:0;top:0;height:4px;background:var(--accent);width:0;z-index:50;
+  transition:width .25s;pointer-events:none}
+#hud{position:fixed;right:14px;top:12px;z-index:50;color:#b3a9c4;font-size:13px;
+  letter-spacing:.04em;background:rgba(26,20,38,.8);padding:5px 12px;border-radius:14px;
+  opacity:1;transition:opacity .5s;pointer-events:none}
+#hud.fade{opacity:0}
+#hud b{color:#ffd9a8}
+
+/* ---------- overview ---------- */
+.thumb{display:contents}
+body.ov #stage{overflow:auto;place-items:start;padding:24px}
+body.ov #deck{width:auto;height:auto;transform:none!important;display:grid;
+  grid-template-columns:repeat(auto-fill,256px);gap:16px;justify-content:center;
+  max-width:1560px;margin:0 auto}
+body.ov .thumb{display:block;position:relative;width:256px;height:144px;overflow:hidden;
+  border:2px solid #3b2f52;border-radius:7px;cursor:pointer;background:var(--bg);
+  box-shadow:0 2px 10px rgba(0,0,0,.35);transition:border-color .15s,transform .15s}
+body.ov .thumb:hover{border-color:#8a72c4;transform:translateY(-2px)}
+body.ov .thumb.here{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+body.ov .thumb::after{content:attr(data-i);position:absolute;right:4px;top:3px;z-index:3;
+  background:rgba(26,20,38,.72);color:#ffd9a8;font-size:10px;padding:1px 6px;border-radius:9px}
+body.ov .slide{position:absolute;top:0;left:0;inset:auto;width:1280px;height:720px;
+  display:flex!important;transform:scale(.2);transform-origin:top left;pointer-events:none}
+body.ov aside.notes{display:none!important}
+body.ov #hud{display:none}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="stage"><div id="deck">
+
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>第 1 堂 · 角色與傷害</h1>
+  <h2>變數、型別、if 判斷</h2>
+  <p>今天的目標：做出<b>可以打的一回合戰鬥</b>。</p>
+  <aside class="notes">按 <b>→</b> 翻頁，<b>O</b> 總覽，<b>N</b> 開關備註，<b>F</b> 全螢幕。
+  <br>上完這堂她要能自己：改變數 → 存檔 → 在終端機跑起來。這個循環跑順比教多少語法重要。
+  <br>課前先在她的電腦上確認 <code>python3 --version</code> 有反應，編輯器能開 <code>lesson01/code/</code>。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 換工具</td><td>20 分</td><td>從瀏覽器搬到真的 Python，學會存檔 → 執行</td></tr>
+    <tr><td>2. 角色卡</td><td>25 分</td><td>變數、字串和數字的差別、f-string</td></tr>
+    <tr><td>3. 傷害公式</td><td>20 分</td><td>加減乘除、取整數</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
+    <tr class="hi"><td>4. 暴擊判定</td><td>35 分</td><td>if / elif / else，and / or</td></tr>
+    <tr><td>5. Demo &amp; 收尾</td><td>15 分</td><td>打第一隻王</td></tr>
+  </table>
+  <aside class="notes">120 分鐘含休息。時間不夠時：第 3 段的 <code>//</code> 和 <code>%</code> 可以只講一句帶過，第 4 段的 and/or 可以留到下一堂。
+  <br><b>最後 15 分鐘的 Demo 不能砍</b>——她是為了這個來的。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>上次我們做到這裡</h2>
+  <div class="cols">
+    <div class="box gd"><h3>你已經會的</h3>
+      <ul>
+        <li><code>print()</code> 讓電腦說話</li>
+        <li><code>input()</code> 問玩家問題</li>
+        <li>把東西放進<b>盒子</b>（變數）</li>
+        <li>看得懂錯誤訊息</li>
+      </ul></div>
+    <div class="box ac"><h3>今天要加的</h3>
+      <ul>
+        <li>盒子裡的東西<b>有分種類</b></li>
+        <li>讓電腦<b>算數學</b></li>
+        <li>讓電腦<b>做判斷</b>：暴擊了沒？</li>
+      </ul></div>
+  </div>
+  <div class="callout">今天開始，程式不在瀏覽器裡跑了——用真的 Python，跟做遊戲的人用的是同一套。</div>
+  <aside class="notes">回顧只花 2 分鐘，問她「上次那個猜數字你回家有再玩嗎／有改什麼」當開場，順便看她記得多少。
+  <br>如果她完全忘了 input，不要重教，等第 2 段用到時再順一次。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>換一套真的工具</h2></section>
+
+<section class="slide sm">
+  <h2>從今天開始的流程</h2>
+  <div class="flow">
+    <div class="st">① 在編輯器打字</div><div class="ar">→</div>
+    <div class="st d">② 存檔<br><small>⌘S</small></div><div class="ar">→</div>
+    <div class="st">③ 在終端機打<br><small>python3 檔名</small></div><div class="ar">→</div>
+    <div class="st e">④ 看結果</div>
+  </div>
+  <div class="term">$ cd Desktop/python/lesson01/code
+$ python3 01-character.py
+<b>=== 角色卡 ===</b>
+名字：小雷
+職業：劍士</div>
+  <p><small>沒存檔就執行 = 跑的是舊的程式。這是初學者最常見的「怎麼沒變」。</small></p>
+  <aside class="notes">這一頁是今天最重要的操作。實際帶她做一次，然後<b>讓她自己重做一次</b>，你不要碰鍵盤。
+  <br>Mac 終端機：Launchpad 搜「終端機」，或 ⌘空白鍵 打 terminal。
+  <br><code>cd</code> 的教法：在 Finder 找到 code 資料夾 → 打 <code>cd </code>（後面空一格）→ 把資料夾<b>拖進終端機視窗</b>，路徑會自動填好 → Enter。比教她打路徑快十倍。
+  <br>再教兩個救命技巧：<b>↑</b> 叫回上一次的指令（之後她會一直用）、<b>Control+C</b> 停掉跑不完的程式。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>三個視窗，各做一件事</h2>
+  <div class="cols w3">
+    <div class="box ac"><h3>編輯器</h3><p>寫程式、存檔<br><small>VS Code</small></p></div>
+    <div class="box sn"><h3>終端機</h3><p>下指令執行<br><small>Terminal</small></p></div>
+    <div class="box gd"><h3>Finder</h3><p>找檔案在哪<br><small>檔案總管</small></p></div>
+  </div>
+  <div class="callout"><b>今天的檔案都在同一個資料夾：</b><code>lesson01/code/</code>。
+  每個範例一個檔案，檔名前面的號碼就是我們講的順序。</div>
+  <aside class="notes">把 VS Code 和終端機並排擺好（VS Code 左、終端機右，各佔半個螢幕）——版面順了，她才不會一直找視窗。
+  <br>VS Code 內建終端機（⌃`）也可以，但第一次先用獨立視窗，概念比較清楚：<b>編輯器負責寫、終端機負責跑</b>。
+  <br>如果她的電腦還沒裝，照 <code>SETUP.md</code> 做，預留 15 分鐘。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>角色卡</h2></section>
+
+<section class="slide sm">
+  <h2>先看一張角色卡</h2>
+  <div class="pg">打開 <span class="k">01-character.py</span><b>執行一次，再改成你的角色</b></div>
+  <pre><code>name = "小雷"
+job = "劍士"
+level = 3
+hp = 100
+atk = 18
+
+print(f"{name} 是 {level} 等的{job}，HP {hp}／ATK {atk}")</code></pre>
+  <p>遊戲裡看到的每一個數字，在程式裡都是一個<b>變數</b>。</p>
+  <aside class="notes">先讓她執行，看到輸出，再逐行看。
+  <br>問她：「如果要做一個遊戲，還有哪些東西需要變數？」——金幣、經驗值、等級、武器名稱……讓她講，越多越好，她會發現「整個遊戲就是一堆變數」。
+  <br>然後請她把角色改成自己想要的（名字、職業隨便她），存檔、執行。這一步要她自己完成。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>盒子裡的東西有兩種</h2>
+  <div class="cols">
+    <div class="box pk"><h3>字串 str（文字）</h3>
+      <p>用<b>引號</b>包起來</p>
+      <pre><code>name = "小雷"
+job = "劍士"</code></pre>
+      <p><small>可以相加 → 接在一起<br><code>"小" + "雷"</code> → <code>"小雷"</code></small></p></div>
+    <div class="box sn"><h3>整數 int（數字）</h3>
+      <p><b>沒有</b>引號</p>
+      <pre><code>hp = 100
+atk = 18</code></pre>
+      <p><small>可以做數學<br><code>100 + 18</code> → <code>118</code></small></p></div>
+  </div>
+  <div class="callout"><b>"100" 和 100 不一樣。</b>前者是「一串符號」，後者是「數量」。
+  <code>"100" + "18"</code> 會得到 <code>"10018"</code>！</div>
+  <aside class="notes">現場示範這個陷阱：在終端機打 <code>python3</code> 進入互動模式，直接打 <code>"100" + "18"</code> 給她看，她會笑。
+  <br>（互動模式離開用 <code>exit()</code>。這招之後拿來試任何一行程式都很好用。）
+  <br>再示範 <code>"100" + 18</code> → TypeError，對照上一堂學過的「錯誤訊息看得懂」。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>f-string：把變數塞進句子裡</h2>
+  <div class="tabs">
+    <div class="pane"><h4>1) 三種寫法</h4>
+<pre><code>print("名字：" + name)        # 用 + 接，只能接字串
+print("血量：", hp)           # 用逗號，什麼都能印
+print(f"{name} 的血量是 {hp}")  # f-string，最好用</code></pre>
+    </div>
+    <div class="pane"><h4>2) f-string 的規則</h4>
+      <ul>
+        <li>引號<b>前面</b>加一個 <code>f</code></li>
+        <li>要放變數的地方用 <b>大括號</b> <code>{ }</code></li>
+        <li>大括號裡面可以直接算：<code>f"總攻擊 {atk * 2}"</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="quiz" data-answer="小雷 的 HP 是 100">
+    <p class="q">如果 <code>name = "小雷"</code>、<code>hp = 100</code>，<br><code>print(f"{name} 的 HP 是 {hp}")</code> 會印出什麼？</p>
+    <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
+    <div class="fb"></div>
+  </div>
+  <aside class="notes">答案：<code>小雷 的 HP 是 100</code>。大括號被換掉，其他字原封不動。
+  <br>之後全部用 f-string，不要再用 <code>+</code> 接字串——省掉「型別不同不能相加」的麻煩。
+  <br>小測驗打錯字也沒關係，重點是她有沒有理解「大括號會被換成盒子裡的東西」。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>傷害公式</h2></section>
+
+<section class="slide sm">
+  <h2>傷害其實就是一條算式</h2>
+  <div class="pg">打開 <span class="k">02-damage.py</span><b>改改看倍率和防禦力</b></div>
+  <pre><code>atk = 18          # 我方攻擊
+defense = 5       # 對方防禦
+skill = 1.5       # 技能倍率
+
+damage = (atk - defense) * skill     # → 19.5
+print(f"傷害 {int(damage)}")          # → 19</code></pre>
+  <div class="cols">
+    <div class="box"><h3>運算子</h3>
+      <table style="font-size:17px">
+        <tr><td><code>+</code> 加</td><td><code>-</code> 減</td><td><code>*</code> 乘</td></tr>
+        <tr><td><code>/</code> 除</td><td><code>//</code> 除完取整</td><td><code>%</code> 餘數</td></tr>
+      </table></div>
+    <div class="box ac"><h3>兩個要記的</h3>
+      <p><code>/</code> 算出來<b>一定有小數點</b>：<code>10 / 2</code> → <code>5.0</code></p>
+      <p><code>int()</code> 把小數點後面<b>直接砍掉</b>：<code>int(19.9)</code> → <code>19</code></p></div>
+  </div>
+  <aside class="notes">重點不是運算子表，是<b>「遊戲數值都是算出來的」</b>這個概念。
+  <br>讓她改 skill 看傷害怎麼變、改 defense 到比 atk 大 → 傷害變負的 → 問她「遊戲裡會有負傷害嗎？該怎麼辦？」（答案是 if，正好接到下一段）。
+  <br><code>//</code> 和 <code>%</code> 各講一個遊戲例子就好：<code>//</code> 算「經驗值夠升幾級」，<code>%</code> 算「還差多少到下一級」。不要展開。</aside>
+</section>
+
+<!-- ========== Part 4 ========== -->
+<section class="slide lead"><h1>Part 4</h1><h2>暴擊判定</h2><p>讓電腦自己做決定</p></section>
+
+<section class="slide sm">
+  <h2>if：如果⋯⋯就⋯⋯</h2>
+  <div class="cols">
+    <div>
+<pre><code>if roll &gt;= 95:
+    print("✨ 完美暴擊！")
+elif roll &gt;= 80:
+    print("💥 暴擊！")
+elif roll &lt;= 5:
+    print("😵 失手了")
+else:
+    print("⚔️ 普通攻擊")</code></pre>
+    </div>
+    <div>
+      <div class="box ac"><h3>三個規則</h3>
+        <ul style="font-size:18px">
+          <li>條件後面要有<b>冒號</b> <code>:</code></li>
+          <li>下一行要<b>縮排 4 格</b></li>
+          <li>從上往下<b>第一個成立的</b>執行完就跳出去</li>
+        </ul></div>
+      <div class="box gd"><h3>比較</h3>
+        <p><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code> 等於 <code>!=</code> 不等於</p>
+        <p><small><b>==</b> 是問「一樣嗎」，<b>=</b> 是「放進盒子」</small></p></div>
+    </div>
+  </div>
+  <aside class="notes">「第一個成立的就跳出去」是今天最容易錯的觀念，下一頁會專門測。
+  <br><code>==</code> 和 <code>=</code> 的差別現在只要講一次，她之後一定會踩到，踩到時再回來講第二次比較有效。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>順序寫反了會怎樣？</h2>
+  <div class="cols">
+    <div class="box bd"><h3>❌ 寫反的版本</h3>
+<pre><code>if roll &gt;= 80:
+    print("💥 暴擊")
+elif roll &gt;= 95:
+    print("✨ 完美暴擊")</code></pre>
+      <p><small>擲到 97 會印什麼？</small></p></div>
+    <div class="box gd"><h3>✅ 正確的版本</h3>
+<pre><code>if roll &gt;= 95:
+    print("✨ 完美暴擊")
+elif roll &gt;= 80:
+    print("💥 暴擊")</code></pre>
+      <p><small>條件<b>嚴格的放前面</b></small></p></div>
+  </div>
+  <details class="reveal"><summary>答案</summary>
+    <div class="body"><p>左邊擲到 97 會印「💥 暴擊」——因為 97 也 <code>&gt;= 80</code>，第一條就成立了，
+    後面的「完美暴擊」<b>永遠不會執行</b>。這種 bug 不會報錯，只是遊戲怪怪的，最難抓。</p></div>
+  </details>
+  <div class="pg">打開 <span class="k">03-critical.py</span><b>執行幾次，試不同的點數</b></div>
+  <aside class="notes">先讓她自己想，再展開答案。如果她答對，請她解釋為什麼——能解釋才是真的懂。
+  <br>可以現場把 03-critical.py 的順序改反，輸入 97，讓她看到「真的不會印完美暴擊」。<b>看到</b>比聽到有用。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>兩個條件要同時看：and / or</h2>
+  <div class="pg">打開 <span class="k">04-potion.py</span><b>試不同的血量和藥水數</b></div>
+  <div class="cols">
+    <div>
+<pre><code>if hp &lt; 30 and potions &gt; 0:
+    print("🧪 快喝藥水！")
+elif hp &lt; 30 and potions == 0:
+    print("😱 沒藥水了，快逃！")
+elif hp &gt;= 80 or potions &gt;= 5:
+    print("💪 狀態很好，衝吧")</code></pre>
+    </div>
+    <div>
+      <table>
+        <tr><th></th><th>意思</th></tr>
+        <tr><td><code>and</code></td><td>兩邊<b>都</b>成立</td></tr>
+        <tr><td><code>or</code></td><td><b>任一</b>邊成立</td></tr>
+        <tr><td><code>not</code></td><td>反過來</td></tr>
+      </table>
+      <p><small>遊戲裡到處都是：<br>「血量低<b>且</b>有藥水」才自動喝<br>「等級夠<b>或</b>有門票」才能進副本</small></p>
+    </div>
+  </div>
+  <aside class="notes">用她玩的遊戲舉例最有感：什麼情況下角色會自動做某件事？通常都是兩三個條件 and 起來。
+  <br>常見錯誤：寫成 <code>if hp &lt; 30 and &gt; 0</code>（第二個條件沒寫完整的主詞）。她一定會犯，先不用預告，犯了再修。</aside>
+</section>
+
+<section class="slide">
+  <h2>換你寫</h2>
+  <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
+  <ul class="check two">
+    <li><div><b>1. 角色卡</b><small>四個變數，用 f-string 印成一行</small></div></li>
+    <li><div><b>2. 問等級算攻擊</b><small>input + int，攻擊 = 10 + 等級 × 2</small></div></li>
+    <li><div><b>3. 血量三段判斷</b><small>≥70 良好、≥30 小心、其他快喝藥水</small></div></li>
+    <li><div><b>4. 挑戰：比戰力</b><small>戰力 = 攻擊×2 + 防禦，印出誰比較強</small></div></li>
+  </ul>
+  <aside class="notes">20 分鐘，她自己寫，你只在她卡住超過 1 分鐘時給<b>提示</b>不給答案。
+  <br>參考解答在 <code>notes/lesson01-solutions.py</code>（老師用，不要給她）。
+  <br>常見卡點：忘了 <code>int(input(...))</code>、<code>if</code> 忘了冒號、縮排沒對齊、用了中文全形括號。
+  <br>第 4 題寫完的話，追問「平手怎麼辦」——她多半會漏掉。</aside>
+</section>
+
+<!-- ========== Part 5 ========== -->
+<section class="slide lead"><h1>Part 5</h1><h2>打第一隻王</h2></section>
+
+<section class="slide sm">
+  <h2>今天的成果</h2>
+  <div class="pg">打開 <span class="k">demo-boss.py</span><b>直接執行，玩一回合</b></div>
+  <div class="term">勇者，你叫什麼名字？ <b>小美</b>
+==================================
+  小美  HP 100  ATK 18
+  史萊姆王  HP 120  ATK 15
+==================================
+
+你要做什麼？輸入 1、2 或 3： <b>2</b>
+
+🔥 小美 蓄力……全力一擊！
+   造成 36 點傷害！
+   史萊姆王  ██████████████░░░░░░  84/120
+💢 史萊姆王 反擊，造成 15 點傷害！</div>
+  <p><small>裡面<b>沒有一行</b>是今天沒學過的：變數、<code>int()</code>、算式、<code>if</code>。</small></p>
+  <aside class="notes">先讓她玩兩三次（三個選項各試一次），再打開程式碼對照——<b>先玩再看碼</b>。
+  <br>指給她看三個地方就好：① 最上面的角色變數 ② <code>if choice == "1"</code> 那一段 ③ 血條是怎麼畫的（<code>"█" * 格數</code>，上一堂的字串乘法）。
+  <br><code>def</code> 和 <code>time.sleep</code> 先不解釋，她問再說「那是把一段程式取名字，之後會學」。
+  <br>剩下時間讓她改數字：攻擊力、血量、藥水回復量、<code>SPEED</code>。改完執行，感覺完全不同——這就是「做遊戲」的感覺。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天做了什麼</h2>
+  <ul class="check">
+    <li>學會存檔 → 終端機 → <code>python3 檔名</code> 的循環</li>
+    <li>知道字串和數字不一樣，會用 <code>int()</code> 轉換</li>
+    <li>會用 f-string 把變數塞進句子</li>
+    <li>會用 <code>if / elif / else</code> 讓電腦做判斷</li>
+    <li>玩到自己改過數值的王戰</li>
+  </ul>
+  <div class="callout"><b>下一堂：</b>讓它<b>一直打下去</b>，打到有人倒下為止——迴圈和亂數。</div>
+  <aside class="notes">讓她自己勾，勾的時候用一句話說那是什麼。
+  <br>回家的事（不叫作業）：把 demo-boss.py 的數值改成「一定打得贏」和「一定打不贏」兩個版本，下次帶來。這題會逼她理解每個數字的作用。</aside>
+</section>
+
+</div></div>
+<div id="hud">← → 翻頁 · <b>O</b> 總覽 · <b>N</b> 備註 · <b>F</b> 全螢幕</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. Python syntax highlighting (runs on plain text in <pre><code>)
+   ============================================================ */
+const KW = new Set(["and","or","not","if","elif","else","for","while","in","def","return",
+  "break","continue","import","from","as","True","False","None","global","pass","lambda","is"]);
+const BI = new Set(["print","input","int","float","str","len","range","list","map","sum","max",
+  "min","sorted","abs","append","pop","split","join","upper","lower","ord","chr","type","set","dict",
+  "random","randint","turtle","Turtle","speed","pencolor","forward","left","right"]);
+
+function esc(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function highlight(text){
+  let out = "";
+  const lines = text.split("\n");
+  lines.forEach((line, li) => {
+    let i = 0, buf = "";
+    while(i < line.length){
+      const ch = line[i];
+      if(ch === "#"){ buf += '<span class="c">' + esc(line.slice(i)) + "</span>"; i = line.length; continue; }
+      if(ch === '"' || ch === "'"){
+        let j = i + 1;
+        while(j < line.length && line[j] !== ch) j++;
+        buf += '<span class="s">' + esc(line.slice(i, j + 1)) + "</span>";
+        i = j + 1; continue;
+      }
+      if(/[A-Za-z_]/.test(ch)){
+        let j = i;
+        while(j < line.length && /[A-Za-z0-9_]/.test(line[j])) j++;
+        const w = line.slice(i, j);
+        buf += KW.has(w) ? '<span class="k">' + w + "</span>"
+             : BI.has(w) ? '<span class="n">' + w + "</span>" : esc(w);
+        i = j; continue;
+      }
+      if(/[0-9]/.test(ch)){
+        let j = i;
+        while(j < line.length && /[0-9.]/.test(line[j])) j++;
+        buf += '<span class="n">' + line.slice(i, j) + "</span>";
+        i = j; continue;
+      }
+      buf += esc(ch); i++;
+    }
+    out += buf + (li < lines.length - 1 ? "\n" : "");
+  });
+  return out;
+}
+document.querySelectorAll("pre > code").forEach(c => { c.innerHTML = highlight(c.textContent); });
+
+/* ============================================================
+   2. Interactive: code tracer
+   ============================================================ */
+document.querySelectorAll(".tracer").forEach(box => {
+  const cfgEl = box.querySelector('script[type="application/json"]');
+  if(!cfgEl) return;
+  let cfg;
+  try{ cfg = JSON.parse(cfgEl.textContent); }
+  catch(e){ box.innerHTML = '<p style="color:#d43d3d">追蹤器設定格式有誤</p>'; return; }
+
+  box.innerHTML = `
+    <div class="tcode">${cfg.code.map(l => "<div>" + highlight(l) + "</div>").join("")}</div>
+    <div class="tside">
+      <table><thead><tr>${cfg.cols.map(c => "<th>" + esc(c) + "</th>").join("")}</tr></thead><tbody></tbody></table>
+      <div class="say"></div>
+      <div class="tbtns">
+        <button data-prev>← 上一步</button>
+        <button class="pri" data-next>下一步 →</button>
+        <button data-rst>重來</button>
+        <span class="step"></span>
+      </div>
+    </div>`;
+
+  const lines = [...box.querySelectorAll(".tcode div")];
+  const tb = box.querySelector("tbody");
+  const say = box.querySelector(".say");
+  const stepLbl = box.querySelector(".step");
+  const bPrev = box.querySelector("[data-prev]"), bNext = box.querySelector("[data-next]");
+  let at = 0;
+
+  function render(){
+    lines.forEach(l => l.classList.remove("lit"));
+    tb.innerHTML = "";
+    let lastSay = "";
+    for(let k = 0; k < at; k++){
+      const st = cfg.steps[k];
+      if(st.row){
+        const tr = document.createElement("tr");
+        tr.innerHTML = st.row.map(v => "<td>" + esc(v) + "</td>").join("");
+        tb.appendChild(tr);
+      }
+      if(st.say) lastSay = st.say;
+    }
+    if(at > 0){
+      const cur = cfg.steps[at - 1];
+      (cur.hl || []).forEach(n => lines[n - 1] && lines[n - 1].classList.add("lit"));
+      say.textContent = cur.say || (cur.row ? "把這一列填進表格" : lastSay);
+    }else{
+      say.textContent = "按「下一步」開始一行一行看。";
+    }
+    stepLbl.textContent = at + " / " + cfg.steps.length;
+    bPrev.disabled = at === 0;
+    bNext.disabled = at === cfg.steps.length;
+  }
+  bNext.addEventListener("click", () => { if(at < cfg.steps.length){ at++; render(); } });
+  bPrev.addEventListener("click", () => { if(at > 0){ at--; render(); } });
+  box.querySelector("[data-rst]").addEventListener("click", () => { at = 0; render(); });
+  render();
+});
+
+/* ============================================================
+   3. Interactive: quiz
+   ============================================================ */
+function normAns(s){
+  return String(s).trim().replace(/\s*,\s*/g, ",").replace(/[ \t]+/g, " ").replace(/^['"]|['"]$/g, "");
+}
+document.querySelectorAll(".quiz").forEach(q => {
+  const want = q.dataset.answer || "";
+  const input = q.querySelector("input");
+  const btn = q.querySelector("button");
+  const fb = q.querySelector(".fb");
+  function check(){
+    const ok = normAns(input.value).toLowerCase() === normAns(want).toLowerCase();
+    fb.className = "fb on " + (ok ? "ok" : "no");
+    fb.textContent = ok ? "✓ 對了" : "✗ 再想一下";
+  }
+  btn.addEventListener("click", check);
+  input.addEventListener("keydown", e => { if(e.key === "Enter"){ e.stopPropagation(); check(); } });
+  input.addEventListener("keyup", e => e.stopPropagation());
+});
+
+/* ============================================================
+   4. Interactive: tabs
+   ============================================================ */
+document.querySelectorAll(".tabs").forEach(t => {
+  const bar = document.createElement("div");
+  bar.className = "tabbar";
+  t.insertBefore(bar, t.firstChild);
+  const panes = [...t.querySelectorAll(".pane")];
+  panes.forEach((p, i) => {
+    const b = document.createElement("button");
+    const h = p.querySelector("h4");
+    b.textContent = h ? h.textContent.replace(/^\d+\)\s*/, "") : "第 " + (i + 1) + " 個";
+    if(h) h.style.display = "none";
+    b.addEventListener("click", () => {
+      panes.forEach(x => x.classList.remove("on"));
+      [...bar.children].forEach(x => x.classList.remove("on"));
+      p.classList.add("on"); b.classList.add("on");
+    });
+    bar.appendChild(b);
+  });
+  if(panes.length){ panes[0].classList.add("on"); bar.children[0].classList.add("on"); }
+});
+
+/* ============================================================
+   5. Interactive: checklist
+   ============================================================ */
+document.querySelectorAll("ul.check > li").forEach(li => {
+  li.addEventListener("click", () => li.classList.toggle("done"));
+});
+
+/* ============================================================
+   6. Deck engine: scaling, navigation, overview, notes
+   ============================================================ */
+const deck = document.getElementById("deck");
+const slides = [...document.querySelectorAll(".slide")];
+let part = "";
+slides.forEach((s, i) => {
+  s.dataset.n = (i + 1) + " / " + slides.length;
+  const h1 = s.querySelector("h1");
+  if(s.classList.contains("lead") && h1 && /^Part/.test(h1.textContent)){
+    const h2 = s.querySelector("h2");
+    part = h1.textContent.trim() + (h2 ? " · " + h2.textContent.trim() : "");
+  }
+  s.dataset.part = part || "Python 第 1 堂";
+});
+
+const thumbs = slides.map((s, i) => {
+  const w = document.createElement("div");
+  w.className = "thumb";
+  w.dataset.i = i + 1;
+  s.parentNode.insertBefore(w, s);
+  w.appendChild(s);
+  w.addEventListener("click", () => {
+    if(document.body.classList.contains("ov")){ go(i); toggleOv(false); }
+  });
+  return w;
+});
+
+let cur = 0;
+function go(i){
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.classList.toggle("on", k === cur));
+  document.getElementById("bar").style.width = ((cur + 1) / slides.length * 100) + "%";
+  if(history.replaceState) history.replaceState(null, "", "#" + (cur + 1));
+}
+function fit(){
+  if(document.body.classList.contains("ov")){ deck.style.transform = ""; return; }
+  const k = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+  deck.style.transform = "scale(" + k + ")";
+}
+function toggleOv(force){
+  const on = force === undefined ? !document.body.classList.contains("ov") : force;
+  document.body.classList.toggle("ov", on);
+  if(on) slides.forEach(s => s.classList.add("on"));
+  else slides.forEach((s, k) => s.classList.toggle("on", k === cur));
+  thumbs.forEach((t, k) => t.classList.toggle("here", on && k === cur));
+  fit();
+  if(on && thumbs[cur]) thumbs[cur].scrollIntoView({block:"center"});
+}
+
+addEventListener("resize", fit);
+addEventListener("keydown", e => {
+  if(/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const k = e.key;
+  if(k === "ArrowRight" || k === " " || k === "PageDown"){ e.preventDefault(); toggleOv(false); go(cur + 1); }
+  else if(k === "ArrowLeft" || k === "PageUp"){ e.preventDefault(); toggleOv(false); go(cur - 1); }
+  else if(k === "Home"){ go(0); }
+  else if(k === "End"){ go(slides.length - 1); }
+  else if(k === "o" || k === "O"){ toggleOv(); }
+  else if(k === "n" || k === "N"){ document.body.classList.toggle("notes"); }
+  else if(k === "f" || k === "F"){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  }
+  else if(k === "Escape"){ toggleOv(false); }
+});
+
+const hud = document.getElementById("hud");
+let hudT;
+function pokeHud(){
+  hud.classList.remove("fade");
+  clearTimeout(hudT);
+  hudT = setTimeout(() => hud.classList.add("fade"), 4000);
+}
+addEventListener("mousemove", pokeHud);
+addEventListener("keydown", pokeHud);
+pokeHud();
+
+/* dev self-check: flag slides whose content would be clipped by the 1280x720 frame */
+(function overflowCheck(){
+  const bad = [];
+  slides.forEach((s, i) => {
+    const was = s.classList.contains("on");
+    s.classList.add("on");
+    if(s.scrollHeight > 722 || s.scrollWidth > 1282) bad.push(i + 1);
+    if(!was) s.classList.remove("on");
+  });
+  if(bad.length) console.warn("[slides] 這幾頁內容超出版面，需要縮減或改用 sm / xs：", bad.join(", "));
+  else console.info("[slides] 版面檢查通過，" + slides.length + " 頁都在框內。");
+})();
+
+function fromHash(){
+  const n = parseInt((location.hash || "").slice(1), 10);
+  return isFinite(n) && n > 0 ? n - 1 : 0;
+}
+addEventListener("hashchange", () => { const n = fromHash(); if(n !== cur) go(n); });
+go(fromHash());
+fit();
+</script>
+</body>
+</html>

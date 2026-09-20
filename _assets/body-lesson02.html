@@ -1,0 +1,251 @@
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>第 2 堂 · 讓它自己打下去</h1>
+  <h2>迴圈 for / while、亂數 random</h2>
+  <p>今天的目標：<b>全自動戰鬥</b>，打到有人倒下為止。</p>
+  <aside class="notes">上堂只打一回合，今天把它變成完整的戰鬥。她會直接感受到「迴圈」的威力。
+  <br>課前確認 <code>lesson02/code/</code> 在她電腦上，終端機能 <code>cd</code> 過去。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 回顧＋暖身</td><td>15 分</td><td>檢查回家改的王戰，複習 if</td></tr>
+    <tr><td>2. for 迴圈</td><td>25 分</td><td>連段攻擊、range、累加</td></tr>
+    <tr><td>3. 亂數</td><td>20 分</td><td>random：掉寶、浮動傷害</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
+    <tr class="hi"><td>4. while 迴圈</td><td>30 分</td><td>打到血量歸零、break、無窮迴圈</td></tr>
+    <tr><td>5. Demo &amp; 收尾</td><td>25 分</td><td>自動戰鬥，調難度</td></tr>
+  </table>
+  <aside class="notes">第 2 段結束前她要能自己寫出一個 for 迴圈。若卡在 range 的起訖，不要急著往下。
+  <br>時間不夠：第 3 段的 <code>random.choice</code> 可以只示範不練習，第 5 段留滿 20 分鐘。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>先看你回家改的</h2>
+  <div class="pg">打開 <span class="k">上堂的 demo-boss.py</span><b>執行你改的版本</b></div>
+  <div class="cols">
+    <div class="box gd"><h3>上次學的</h3>
+      <ul><li>變數、字串 vs 數字</li><li><code>int()</code> 轉換</li><li><code>if / elif / else</code></li></ul></div>
+    <div class="box ac"><h3>上次的問題</h3>
+      <p>王戰<b>只打一回合</b>就結束了。</p>
+      <p>要打十回合的話，難道要把同一段複製十次？</p></div>
+  </div>
+  <div class="callout">這就是今天要解決的事：<b>同樣的事要做很多次，交給迴圈。</b></div>
+  <aside class="notes">先請她展示「一定打得贏」和「一定打不贏」的版本，問她<b>改了哪個數字、為什麼</b>——這比程式本身重要。
+  <br>如果她沒做，不要責備，當場花 3 分鐘一起改一次。
+  <br>「複製十次」的荒謬感要讓她自己說出來，之後 for 的必要性就不用解釋了。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>for：重複固定次數</h2></section>
+
+<section class="slide sm">
+  <h2>五連段攻擊</h2>
+  <div class="pg">打開 <span class="k">01-combo.py</span><b>執行，然後改成 8 連段</b></div>
+  <div class="cols">
+    <div>
+<pre><code>for i in range(5):
+    print(f"第 {i} 下攻擊")</code></pre>
+      <div class="term">第 0 下攻擊
+第 1 下攻擊
+第 2 下攻擊
+第 3 下攻擊
+第 4 下攻擊</div>
+    </div>
+    <div class="box ac"><h3>三個部分</h3>
+      <ul style="font-size:18px">
+        <li><code>range(5)</code> 給出 <b>0 1 2 3 4</b>（五個數字，從 0 開始）</li>
+        <li><code>i</code> 是一個盒子，每輪裝一個</li>
+        <li>冒號 + <b>縮排 4 格</b>，跟 if 一樣</li>
+      </ul>
+      <p><small>想從 1 開始 → <code>range(1, 6)</code></small></p></div>
+  </div>
+  <aside class="notes">「從 0 開始」她一定會不習慣，這是程式的慣例，直接說「電腦數數從 0 開始，習慣就好」，不要哲學化。
+  <br>現場出三個小題讓她口答：<code>range(3)</code>？<code>range(2, 5)</code>？<code>range(1, 4)</code> 跑幾次？
+  <br><code>range(0, 10, 2)</code> 讓她自己試，不要先講。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>越打越痛：用 i 來算傷害</h2>
+  <div class="cols">
+    <div>
+<pre><code>atk = 12
+
+for i in range(1, 6):
+    damage = atk * i
+    print(f"第 {i} 下：{damage}")</code></pre>
+    </div>
+    <div>
+      <div class="term">第 1 下：12
+第 2 下：24
+第 3 下：36
+第 4 下：48
+第 5 下：60</div>
+    </div>
+  </div>
+  <div class="callout"><code>i</code> 不只是編號，<b>可以拿來算</b>——連段倍率、關卡難度、敵人數量都靠它。</div>
+  <div class="quiz" data-answer="15">
+    <p class="q"><code>for i in range(1, 6): print(i * 3)</code> 印出來的<b>最後一個數字</b>是？</p>
+    <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
+    <div class="fb"></div>
+  </div>
+  <aside class="notes">答案 15（i 最後是 5）。答錯通常是以為 range(1,6) 跑到 6。
+  <br>延伸玩法（她如果很快）：<code>print("⚔️" * i)</code> 印出三角形，她會很喜歡。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>把傷害加起來</h2>
+  <div class="pg">打開 <span class="k">02-total.py</span><b>執行看累積過程</b></div>
+  <pre><code>total = 0                      # ① 先準備一個空的計數盒子
+
+for i in range(1, 6):
+    damage = 12 * i
+    total = total + damage     # ② 每輪把新的加進去
+    print(f"第 {i} 下 {damage}，目前累積 {total}")
+
+print(f"總傷害：{total}")        # ③ 迴圈跑完才印</code></pre>
+  <div class="cols">
+    <div class="box ac"><h3>累加三步驟</h3><p>① 迴圈<b>外面</b>歸零<br>② 迴圈<b>裡面</b>累加<br>③ 迴圈<b>外面</b>印結果</p></div>
+    <div class="box gd"><h3>同一招能做什麼</h3><p>總傷害、總金幣、總經驗、<b>數次數</b>（暴擊幾次、贏幾場）</p></div>
+  </div>
+  <aside class="notes">最常見的兩個錯：<code>total = 0</code> 寫在迴圈裡面（每輪歸零，結果永遠是最後一下）、<code>print</code> 縮排進迴圈（印五次）。
+  <br><b>兩種都故意示範一次</b>，讓她看見「縮排位置＝什麼時候做」。這是今天最關鍵的觀念。
+  <br><code>total += damage</code> 提一下就好，她想用再用。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>random：讓遊戲每次都不一樣</h2></section>
+
+<section class="slide sm">
+  <h2>擲骰子與掉寶</h2>
+  <div class="pg">打開 <span class="k">03-random.py</span><b>連續執行三次，看結果不一樣</b></div>
+  <div class="cols">
+    <div>
+<pre><code>import random     # 借用工具箱
+
+roll = random.randint(1, 100)
+print(f"骰出了 {roll}")
+
+drops = ["生鏽的劍", "紅藥水",
+         "金幣 x10", "什麼都沒有"]
+print(random.choice(drops))</code></pre>
+    </div>
+    <div>
+      <div class="box ac"><h3>兩個好用的</h3>
+        <p><code>randint(1, 100)</code><br>隨機一個整數，<b>含頭含尾</b></p>
+        <p><code>choice(清單)</code><br>從清單裡隨機挑一個</p></div>
+      <div class="box sn"><h3>為什麼遊戲要亂數</h3>
+        <p>每次都一樣就不好玩了——掉寶、暴擊、抽卡、怪物位置，全都是亂數。</p></div>
+    </div>
+  </div>
+  <aside class="notes"><code>import</code> 只要說「借用別人寫好的工具箱」，不要講模組系統。
+  <br>讓她執行三次看到不同結果——這一刻她會理解亂數。
+  <br>接著把上一頁的固定傷害改成 <code>random.randint(10, 20)</code>，五連段每次都不同，串起 for + random。
+  <br>中括號的清單今天只要會用 <code>choice</code> 就好，<b>下一堂才正式教清單</b>，不要展開。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>while：不知道要跑幾次</h2></section>
+
+<section class="slide sm">
+  <h2>打到倒下為止</h2>
+  <div class="pg">打開 <span class="k">04-while.py</span><b>執行幾次，回合數每次不同</b></div>
+  <div class="cols">
+    <div>
+<pre><code>hp = 100
+turn = 0
+
+while hp &gt; 0:
+    turn = turn + 1
+    damage = random.randint(10, 25)
+    hp = hp - damage
+    print(f"第 {turn} 回合，剩 {hp}")
+
+print(f"撐了 {turn} 回合")</code></pre>
+    </div>
+    <div>
+      <table>
+        <tr><th></th><th>什麼時候用</th></tr>
+        <tr><td><code>for</code></td><td>知道要跑<b>幾次</b><br><small>五連段、十個怪</small></td></tr>
+        <tr><td><code>while</code></td><td>只知道<b>什麼時候停</b><br><small>打到血量歸零</small></td></tr>
+      </table>
+      <p><small>這就是為什麼戰鬥要用 while——誰知道要打幾回合？</small></p>
+    </div>
+  </div>
+  <aside class="notes">先問她：「一場戰鬥要打幾回合？」她答不出來 → 「所以 for 不夠用」。這個提問順序很重要。
+  <br>條件寫的是<b>「繼續的條件」</b>不是「結束的條件」，她很容易寫反成 <code>while hp &lt;= 0</code>（一次都不跑）。讓她試一次看看。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>無窮迴圈：迴圈停不下來</h2>
+  <div class="cols">
+    <div class="box bd"><h3>❌ 永遠停不下來</h3>
+<pre><code>hp = 100
+while hp &gt; 0:
+    print("攻擊！")</code></pre>
+      <p><small>血量<b>從來沒有變少</b>，條件永遠成立</small></p></div>
+    <div class="box gd"><h3>✅ 會結束</h3>
+<pre><code>hp = 100
+while hp &gt; 0:
+    print("攻擊！")
+    hp = hp - 10</code></pre>
+      <p><small>每輪血量減少，總有一天 ≤ 0</small></p></div>
+  </div>
+  <div class="callout"><b>卡住了怎麼辦：</b>在終端機按 <b>Control + C</b>，強制停掉。<br>
+  每次寫 while 都要問自己一句：<em>哪一行會讓條件變成不成立？</em></div>
+  <aside class="notes"><b>一定要現場示範一次無窮迴圈</b>，讓畫面狂噴，再按 Control+C 停掉。她會記一輩子，而且以後不會怕。
+  <br>（上一堂在工坊也遇過，那時是 20 秒自動停。真的 Python 不會自動停，只能自己按。）
+  <br><code>break</code> 在這裡順帶講：迴圈裡遇到 break 就直接跳出去，不管條件成不成立。上堂的猜數字就用過。</aside>
+</section>
+
+<section class="slide">
+  <h2>換你寫</h2>
+  <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
+  <ul class="check two">
+    <li><div><b>1. 印 10 行攻擊</b><small>暖身，確認 for 的寫法</small></div></li>
+    <li><div><b>2. 經驗值總和</b><small>第 i 隻怪給 i × 15 點，印每隻＋總和</small></div></li>
+    <li><div><b>3. 抽獎轉盤</b><small>獎品清單 + random.choice 抽 5 次</small></div></li>
+    <li><div><b>4. 怪物要打幾下</b><small>while + 隨機傷害，印「打了 N 下」</small></div></li>
+    <li><div><b>5. 挑戰：運氣統計</b><small>擲 1000 次，數幾次 ≥ 95</small></div></li>
+  </ul>
+  <aside class="notes">25 分鐘。第 5 題先讓她<b>猜</b>再跑（答案大約 50 次），猜完再驗證，印象最深。
+  <br>參考解答在 <code>notes/lesson02-solutions.py</code>。
+  <br>常見卡點：累加變數放錯位置、<code>print</code> 縮排、while 條件寫反、忘了 <code>import random</code>。</aside>
+</section>
+
+<!-- ========== Part 4 ========== -->
+<section class="slide lead"><h1>Part 4</h1><h2>今天的成果</h2></section>
+
+<section class="slide sm">
+  <h2>全自動戰鬥</h2>
+  <div class="pg">打開 <span class="k">demo-auto-battle.py</span><b>直接執行，看它自己打完</b></div>
+  <div class="term">── 第 7 回合 ──
+💥 勇者 暴擊！ 造成 28 點傷害
+⚔️  熔岩巨龍 攻擊 造成 16 點傷害
+  勇者   ████░░░░░░░░░░░░░░░░  28/120
+  熔岩巨龍 ███████░░░░░░░░░░░░░  59/160
+🧪 勇者 喝下藥水，血量回到 68（剩 1 瓶）
+
+🎉 第 11 回合，熔岩巨龍 倒下了！
+   勇者 總共打出 165 點傷害</div>
+  <p><small>裡面只有 <code>while</code>、<code>if</code>、<code>random</code>、變數——全部是你會的。</small></p>
+  <aside class="notes">先執行兩三次，讓她看到<b>結果每次都不一樣，有時候還會輸</b>。
+  <br>對照程式：① 外層 <code>while hero_hp &gt; 0 and boss_hp &gt; 0</code>（兩個條件 and） ② 藥水那段 if（她上堂寫過類似的） ③ 最後的統計（今天的累加）。
+  <br><b>剩下的時間全部給她調數值</b>：<code>BOSS_ATK</code>、<code>potions</code>、雙方血量。目標是調到「大約五五波」，這其實就是遊戲設計師在做的事——可以順口說一句，她會覺得自己在做真的遊戲。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天做了什麼</h2>
+  <ul class="check">
+    <li><code>for</code> + <code>range</code>：重複固定次數</li>
+    <li>累加：先歸零、迴圈裡加、迴圈外印</li>
+    <li><code>random</code>：讓每次執行都不一樣</li>
+    <li><code>while</code>：重複到條件不成立為止，還會用 Control+C 救自己</li>
+    <li>調出一場勢均力敵的戰鬥</li>
+  </ul>
+  <div class="callout"><b>下一堂：</b>背包、隊伍、<b>抽卡</b>——用「清單」一次管很多東西。</div>
+  <aside class="notes">回家的事：把自動戰鬥調成「五五波」，記下最後用的數字，下次說明為什麼這樣調。
+  <br>下課前確認她的檔案有存好；提醒她 <code>lesson02/code/</code> 不要搬動位置。</aside>
+</section>

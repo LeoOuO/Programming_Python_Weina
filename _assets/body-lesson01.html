@@ -1,0 +1,313 @@
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>第 1 堂 · 角色與傷害</h1>
+  <h2>變數、型別、if 判斷</h2>
+  <p>今天的目標：做出<b>可以打的一回合戰鬥</b>。</p>
+  <aside class="notes">按 <b>→</b> 翻頁，<b>O</b> 總覽，<b>N</b> 開關備註，<b>F</b> 全螢幕。
+  <br>上完這堂她要能自己：改變數 → 存檔 → 在終端機跑起來。這個循環跑順比教多少語法重要。
+  <br>課前先在她的電腦上確認 <code>python3 --version</code> 有反應，編輯器能開 <code>lesson01/code/</code>。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 換工具</td><td>20 分</td><td>從瀏覽器搬到真的 Python，學會存檔 → 執行</td></tr>
+    <tr><td>2. 角色卡</td><td>25 分</td><td>變數、字串和數字的差別、f-string</td></tr>
+    <tr><td>3. 傷害公式</td><td>20 分</td><td>加減乘除、取整數</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
+    <tr class="hi"><td>4. 暴擊判定</td><td>35 分</td><td>if / elif / else，and / or</td></tr>
+    <tr><td>5. Demo &amp; 收尾</td><td>15 分</td><td>打第一隻王</td></tr>
+  </table>
+  <aside class="notes">120 分鐘含休息。時間不夠時：第 3 段的 <code>//</code> 和 <code>%</code> 可以只講一句帶過，第 4 段的 and/or 可以留到下一堂。
+  <br><b>最後 15 分鐘的 Demo 不能砍</b>——她是為了這個來的。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>上次我們做到這裡</h2>
+  <div class="cols">
+    <div class="box gd"><h3>你已經會的</h3>
+      <ul>
+        <li><code>print()</code> 讓電腦說話</li>
+        <li><code>input()</code> 問玩家問題</li>
+        <li>把東西放進<b>盒子</b>（變數）</li>
+        <li>看得懂錯誤訊息</li>
+      </ul></div>
+    <div class="box ac"><h3>今天要加的</h3>
+      <ul>
+        <li>盒子裡的東西<b>有分種類</b></li>
+        <li>讓電腦<b>算數學</b></li>
+        <li>讓電腦<b>做判斷</b>：暴擊了沒？</li>
+      </ul></div>
+  </div>
+  <div class="callout">今天開始，程式不在瀏覽器裡跑了——用真的 Python，跟做遊戲的人用的是同一套。</div>
+  <aside class="notes">回顧只花 2 分鐘，問她「上次那個猜數字你回家有再玩嗎／有改什麼」當開場，順便看她記得多少。
+  <br>如果她完全忘了 input，不要重教，等第 2 段用到時再順一次。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>換一套真的工具</h2></section>
+
+<section class="slide sm">
+  <h2>從今天開始的流程</h2>
+  <div class="flow">
+    <div class="st">① 在編輯器打字</div><div class="ar">→</div>
+    <div class="st d">② 存檔<br><small>⌘S</small></div><div class="ar">→</div>
+    <div class="st">③ 在終端機打<br><small>python3 檔名</small></div><div class="ar">→</div>
+    <div class="st e">④ 看結果</div>
+  </div>
+  <div class="term">$ cd Desktop/python/lesson01/code
+$ python3 01-character.py
+<b>=== 角色卡 ===</b>
+名字：小雷
+職業：劍士</div>
+  <p><small>沒存檔就執行 = 跑的是舊的程式。這是初學者最常見的「怎麼沒變」。</small></p>
+  <aside class="notes">這一頁是今天最重要的操作。實際帶她做一次，然後<b>讓她自己重做一次</b>，你不要碰鍵盤。
+  <br>Mac 終端機：Launchpad 搜「終端機」，或 ⌘空白鍵 打 terminal。
+  <br><code>cd</code> 的教法：在 Finder 找到 code 資料夾 → 打 <code>cd </code>（後面空一格）→ 把資料夾<b>拖進終端機視窗</b>，路徑會自動填好 → Enter。比教她打路徑快十倍。
+  <br>再教兩個救命技巧：<b>↑</b> 叫回上一次的指令（之後她會一直用）、<b>Control+C</b> 停掉跑不完的程式。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>三個視窗，各做一件事</h2>
+  <div class="cols w3">
+    <div class="box ac"><h3>編輯器</h3><p>寫程式、存檔<br><small>VS Code</small></p></div>
+    <div class="box sn"><h3>終端機</h3><p>下指令執行<br><small>Terminal</small></p></div>
+    <div class="box gd"><h3>Finder</h3><p>找檔案在哪<br><small>檔案總管</small></p></div>
+  </div>
+  <div class="callout"><b>今天的檔案都在同一個資料夾：</b><code>lesson01/code/</code>。
+  每個範例一個檔案，檔名前面的號碼就是我們講的順序。</div>
+  <aside class="notes">把 VS Code 和終端機並排擺好（VS Code 左、終端機右，各佔半個螢幕）——版面順了，她才不會一直找視窗。
+  <br>VS Code 內建終端機（⌃`）也可以，但第一次先用獨立視窗，概念比較清楚：<b>編輯器負責寫、終端機負責跑</b>。
+  <br>如果她的電腦還沒裝，照 <code>SETUP.md</code> 做，預留 15 分鐘。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>角色卡</h2></section>
+
+<section class="slide sm">
+  <h2>先看一張角色卡</h2>
+  <div class="pg">打開 <span class="k">01-character.py</span><b>執行一次，再改成你的角色</b></div>
+  <pre><code>name = "小雷"
+job = "劍士"
+level = 3
+hp = 100
+atk = 18
+
+print(f"{name} 是 {level} 等的{job}，HP {hp}／ATK {atk}")</code></pre>
+  <p>遊戲裡看到的每一個數字，在程式裡都是一個<b>變數</b>。</p>
+  <aside class="notes">先讓她執行，看到輸出，再逐行看。
+  <br>問她：「如果要做一個遊戲，還有哪些東西需要變數？」——金幣、經驗值、等級、武器名稱……讓她講，越多越好，她會發現「整個遊戲就是一堆變數」。
+  <br>然後請她把角色改成自己想要的（名字、職業隨便她），存檔、執行。這一步要她自己完成。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>盒子裡的東西有兩種</h2>
+  <div class="cols">
+    <div class="box pk"><h3>字串 str（文字）</h3>
+      <p>用<b>引號</b>包起來</p>
+      <pre><code>name = "小雷"
+job = "劍士"</code></pre>
+      <p><small>可以相加 → 接在一起<br><code>"小" + "雷"</code> → <code>"小雷"</code></small></p></div>
+    <div class="box sn"><h3>整數 int（數字）</h3>
+      <p><b>沒有</b>引號</p>
+      <pre><code>hp = 100
+atk = 18</code></pre>
+      <p><small>可以做數學<br><code>100 + 18</code> → <code>118</code></small></p></div>
+  </div>
+  <div class="callout"><b>"100" 和 100 不一樣。</b>前者是「一串符號」，後者是「數量」。
+  <code>"100" + "18"</code> 會得到 <code>"10018"</code>！</div>
+  <aside class="notes">現場示範這個陷阱：在終端機打 <code>python3</code> 進入互動模式，直接打 <code>"100" + "18"</code> 給她看，她會笑。
+  <br>（互動模式離開用 <code>exit()</code>。這招之後拿來試任何一行程式都很好用。）
+  <br>再示範 <code>"100" + 18</code> → TypeError，對照上一堂學過的「錯誤訊息看得懂」。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>f-string：把變數塞進句子裡</h2>
+  <div class="tabs">
+    <div class="pane"><h4>1) 三種寫法</h4>
+<pre><code>print("名字：" + name)        # 用 + 接，只能接字串
+print("血量：", hp)           # 用逗號，什麼都能印
+print(f"{name} 的血量是 {hp}")  # f-string，最好用</code></pre>
+    </div>
+    <div class="pane"><h4>2) f-string 的規則</h4>
+      <ul>
+        <li>引號<b>前面</b>加一個 <code>f</code></li>
+        <li>要放變數的地方用 <b>大括號</b> <code>{ }</code></li>
+        <li>大括號裡面可以直接算：<code>f"總攻擊 {atk * 2}"</code></li>
+      </ul>
+    </div>
+  </div>
+  <div class="quiz" data-answer="小雷 的 HP 是 100">
+    <p class="q">如果 <code>name = "小雷"</code>、<code>hp = 100</code>，<br><code>print(f"{name} 的 HP 是 {hp}")</code> 會印出什麼？</p>
+    <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
+    <div class="fb"></div>
+  </div>
+  <aside class="notes">答案：<code>小雷 的 HP 是 100</code>。大括號被換掉，其他字原封不動。
+  <br>之後全部用 f-string，不要再用 <code>+</code> 接字串——省掉「型別不同不能相加」的麻煩。
+  <br>小測驗打錯字也沒關係，重點是她有沒有理解「大括號會被換成盒子裡的東西」。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>傷害公式</h2></section>
+
+<section class="slide sm">
+  <h2>傷害其實就是一條算式</h2>
+  <div class="pg">打開 <span class="k">02-damage.py</span><b>改改看倍率和防禦力</b></div>
+  <pre><code>atk = 18          # 我方攻擊
+defense = 5       # 對方防禦
+skill = 1.5       # 技能倍率
+
+damage = (atk - defense) * skill     # → 19.5
+print(f"傷害 {int(damage)}")          # → 19</code></pre>
+  <div class="cols">
+    <div class="box"><h3>運算子</h3>
+      <table style="font-size:17px">
+        <tr><td><code>+</code> 加</td><td><code>-</code> 減</td><td><code>*</code> 乘</td></tr>
+        <tr><td><code>/</code> 除</td><td><code>//</code> 除完取整</td><td><code>%</code> 餘數</td></tr>
+      </table></div>
+    <div class="box ac"><h3>兩個要記的</h3>
+      <p><code>/</code> 算出來<b>一定有小數點</b>：<code>10 / 2</code> → <code>5.0</code></p>
+      <p><code>int()</code> 把小數點後面<b>直接砍掉</b>：<code>int(19.9)</code> → <code>19</code></p></div>
+  </div>
+  <aside class="notes">重點不是運算子表，是<b>「遊戲數值都是算出來的」</b>這個概念。
+  <br>讓她改 skill 看傷害怎麼變、改 defense 到比 atk 大 → 傷害變負的 → 問她「遊戲裡會有負傷害嗎？該怎麼辦？」（答案是 if，正好接到下一段）。
+  <br><code>//</code> 和 <code>%</code> 各講一個遊戲例子就好：<code>//</code> 算「經驗值夠升幾級」，<code>%</code> 算「還差多少到下一級」。不要展開。</aside>
+</section>
+
+<!-- ========== Part 4 ========== -->
+<section class="slide lead"><h1>Part 4</h1><h2>暴擊判定</h2><p>讓電腦自己做決定</p></section>
+
+<section class="slide sm">
+  <h2>if：如果⋯⋯就⋯⋯</h2>
+  <div class="cols">
+    <div>
+<pre><code>if roll &gt;= 95:
+    print("✨ 完美暴擊！")
+elif roll &gt;= 80:
+    print("💥 暴擊！")
+elif roll &lt;= 5:
+    print("😵 失手了")
+else:
+    print("⚔️ 普通攻擊")</code></pre>
+    </div>
+    <div>
+      <div class="box ac"><h3>三個規則</h3>
+        <ul style="font-size:18px">
+          <li>條件後面要有<b>冒號</b> <code>:</code></li>
+          <li>下一行要<b>縮排 4 格</b></li>
+          <li>從上往下<b>第一個成立的</b>執行完就跳出去</li>
+        </ul></div>
+      <div class="box gd"><h3>比較</h3>
+        <p><code>&gt;</code> <code>&lt;</code> <code>&gt;=</code> <code>&lt;=</code> <code>==</code> 等於 <code>!=</code> 不等於</p>
+        <p><small><b>==</b> 是問「一樣嗎」，<b>=</b> 是「放進盒子」</small></p></div>
+    </div>
+  </div>
+  <aside class="notes">「第一個成立的就跳出去」是今天最容易錯的觀念，下一頁會專門測。
+  <br><code>==</code> 和 <code>=</code> 的差別現在只要講一次，她之後一定會踩到，踩到時再回來講第二次比較有效。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>順序寫反了會怎樣？</h2>
+  <div class="cols">
+    <div class="box bd"><h3>❌ 寫反的版本</h3>
+<pre><code>if roll &gt;= 80:
+    print("💥 暴擊")
+elif roll &gt;= 95:
+    print("✨ 完美暴擊")</code></pre>
+      <p><small>擲到 97 會印什麼？</small></p></div>
+    <div class="box gd"><h3>✅ 正確的版本</h3>
+<pre><code>if roll &gt;= 95:
+    print("✨ 完美暴擊")
+elif roll &gt;= 80:
+    print("💥 暴擊")</code></pre>
+      <p><small>條件<b>嚴格的放前面</b></small></p></div>
+  </div>
+  <details class="reveal"><summary>答案</summary>
+    <div class="body"><p>左邊擲到 97 會印「💥 暴擊」——因為 97 也 <code>&gt;= 80</code>，第一條就成立了，
+    後面的「完美暴擊」<b>永遠不會執行</b>。這種 bug 不會報錯，只是遊戲怪怪的，最難抓。</p></div>
+  </details>
+  <div class="pg">打開 <span class="k">03-critical.py</span><b>執行幾次，試不同的點數</b></div>
+  <aside class="notes">先讓她自己想，再展開答案。如果她答對，請她解釋為什麼——能解釋才是真的懂。
+  <br>可以現場把 03-critical.py 的順序改反，輸入 97，讓她看到「真的不會印完美暴擊」。<b>看到</b>比聽到有用。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>兩個條件要同時看：and / or</h2>
+  <div class="pg">打開 <span class="k">04-potion.py</span><b>試不同的血量和藥水數</b></div>
+  <div class="cols">
+    <div>
+<pre><code>if hp &lt; 30 and potions &gt; 0:
+    print("🧪 快喝藥水！")
+elif hp &lt; 30 and potions == 0:
+    print("😱 沒藥水了，快逃！")
+elif hp &gt;= 80 or potions &gt;= 5:
+    print("💪 狀態很好，衝吧")</code></pre>
+    </div>
+    <div>
+      <table>
+        <tr><th></th><th>意思</th></tr>
+        <tr><td><code>and</code></td><td>兩邊<b>都</b>成立</td></tr>
+        <tr><td><code>or</code></td><td><b>任一</b>邊成立</td></tr>
+        <tr><td><code>not</code></td><td>反過來</td></tr>
+      </table>
+      <p><small>遊戲裡到處都是：<br>「血量低<b>且</b>有藥水」才自動喝<br>「等級夠<b>或</b>有門票」才能進副本</small></p>
+    </div>
+  </div>
+  <aside class="notes">用她玩的遊戲舉例最有感：什麼情況下角色會自動做某件事？通常都是兩三個條件 and 起來。
+  <br>常見錯誤：寫成 <code>if hp &lt; 30 and &gt; 0</code>（第二個條件沒寫完整的主詞）。她一定會犯，先不用預告，犯了再修。</aside>
+</section>
+
+<section class="slide">
+  <h2>換你寫</h2>
+  <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
+  <ul class="check two">
+    <li><div><b>1. 角色卡</b><small>四個變數，用 f-string 印成一行</small></div></li>
+    <li><div><b>2. 問等級算攻擊</b><small>input + int，攻擊 = 10 + 等級 × 2</small></div></li>
+    <li><div><b>3. 血量三段判斷</b><small>≥70 良好、≥30 小心、其他快喝藥水</small></div></li>
+    <li><div><b>4. 挑戰：比戰力</b><small>戰力 = 攻擊×2 + 防禦，印出誰比較強</small></div></li>
+  </ul>
+  <aside class="notes">20 分鐘，她自己寫，你只在她卡住超過 1 分鐘時給<b>提示</b>不給答案。
+  <br>參考解答在 <code>notes/lesson01-solutions.py</code>（老師用，不要給她）。
+  <br>常見卡點：忘了 <code>int(input(...))</code>、<code>if</code> 忘了冒號、縮排沒對齊、用了中文全形括號。
+  <br>第 4 題寫完的話，追問「平手怎麼辦」——她多半會漏掉。</aside>
+</section>
+
+<!-- ========== Part 5 ========== -->
+<section class="slide lead"><h1>Part 5</h1><h2>打第一隻王</h2></section>
+
+<section class="slide sm">
+  <h2>今天的成果</h2>
+  <div class="pg">打開 <span class="k">demo-boss.py</span><b>直接執行，玩一回合</b></div>
+  <div class="term">勇者，你叫什麼名字？ <b>小美</b>
+==================================
+  小美  HP 100  ATK 18
+  史萊姆王  HP 120  ATK 15
+==================================
+
+你要做什麼？輸入 1、2 或 3： <b>2</b>
+
+🔥 小美 蓄力……全力一擊！
+   造成 36 點傷害！
+   史萊姆王  ██████████████░░░░░░  84/120
+💢 史萊姆王 反擊，造成 15 點傷害！</div>
+  <p><small>裡面<b>沒有一行</b>是今天沒學過的：變數、<code>int()</code>、算式、<code>if</code>。</small></p>
+  <aside class="notes">先讓她玩兩三次（三個選項各試一次），再打開程式碼對照——<b>先玩再看碼</b>。
+  <br>指給她看三個地方就好：① 最上面的角色變數 ② <code>if choice == "1"</code> 那一段 ③ 血條是怎麼畫的（<code>"█" * 格數</code>，上一堂的字串乘法）。
+  <br><code>def</code> 和 <code>time.sleep</code> 先不解釋，她問再說「那是把一段程式取名字，之後會學」。
+  <br>剩下時間讓她改數字：攻擊力、血量、藥水回復量、<code>SPEED</code>。改完執行，感覺完全不同——這就是「做遊戲」的感覺。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天做了什麼</h2>
+  <ul class="check">
+    <li>學會存檔 → 終端機 → <code>python3 檔名</code> 的循環</li>
+    <li>知道字串和數字不一樣，會用 <code>int()</code> 轉換</li>
+    <li>會用 f-string 把變數塞進句子</li>
+    <li>會用 <code>if / elif / else</code> 讓電腦做判斷</li>
+    <li>玩到自己改過數值的王戰</li>
+  </ul>
+  <div class="callout"><b>下一堂：</b>讓它<b>一直打下去</b>，打到有人倒下為止——迴圈和亂數。</div>
+  <aside class="notes">讓她自己勾，勾的時候用一句話說那是什麼。
+  <br>回家的事（不叫作業）：把 demo-boss.py 的數值改成「一定打得贏」和「一定打不贏」兩個版本，下次帶來。這題會逼她理解每個數字的作用。</aside>
+</section>

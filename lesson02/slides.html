@@ -1,0 +1,775 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Python 第 2 堂 · 迴圈與隨機</title>
+
+<!--
+================================================================
+  怎麼改這份簡報
+  ----------------------------------------------------------------
+  · 一張投影片 = 一個 <section class="slide">…</section>
+  · 教師備註寫在 <aside class="notes">…</aside>，簡報時按 N 顯示/隱藏
+  · 要學生打開檔案時，用 <div class="pg"> 提示條（見各頁）
+  · 可用的互動元件：
+      <details class="reveal">   點一下展開
+      <div class="tracer">       程式碼逐步追蹤
+      <div class="quiz">         現場作答
+      <div class="tabs">         分頁切換
+      <ul class="check">         可勾選的清單
+  ----------------------------------------------------------------
+  操作鍵：→/空白 下一頁　←上一頁　O 總覽　N 教師備註　F 全螢幕
+================================================================
+-->
+
+<style>
+:root{
+  --ink:#2a2233; --soft:#6b6376; --bg:#fff8f3; --panel:#fff; --line:#efe1d8;
+  --brand:#6a3fd6; --brand2:#5630b8; --brand-soft:#efe9fc; --brand-dim:#b09ae8;
+  --accent:#ff6b3d; --accent-soft:#fff0e8;
+  --pink:#ff5c8a; --sun:#ffb347;
+  --g:#1f9d6a; --gbg:#e6f6ee; --gl:#b9e4cd;
+  --r:#d43d3d; --rbg:#fbe9e9; --rl:#f0c4c4;
+  --code:#faf6fd;
+  --mono:"SF Mono","JetBrains Mono",Menlo,Consolas,"Noto Sans Mono CJK TC",monospace;
+  --sans:"Helvetica Neue","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#1a1426;font-family:var(--sans);color:var(--ink);
+  -webkit-text-size-adjust:100%}
+
+/* ---------- deck / stage ---------- */
+#stage{position:fixed;inset:0;display:grid;place-items:center;overflow:hidden}
+#deck{width:1280px;height:720px;transform-origin:center center;position:relative}
+.slide{position:absolute;inset:0;background:var(--bg);padding:54px 66px 60px;
+  display:none;flex-direction:column;justify-content:center;overflow:hidden}
+.slide.on{display:flex}
+.slide::after{content:attr(data-n);position:absolute;right:38px;bottom:20px;
+  font-size:14px;color:var(--soft)}
+.slide::before{content:attr(data-part);position:absolute;left:66px;bottom:20px;
+  font-size:14px;color:var(--soft);letter-spacing:.05em}
+
+/* ---------- typography ---------- */
+.slide h1{font-size:46px;color:var(--brand);margin:0 0 8px;line-height:1.25}
+.slide h2{font-size:36px;color:var(--brand);margin:0 0 18px;padding-bottom:10px;
+  border-bottom:3px solid var(--line);line-height:1.3}
+.slide h3{font-size:26px;margin:16px 0 6px;line-height:1.35}
+.slide h4{font-size:20px;color:var(--soft);margin:14px 0 4px;font-weight:600}
+.slide p{font-size:24px;line-height:1.55;margin:8px 0}
+.slide ul,.slide ol{font-size:24px;line-height:1.55;margin:6px 0 6px 1.15em;padding:0}
+.slide li{margin:8px 0}
+.slide li li{font-size:.88em;color:var(--soft)}
+.slide b,.slide strong{color:var(--brand)}
+.slide em{color:var(--accent);font-style:normal;font-weight:700}
+.slide small{font-size:17px;color:var(--soft)}
+.slide.sm p,.slide.sm ul,.slide.sm ol{font-size:21px}
+.slide.sm h2{font-size:31px;margin-bottom:14px}
+.slide.xs p,.slide.xs ul,.slide.xs ol,.slide.xs td,.slide.xs th{font-size:18px}
+.slide.xs h2{font-size:28px;margin-bottom:12px}
+.slide.top{justify-content:flex-start}
+.big{font-size:34px!important;line-height:1.4!important}
+
+/* ---------- title / divider slides ---------- */
+.slide.lead{background:linear-gradient(135deg,#6a3fd6 0%,#ff5c8a 60%,#ffb347 100%);color:#fff;justify-content:center}
+.slide.lead h1{color:#fff;font-size:60px;border:none;text-shadow:0 2px 10px rgba(0,0,0,.18)}
+.slide.lead h2{color:#fff3f7;border:none;font-size:30px;font-weight:400;padding:0;margin-top:6px}
+.slide.lead p{color:#fff3f7;font-size:22px}
+.slide.lead b,.slide.lead strong{color:#fff3b0}
+.slide.lead::after,.slide.lead::before{color:rgba(255,255,255,.6)}
+.slide.punch{background:linear-gradient(135deg,#6a3fd6,#ff5c8a);color:#fff;text-align:center;align-items:center}
+.slide.punch h1{color:#fff;font-size:58px;line-height:1.3;border:none}
+.slide.punch p{color:#fff3f7;font-size:24px;margin-top:18px}
+.slide.punch b{color:#fff3b0}
+
+/* ---------- code ---------- */
+.slide code{font-family:var(--mono);font-size:.86em;background:var(--code);
+  border:1px solid var(--line);border-radius:4px;padding:1px 6px}
+.slide pre{background:var(--code);border:1px solid var(--line);border-left:5px solid var(--brand-dim);
+  border-radius:9px;padding:14px 18px;margin:12px 0;overflow:auto}
+.slide pre code{font-size:21px;line-height:1.5;background:none;border:none;padding:0;
+  display:block;white-space:pre}
+.slide.sm pre code{font-size:19px}
+.slide.xs pre code{font-size:17px}
+.k{color:#c2255c} .n{color:#5b3fd6} .s{color:#1f9d6a} .c{color:#9a91a6}
+
+/* ---------- tables ---------- */
+.slide table{border-collapse:collapse;margin:10px 0;width:100%;font-size:20px}
+.slide th{background:var(--brand-soft);color:var(--brand);font-weight:700;text-align:left;
+  padding:9px 14px;border:1px solid var(--line)}
+.slide td{padding:9px 14px;border:1px solid var(--line);vertical-align:top;background:#fff}
+.slide tr.hi td{background:var(--accent-soft);font-weight:600}
+.slide table.narrow{width:auto}
+
+/* ---------- callout ---------- */
+.slide blockquote,.callout{background:var(--brand-soft);border-left:5px solid var(--accent);
+  margin:14px 0;padding:11px 18px;font-size:20px;color:var(--soft);border-radius:0 8px 8px 0}
+.callout b{color:var(--ink)}
+
+/* ---------- reveal ---------- */
+details.reveal{border:1px solid var(--line);border-left:5px solid var(--accent);border-radius:9px;
+  background:var(--panel);margin:10px 0;overflow:hidden}
+details.reveal>summary{cursor:pointer;list-style:none;padding:11px 18px;font-size:21px;
+  color:var(--accent);font-weight:700;user-select:none;background:var(--accent-soft)}
+details.reveal>summary::-webkit-details-marker{display:none}
+details.reveal>summary::before{content:"▸ ";display:inline-block}
+details.reveal[open]>summary::before{content:"▾ "}
+details.reveal .body{padding:12px 18px 14px;font-size:20px;line-height:1.55}
+details.reveal .body p{font-size:20px;margin:6px 0}
+details.reveal .body pre code{font-size:17px}
+
+/* ---------- tracer ---------- */
+.tracer{display:grid;grid-template-columns:1fr 1fr;gap:16px;align-items:start;margin:10px 0}
+.tracer .tcode{background:var(--code);border:1px solid var(--line);border-radius:9px;
+  padding:12px 0;font-family:var(--mono);font-size:18px;line-height:1.62}
+.tracer .tcode div{padding:1px 16px;white-space:pre;border-left:4px solid transparent}
+.tracer .tcode div.lit{background:#fff1d6;border-left-color:var(--accent)}
+.tracer .tside{display:flex;flex-direction:column;gap:10px}
+.tracer table{margin:0;font-size:17px}
+.tracer th,.tracer td{padding:5px 11px}
+.tracer tbody tr:last-child td{background:var(--accent-soft);font-weight:600}
+.tracer .say{font-size:18px;color:var(--soft);min-height:1.6em;background:var(--panel);
+  border:1px dashed var(--line);border-radius:6px;padding:8px 12px}
+.tracer .tbtns{display:flex;gap:8px;align-items:center}
+.tracer .step{font-size:16px;color:var(--soft);margin-left:auto}
+button{font-family:var(--sans);cursor:pointer;border:1px solid var(--line);background:var(--panel);
+  color:var(--ink);border-radius:9px;padding:8px 15px;font-size:17px;transition:.15s}
+button:hover:not(:disabled){border-color:var(--brand);color:var(--brand)}
+button.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+button.pri:hover:not(:disabled){background:var(--brand2);color:#fff}
+button:disabled{opacity:.4;cursor:not-allowed}
+
+/* ---------- quiz ---------- */
+.quiz{background:var(--panel);border:1px solid var(--line);border-radius:9px;padding:13px 17px;margin:12px 0}
+.quiz .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+.quiz input{flex:1;min-width:150px;font-family:var(--mono);font-size:19px;padding:9px 12px;
+  border:1.5px solid var(--line);border-radius:6px;background:#fcfdfe;color:var(--ink)}
+.quiz input:focus{outline:2px solid var(--brand-soft);border-color:var(--brand)}
+.quiz .fb{margin-top:9px;font-size:19px;display:none}
+.quiz .fb.on{display:block}
+.quiz .fb.ok{color:var(--g)} .quiz .fb.no{color:var(--r)}
+.quiz .q{font-size:20px;margin:0 0 9px}
+
+/* ---------- tabs ---------- */
+.tabs .tabbar{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.tabs .tabbar button{font-size:16px;padding:6px 13px}
+.tabs .tabbar button.on{background:var(--brand);border-color:var(--brand);color:#fff}
+.tabs .pane{display:none} .tabs .pane.on{display:block}
+
+/* ---------- checklist ---------- */
+ul.check{list-style:none;margin:6px 0;padding:0}
+ul.check li{border:1px solid var(--line);background:var(--panel);border-radius:9px;
+  padding:9px 14px;margin:7px 0;cursor:pointer;font-size:21px;user-select:none;
+  display:flex;gap:11px;align-items:flex-start;transition:.13s}
+ul.check li::before{content:"○";color:var(--brand-dim);flex:0 0 auto;font-size:19px;line-height:1.5}
+ul.check li.done{background:var(--gbg);border-color:var(--gl);color:var(--g)}
+ul.check li.done::before{content:"●";color:var(--g)}
+ul.check li small{display:block;color:var(--soft);font-size:16px;margin-top:2px}
+ul.check.two{column-count:2;column-gap:14px}
+ul.check.two li{break-inside:avoid;font-size:18px;padding:7px 12px;margin:0 0 8px}
+ul.check.two li small{font-size:14px}
+ul.check li.done small{color:var(--g);opacity:.85}
+
+/* ---------- columns / boxes ---------- */
+.cols{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+.cols.w3{grid-template-columns:1fr 1fr 1fr}
+.cols.w4{grid-template-columns:1fr 1fr 1fr 1fr;gap:14px}
+.box{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:14px 17px;
+  box-shadow:0 2px 8px rgba(106,63,214,.06)}
+.box h3{margin:0 0 6px;font-size:22px;color:var(--brand)}
+.box p,.box ul{font-size:18px;margin:5px 0}
+.box.ac{border-top:5px solid var(--accent)}
+.box.gd{border-top:5px solid var(--g)}
+.box.pk{border-top:5px solid var(--pink)}
+.box.sn{border-top:5px solid var(--sun)}
+.box .ico{font-size:40px;line-height:1;margin-bottom:6px}
+
+/* ---------- flow diagram ---------- */
+.flow{display:flex;align-items:center;justify-content:center;gap:10px;flex-wrap:wrap;margin:14px 0}
+.flow .st{background:#fff;border:2px solid var(--brand-dim);border-radius:12px;padding:12px 18px;
+  font-size:20px;text-align:center;min-width:150px}
+.flow .st.d{border-color:var(--accent);background:var(--accent-soft);border-radius:30px}
+.flow .st.e{border-color:var(--g);background:var(--gbg)}
+.flow .ar{font-size:28px;color:var(--brand-dim)}
+
+/* ---------- file cue: tells everyone which .py file to open now ---------- */
+.pg{display:inline-flex;align-items:center;gap:10px;background:#1f2937;color:#fff;border-radius:10px;
+  padding:8px 16px;font-size:18px;margin:0 0 12px}
+.pg b{color:#ffd166;font-weight:700}
+.pg .k{display:inline-block;background:#ff5c8a;color:#fff;border-radius:16px;padding:1px 12px;font-size:16px;font-weight:700}
+.pg a{color:#8fc7ea;font-size:15px;margin-left:6px}
+
+/* ---------- terminal mock ---------- */
+.term{background:#1b1b24;color:#e8e8f0;border-radius:10px;padding:14px 18px;margin:12px 0;
+  font-family:var(--mono);font-size:19px;line-height:1.5;white-space:pre;overflow:auto}
+.term b{color:#ffd166}
+.term .dim{color:#8b8b9e}
+
+/* ---------- notes ---------- */
+aside.notes{display:none;position:absolute;left:0;right:0;bottom:0;background:#2a2238;color:#ece6f5;
+  padding:14px 66px 16px;font-size:17px;line-height:1.5;border-top:3px solid var(--accent);
+  max-height:58%;overflow:auto}
+body.notes aside.notes{display:block}
+aside.notes b,aside.notes strong{color:#ffd9a8}
+aside.notes em{color:#9fe3c0;font-style:normal;font-weight:600}
+aside.notes a{color:#c8b6ff}
+aside.notes code{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.28);
+  color:#ffe6c2;border-radius:4px;padding:1px 6px;font-size:.92em}
+aside.notes pre{background:rgba(0,0,0,.32);border:1px solid rgba(255,255,255,.18);
+  border-left:4px solid var(--accent);border-radius:6px;padding:9px 13px;margin:7px 0;overflow:auto}
+aside.notes pre code{background:none;border:none;padding:0;color:#ece6f5;font-size:15px;
+  line-height:1.5;display:block;white-space:pre}
+aside.notes pre code .k{color:#ff9d9d} aside.notes pre code .n{color:#c8b6ff}
+aside.notes pre code .s{color:#9fe3c0} aside.notes pre code .c{color:#a99fb8}
+aside.notes::before{content:"教師備註";display:block;font-size:13px;letter-spacing:.1em;
+  color:#a99fb8;margin-bottom:5px}
+
+/* ---------- chrome ---------- */
+#bar{position:fixed;left:0;top:0;height:4px;background:var(--accent);width:0;z-index:50;
+  transition:width .25s;pointer-events:none}
+#hud{position:fixed;right:14px;top:12px;z-index:50;color:#b3a9c4;font-size:13px;
+  letter-spacing:.04em;background:rgba(26,20,38,.8);padding:5px 12px;border-radius:14px;
+  opacity:1;transition:opacity .5s;pointer-events:none}
+#hud.fade{opacity:0}
+#hud b{color:#ffd9a8}
+
+/* ---------- overview ---------- */
+.thumb{display:contents}
+body.ov #stage{overflow:auto;place-items:start;padding:24px}
+body.ov #deck{width:auto;height:auto;transform:none!important;display:grid;
+  grid-template-columns:repeat(auto-fill,256px);gap:16px;justify-content:center;
+  max-width:1560px;margin:0 auto}
+body.ov .thumb{display:block;position:relative;width:256px;height:144px;overflow:hidden;
+  border:2px solid #3b2f52;border-radius:7px;cursor:pointer;background:var(--bg);
+  box-shadow:0 2px 10px rgba(0,0,0,.35);transition:border-color .15s,transform .15s}
+body.ov .thumb:hover{border-color:#8a72c4;transform:translateY(-2px)}
+body.ov .thumb.here{border-color:var(--accent);box-shadow:0 0 0 2px var(--accent)}
+body.ov .thumb::after{content:attr(data-i);position:absolute;right:4px;top:3px;z-index:3;
+  background:rgba(26,20,38,.72);color:#ffd9a8;font-size:10px;padding:1px 6px;border-radius:9px}
+body.ov .slide{position:absolute;top:0;left:0;inset:auto;width:1280px;height:720px;
+  display:flex!important;transform:scale(.2);transform-origin:top left;pointer-events:none}
+body.ov aside.notes{display:none!important}
+body.ov #hud{display:none}
+</style>
+</head>
+<body>
+<div id="bar"></div>
+<div id="stage"><div id="deck">
+
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>第 2 堂 · 讓它自己打下去</h1>
+  <h2>迴圈 for / while、亂數 random</h2>
+  <p>今天的目標：<b>全自動戰鬥</b>，打到有人倒下為止。</p>
+  <aside class="notes">上堂只打一回合，今天把它變成完整的戰鬥。她會直接感受到「迴圈」的威力。
+  <br>課前確認 <code>lesson02/code/</code> 在她電腦上，終端機能 <code>cd</code> 過去。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 回顧＋暖身</td><td>15 分</td><td>檢查回家改的王戰，複習 if</td></tr>
+    <tr><td>2. for 迴圈</td><td>25 分</td><td>連段攻擊、range、累加</td></tr>
+    <tr><td>3. 亂數</td><td>20 分</td><td>random：掉寶、浮動傷害</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
+    <tr class="hi"><td>4. while 迴圈</td><td>30 分</td><td>打到血量歸零、break、無窮迴圈</td></tr>
+    <tr><td>5. Demo &amp; 收尾</td><td>25 分</td><td>自動戰鬥，調難度</td></tr>
+  </table>
+  <aside class="notes">第 2 段結束前她要能自己寫出一個 for 迴圈。若卡在 range 的起訖，不要急著往下。
+  <br>時間不夠：第 3 段的 <code>random.choice</code> 可以只示範不練習，第 5 段留滿 20 分鐘。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>先看你回家改的</h2>
+  <div class="pg">打開 <span class="k">上堂的 demo-boss.py</span><b>執行你改的版本</b></div>
+  <div class="cols">
+    <div class="box gd"><h3>上次學的</h3>
+      <ul><li>變數、字串 vs 數字</li><li><code>int()</code> 轉換</li><li><code>if / elif / else</code></li></ul></div>
+    <div class="box ac"><h3>上次的問題</h3>
+      <p>王戰<b>只打一回合</b>就結束了。</p>
+      <p>要打十回合的話，難道要把同一段複製十次？</p></div>
+  </div>
+  <div class="callout">這就是今天要解決的事：<b>同樣的事要做很多次，交給迴圈。</b></div>
+  <aside class="notes">先請她展示「一定打得贏」和「一定打不贏」的版本，問她<b>改了哪個數字、為什麼</b>——這比程式本身重要。
+  <br>如果她沒做，不要責備，當場花 3 分鐘一起改一次。
+  <br>「複製十次」的荒謬感要讓她自己說出來，之後 for 的必要性就不用解釋了。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>for：重複固定次數</h2></section>
+
+<section class="slide sm">
+  <h2>五連段攻擊</h2>
+  <div class="pg">打開 <span class="k">01-combo.py</span><b>執行，然後改成 8 連段</b></div>
+  <div class="cols">
+    <div>
+<pre><code>for i in range(5):
+    print(f"第 {i} 下攻擊")</code></pre>
+      <div class="term">第 0 下攻擊
+第 1 下攻擊
+第 2 下攻擊
+第 3 下攻擊
+第 4 下攻擊</div>
+    </div>
+    <div class="box ac"><h3>三個部分</h3>
+      <ul style="font-size:18px">
+        <li><code>range(5)</code> 給出 <b>0 1 2 3 4</b>（五個數字，從 0 開始）</li>
+        <li><code>i</code> 是一個盒子，每輪裝一個</li>
+        <li>冒號 + <b>縮排 4 格</b>，跟 if 一樣</li>
+      </ul>
+      <p><small>想從 1 開始 → <code>range(1, 6)</code></small></p></div>
+  </div>
+  <aside class="notes">「從 0 開始」她一定會不習慣，這是程式的慣例，直接說「電腦數數從 0 開始，習慣就好」，不要哲學化。
+  <br>現場出三個小題讓她口答：<code>range(3)</code>？<code>range(2, 5)</code>？<code>range(1, 4)</code> 跑幾次？
+  <br><code>range(0, 10, 2)</code> 讓她自己試，不要先講。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>越打越痛：用 i 來算傷害</h2>
+  <div class="cols">
+    <div>
+<pre><code>atk = 12
+
+for i in range(1, 6):
+    damage = atk * i
+    print(f"第 {i} 下：{damage}")</code></pre>
+    </div>
+    <div>
+      <div class="term">第 1 下：12
+第 2 下：24
+第 3 下：36
+第 4 下：48
+第 5 下：60</div>
+    </div>
+  </div>
+  <div class="callout"><code>i</code> 不只是編號，<b>可以拿來算</b>——連段倍率、關卡難度、敵人數量都靠它。</div>
+  <div class="quiz" data-answer="15">
+    <p class="q"><code>for i in range(1, 6): print(i * 3)</code> 印出來的<b>最後一個數字</b>是？</p>
+    <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
+    <div class="fb"></div>
+  </div>
+  <aside class="notes">答案 15（i 最後是 5）。答錯通常是以為 range(1,6) 跑到 6。
+  <br>延伸玩法（她如果很快）：<code>print("⚔️" * i)</code> 印出三角形，她會很喜歡。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>把傷害加起來</h2>
+  <div class="pg">打開 <span class="k">02-total.py</span><b>執行看累積過程</b></div>
+  <pre><code>total = 0                      # ① 先準備一個空的計數盒子
+
+for i in range(1, 6):
+    damage = 12 * i
+    total = total + damage     # ② 每輪把新的加進去
+    print(f"第 {i} 下 {damage}，目前累積 {total}")
+
+print(f"總傷害：{total}")        # ③ 迴圈跑完才印</code></pre>
+  <div class="cols">
+    <div class="box ac"><h3>累加三步驟</h3><p>① 迴圈<b>外面</b>歸零<br>② 迴圈<b>裡面</b>累加<br>③ 迴圈<b>外面</b>印結果</p></div>
+    <div class="box gd"><h3>同一招能做什麼</h3><p>總傷害、總金幣、總經驗、<b>數次數</b>（暴擊幾次、贏幾場）</p></div>
+  </div>
+  <aside class="notes">最常見的兩個錯：<code>total = 0</code> 寫在迴圈裡面（每輪歸零，結果永遠是最後一下）、<code>print</code> 縮排進迴圈（印五次）。
+  <br><b>兩種都故意示範一次</b>，讓她看見「縮排位置＝什麼時候做」。這是今天最關鍵的觀念。
+  <br><code>total += damage</code> 提一下就好，她想用再用。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>random：讓遊戲每次都不一樣</h2></section>
+
+<section class="slide sm">
+  <h2>擲骰子與掉寶</h2>
+  <div class="pg">打開 <span class="k">03-random.py</span><b>連續執行三次，看結果不一樣</b></div>
+  <div class="cols">
+    <div>
+<pre><code>import random     # 借用工具箱
+
+roll = random.randint(1, 100)
+print(f"骰出了 {roll}")
+
+drops = ["生鏽的劍", "紅藥水",
+         "金幣 x10", "什麼都沒有"]
+print(random.choice(drops))</code></pre>
+    </div>
+    <div>
+      <div class="box ac"><h3>兩個好用的</h3>
+        <p><code>randint(1, 100)</code><br>隨機一個整數，<b>含頭含尾</b></p>
+        <p><code>choice(清單)</code><br>從清單裡隨機挑一個</p></div>
+      <div class="box sn"><h3>為什麼遊戲要亂數</h3>
+        <p>每次都一樣就不好玩了——掉寶、暴擊、抽卡、怪物位置，全都是亂數。</p></div>
+    </div>
+  </div>
+  <aside class="notes"><code>import</code> 只要說「借用別人寫好的工具箱」，不要講模組系統。
+  <br>讓她執行三次看到不同結果——這一刻她會理解亂數。
+  <br>接著把上一頁的固定傷害改成 <code>random.randint(10, 20)</code>，五連段每次都不同，串起 for + random。
+  <br>中括號的清單今天只要會用 <code>choice</code> 就好，<b>下一堂才正式教清單</b>，不要展開。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>while：不知道要跑幾次</h2></section>
+
+<section class="slide sm">
+  <h2>打到倒下為止</h2>
+  <div class="pg">打開 <span class="k">04-while.py</span><b>執行幾次，回合數每次不同</b></div>
+  <div class="cols">
+    <div>
+<pre><code>hp = 100
+turn = 0
+
+while hp &gt; 0:
+    turn = turn + 1
+    damage = random.randint(10, 25)
+    hp = hp - damage
+    print(f"第 {turn} 回合，剩 {hp}")
+
+print(f"撐了 {turn} 回合")</code></pre>
+    </div>
+    <div>
+      <table>
+        <tr><th></th><th>什麼時候用</th></tr>
+        <tr><td><code>for</code></td><td>知道要跑<b>幾次</b><br><small>五連段、十個怪</small></td></tr>
+        <tr><td><code>while</code></td><td>只知道<b>什麼時候停</b><br><small>打到血量歸零</small></td></tr>
+      </table>
+      <p><small>這就是為什麼戰鬥要用 while——誰知道要打幾回合？</small></p>
+    </div>
+  </div>
+  <aside class="notes">先問她：「一場戰鬥要打幾回合？」她答不出來 → 「所以 for 不夠用」。這個提問順序很重要。
+  <br>條件寫的是<b>「繼續的條件」</b>不是「結束的條件」，她很容易寫反成 <code>while hp &lt;= 0</code>（一次都不跑）。讓她試一次看看。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>無窮迴圈：迴圈停不下來</h2>
+  <div class="cols">
+    <div class="box bd"><h3>❌ 永遠停不下來</h3>
+<pre><code>hp = 100
+while hp &gt; 0:
+    print("攻擊！")</code></pre>
+      <p><small>血量<b>從來沒有變少</b>，條件永遠成立</small></p></div>
+    <div class="box gd"><h3>✅ 會結束</h3>
+<pre><code>hp = 100
+while hp &gt; 0:
+    print("攻擊！")
+    hp = hp - 10</code></pre>
+      <p><small>每輪血量減少，總有一天 ≤ 0</small></p></div>
+  </div>
+  <div class="callout"><b>卡住了怎麼辦：</b>在終端機按 <b>Control + C</b>，強制停掉。<br>
+  每次寫 while 都要問自己一句：<em>哪一行會讓條件變成不成立？</em></div>
+  <aside class="notes"><b>一定要現場示範一次無窮迴圈</b>，讓畫面狂噴，再按 Control+C 停掉。她會記一輩子，而且以後不會怕。
+  <br>（上一堂在工坊也遇過，那時是 20 秒自動停。真的 Python 不會自動停，只能自己按。）
+  <br><code>break</code> 在這裡順帶講：迴圈裡遇到 break 就直接跳出去，不管條件成不成立。上堂的猜數字就用過。</aside>
+</section>
+
+<section class="slide">
+  <h2>換你寫</h2>
+  <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
+  <ul class="check two">
+    <li><div><b>1. 印 10 行攻擊</b><small>暖身，確認 for 的寫法</small></div></li>
+    <li><div><b>2. 經驗值總和</b><small>第 i 隻怪給 i × 15 點，印每隻＋總和</small></div></li>
+    <li><div><b>3. 抽獎轉盤</b><small>獎品清單 + random.choice 抽 5 次</small></div></li>
+    <li><div><b>4. 怪物要打幾下</b><small>while + 隨機傷害，印「打了 N 下」</small></div></li>
+    <li><div><b>5. 挑戰：運氣統計</b><small>擲 1000 次，數幾次 ≥ 95</small></div></li>
+  </ul>
+  <aside class="notes">25 分鐘。第 5 題先讓她<b>猜</b>再跑（答案大約 50 次），猜完再驗證，印象最深。
+  <br>參考解答在 <code>notes/lesson02-solutions.py</code>。
+  <br>常見卡點：累加變數放錯位置、<code>print</code> 縮排、while 條件寫反、忘了 <code>import random</code>。</aside>
+</section>
+
+<!-- ========== Part 4 ========== -->
+<section class="slide lead"><h1>Part 4</h1><h2>今天的成果</h2></section>
+
+<section class="slide sm">
+  <h2>全自動戰鬥</h2>
+  <div class="pg">打開 <span class="k">demo-auto-battle.py</span><b>直接執行，看它自己打完</b></div>
+  <div class="term">── 第 7 回合 ──
+💥 勇者 暴擊！ 造成 28 點傷害
+⚔️  熔岩巨龍 攻擊 造成 16 點傷害
+  勇者   ████░░░░░░░░░░░░░░░░  28/120
+  熔岩巨龍 ███████░░░░░░░░░░░░░  59/160
+🧪 勇者 喝下藥水，血量回到 68（剩 1 瓶）
+
+🎉 第 11 回合，熔岩巨龍 倒下了！
+   勇者 總共打出 165 點傷害</div>
+  <p><small>裡面只有 <code>while</code>、<code>if</code>、<code>random</code>、變數——全部是你會的。</small></p>
+  <aside class="notes">先執行兩三次，讓她看到<b>結果每次都不一樣，有時候還會輸</b>。
+  <br>對照程式：① 外層 <code>while hero_hp &gt; 0 and boss_hp &gt; 0</code>（兩個條件 and） ② 藥水那段 if（她上堂寫過類似的） ③ 最後的統計（今天的累加）。
+  <br><b>剩下的時間全部給她調數值</b>：<code>BOSS_ATK</code>、<code>potions</code>、雙方血量。目標是調到「大約五五波」，這其實就是遊戲設計師在做的事——可以順口說一句，她會覺得自己在做真的遊戲。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天做了什麼</h2>
+  <ul class="check">
+    <li><code>for</code> + <code>range</code>：重複固定次數</li>
+    <li>累加：先歸零、迴圈裡加、迴圈外印</li>
+    <li><code>random</code>：讓每次執行都不一樣</li>
+    <li><code>while</code>：重複到條件不成立為止，還會用 Control+C 救自己</li>
+    <li>調出一場勢均力敵的戰鬥</li>
+  </ul>
+  <div class="callout"><b>下一堂：</b>背包、隊伍、<b>抽卡</b>——用「清單」一次管很多東西。</div>
+  <aside class="notes">回家的事：把自動戰鬥調成「五五波」，記下最後用的數字，下次說明為什麼這樣調。
+  <br>下課前確認她的檔案有存好；提醒她 <code>lesson02/code/</code> 不要搬動位置。</aside>
+</section>
+
+</div></div>
+<div id="hud">← → 翻頁 · <b>O</b> 總覽 · <b>N</b> 備註 · <b>F</b> 全螢幕</div>
+
+<script>
+"use strict";
+
+/* ============================================================
+   1. Python syntax highlighting (runs on plain text in <pre><code>)
+   ============================================================ */
+const KW = new Set(["and","or","not","if","elif","else","for","while","in","def","return",
+  "break","continue","import","from","as","True","False","None","global","pass","lambda","is"]);
+const BI = new Set(["print","input","int","float","str","len","range","list","map","sum","max",
+  "min","sorted","abs","append","pop","split","join","upper","lower","ord","chr","type","set","dict",
+  "random","randint","turtle","Turtle","speed","pencolor","forward","left","right"]);
+
+function esc(t){ return t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+function highlight(text){
+  let out = "";
+  const lines = text.split("\n");
+  lines.forEach((line, li) => {
+    let i = 0, buf = "";
+    while(i < line.length){
+      const ch = line[i];
+      if(ch === "#"){ buf += '<span class="c">' + esc(line.slice(i)) + "</span>"; i = line.length; continue; }
+      if(ch === '"' || ch === "'"){
+        let j = i + 1;
+        while(j < line.length && line[j] !== ch) j++;
+        buf += '<span class="s">' + esc(line.slice(i, j + 1)) + "</span>";
+        i = j + 1; continue;
+      }
+      if(/[A-Za-z_]/.test(ch)){
+        let j = i;
+        while(j < line.length && /[A-Za-z0-9_]/.test(line[j])) j++;
+        const w = line.slice(i, j);
+        buf += KW.has(w) ? '<span class="k">' + w + "</span>"
+             : BI.has(w) ? '<span class="n">' + w + "</span>" : esc(w);
+        i = j; continue;
+      }
+      if(/[0-9]/.test(ch)){
+        let j = i;
+        while(j < line.length && /[0-9.]/.test(line[j])) j++;
+        buf += '<span class="n">' + line.slice(i, j) + "</span>";
+        i = j; continue;
+      }
+      buf += esc(ch); i++;
+    }
+    out += buf + (li < lines.length - 1 ? "\n" : "");
+  });
+  return out;
+}
+document.querySelectorAll("pre > code").forEach(c => { c.innerHTML = highlight(c.textContent); });
+
+/* ============================================================
+   2. Interactive: code tracer
+   ============================================================ */
+document.querySelectorAll(".tracer").forEach(box => {
+  const cfgEl = box.querySelector('script[type="application/json"]');
+  if(!cfgEl) return;
+  let cfg;
+  try{ cfg = JSON.parse(cfgEl.textContent); }
+  catch(e){ box.innerHTML = '<p style="color:#d43d3d">追蹤器設定格式有誤</p>'; return; }
+
+  box.innerHTML = `
+    <div class="tcode">${cfg.code.map(l => "<div>" + highlight(l) + "</div>").join("")}</div>
+    <div class="tside">
+      <table><thead><tr>${cfg.cols.map(c => "<th>" + esc(c) + "</th>").join("")}</tr></thead><tbody></tbody></table>
+      <div class="say"></div>
+      <div class="tbtns">
+        <button data-prev>← 上一步</button>
+        <button class="pri" data-next>下一步 →</button>
+        <button data-rst>重來</button>
+        <span class="step"></span>
+      </div>
+    </div>`;
+
+  const lines = [...box.querySelectorAll(".tcode div")];
+  const tb = box.querySelector("tbody");
+  const say = box.querySelector(".say");
+  const stepLbl = box.querySelector(".step");
+  const bPrev = box.querySelector("[data-prev]"), bNext = box.querySelector("[data-next]");
+  let at = 0;
+
+  function render(){
+    lines.forEach(l => l.classList.remove("lit"));
+    tb.innerHTML = "";
+    let lastSay = "";
+    for(let k = 0; k < at; k++){
+      const st = cfg.steps[k];
+      if(st.row){
+        const tr = document.createElement("tr");
+        tr.innerHTML = st.row.map(v => "<td>" + esc(v) + "</td>").join("");
+        tb.appendChild(tr);
+      }
+      if(st.say) lastSay = st.say;
+    }
+    if(at > 0){
+      const cur = cfg.steps[at - 1];
+      (cur.hl || []).forEach(n => lines[n - 1] && lines[n - 1].classList.add("lit"));
+      say.textContent = cur.say || (cur.row ? "把這一列填進表格" : lastSay);
+    }else{
+      say.textContent = "按「下一步」開始一行一行看。";
+    }
+    stepLbl.textContent = at + " / " + cfg.steps.length;
+    bPrev.disabled = at === 0;
+    bNext.disabled = at === cfg.steps.length;
+  }
+  bNext.addEventListener("click", () => { if(at < cfg.steps.length){ at++; render(); } });
+  bPrev.addEventListener("click", () => { if(at > 0){ at--; render(); } });
+  box.querySelector("[data-rst]").addEventListener("click", () => { at = 0; render(); });
+  render();
+});
+
+/* ============================================================
+   3. Interactive: quiz
+   ============================================================ */
+function normAns(s){
+  return String(s).trim().replace(/\s*,\s*/g, ",").replace(/[ \t]+/g, " ").replace(/^['"]|['"]$/g, "");
+}
+document.querySelectorAll(".quiz").forEach(q => {
+  const want = q.dataset.answer || "";
+  const input = q.querySelector("input");
+  const btn = q.querySelector("button");
+  const fb = q.querySelector(".fb");
+  function check(){
+    const ok = normAns(input.value).toLowerCase() === normAns(want).toLowerCase();
+    fb.className = "fb on " + (ok ? "ok" : "no");
+    fb.textContent = ok ? "✓ 對了" : "✗ 再想一下";
+  }
+  btn.addEventListener("click", check);
+  input.addEventListener("keydown", e => { if(e.key === "Enter"){ e.stopPropagation(); check(); } });
+  input.addEventListener("keyup", e => e.stopPropagation());
+});
+
+/* ============================================================
+   4. Interactive: tabs
+   ============================================================ */
+document.querySelectorAll(".tabs").forEach(t => {
+  const bar = document.createElement("div");
+  bar.className = "tabbar";
+  t.insertBefore(bar, t.firstChild);
+  const panes = [...t.querySelectorAll(".pane")];
+  panes.forEach((p, i) => {
+    const b = document.createElement("button");
+    const h = p.querySelector("h4");
+    b.textContent = h ? h.textContent.replace(/^\d+\)\s*/, "") : "第 " + (i + 1) + " 個";
+    if(h) h.style.display = "none";
+    b.addEventListener("click", () => {
+      panes.forEach(x => x.classList.remove("on"));
+      [...bar.children].forEach(x => x.classList.remove("on"));
+      p.classList.add("on"); b.classList.add("on");
+    });
+    bar.appendChild(b);
+  });
+  if(panes.length){ panes[0].classList.add("on"); bar.children[0].classList.add("on"); }
+});
+
+/* ============================================================
+   5. Interactive: checklist
+   ============================================================ */
+document.querySelectorAll("ul.check > li").forEach(li => {
+  li.addEventListener("click", () => li.classList.toggle("done"));
+});
+
+/* ============================================================
+   6. Deck engine: scaling, navigation, overview, notes
+   ============================================================ */
+const deck = document.getElementById("deck");
+const slides = [...document.querySelectorAll(".slide")];
+let part = "";
+slides.forEach((s, i) => {
+  s.dataset.n = (i + 1) + " / " + slides.length;
+  const h1 = s.querySelector("h1");
+  if(s.classList.contains("lead") && h1 && /^Part/.test(h1.textContent)){
+    const h2 = s.querySelector("h2");
+    part = h1.textContent.trim() + (h2 ? " · " + h2.textContent.trim() : "");
+  }
+  s.dataset.part = part || "Python 第 1 堂";
+});
+
+const thumbs = slides.map((s, i) => {
+  const w = document.createElement("div");
+  w.className = "thumb";
+  w.dataset.i = i + 1;
+  s.parentNode.insertBefore(w, s);
+  w.appendChild(s);
+  w.addEventListener("click", () => {
+    if(document.body.classList.contains("ov")){ go(i); toggleOv(false); }
+  });
+  return w;
+});
+
+let cur = 0;
+function go(i){
+  cur = Math.max(0, Math.min(slides.length - 1, i));
+  slides.forEach((s, k) => s.classList.toggle("on", k === cur));
+  document.getElementById("bar").style.width = ((cur + 1) / slides.length * 100) + "%";
+  if(history.replaceState) history.replaceState(null, "", "#" + (cur + 1));
+}
+function fit(){
+  if(document.body.classList.contains("ov")){ deck.style.transform = ""; return; }
+  const k = Math.min(window.innerWidth / 1280, window.innerHeight / 720);
+  deck.style.transform = "scale(" + k + ")";
+}
+function toggleOv(force){
+  const on = force === undefined ? !document.body.classList.contains("ov") : force;
+  document.body.classList.toggle("ov", on);
+  if(on) slides.forEach(s => s.classList.add("on"));
+  else slides.forEach((s, k) => s.classList.toggle("on", k === cur));
+  thumbs.forEach((t, k) => t.classList.toggle("here", on && k === cur));
+  fit();
+  if(on && thumbs[cur]) thumbs[cur].scrollIntoView({block:"center"});
+}
+
+addEventListener("resize", fit);
+addEventListener("keydown", e => {
+  if(/^(INPUT|TEXTAREA)$/.test(e.target.tagName)) return;
+  const k = e.key;
+  if(k === "ArrowRight" || k === " " || k === "PageDown"){ e.preventDefault(); toggleOv(false); go(cur + 1); }
+  else if(k === "ArrowLeft" || k === "PageUp"){ e.preventDefault(); toggleOv(false); go(cur - 1); }
+  else if(k === "Home"){ go(0); }
+  else if(k === "End"){ go(slides.length - 1); }
+  else if(k === "o" || k === "O"){ toggleOv(); }
+  else if(k === "n" || k === "N"){ document.body.classList.toggle("notes"); }
+  else if(k === "f" || k === "F"){
+    if(document.fullscreenElement) document.exitFullscreen();
+    else document.documentElement.requestFullscreen && document.documentElement.requestFullscreen();
+  }
+  else if(k === "Escape"){ toggleOv(false); }
+});
+
+const hud = document.getElementById("hud");
+let hudT;
+function pokeHud(){
+  hud.classList.remove("fade");
+  clearTimeout(hudT);
+  hudT = setTimeout(() => hud.classList.add("fade"), 4000);
+}
+addEventListener("mousemove", pokeHud);
+addEventListener("keydown", pokeHud);
+pokeHud();
+
+/* dev self-check: flag slides whose content would be clipped by the 1280x720 frame */
+(function overflowCheck(){
+  const bad = [];
+  slides.forEach((s, i) => {
+    const was = s.classList.contains("on");
+    s.classList.add("on");
+    if(s.scrollHeight > 722 || s.scrollWidth > 1282) bad.push(i + 1);
+    if(!was) s.classList.remove("on");
+  });
+  if(bad.length) console.warn("[slides] 這幾頁內容超出版面，需要縮減或改用 sm / xs：", bad.join(", "));
+  else console.info("[slides] 版面檢查通過，" + slides.length + " 頁都在框內。");
+})();
+
+function fromHash(){
+  const n = parseInt((location.hash || "").slice(1), 10);
+  return isFinite(n) && n > 0 ? n - 1 : 0;
+}
+addEventListener("hashchange", () => { const n = fromHash(); if(n !== cur) go(n); });
+go(fromHash());
+fit();
+</script>
+</body>
+</html>
