@@ -1,0 +1,33 @@
+// 學生電腦的 VS Code 建議設定
+// 貼到：Code → Settings → Settings (⌘,) → 右上角「Open Settings (JSON)」
+// 目的：① 把 Tab 還給縮排（不要被 AI 補完搶走）② 初學者不要用 AI 自動補完
+{
+  // ---- 縮排：Python 一律 4 個空格 ----
+  "editor.tabSize": 4,
+  "editor.insertSpaces": true,
+  "editor.detectIndentation": false,
+  "editor.renderWhitespace": "boundary",
+
+  // ---- 不要讓任何東西搶走 Tab / Enter ----
+  "editor.inlineSuggest.enabled": false,
+  "editor.tabCompletion": "off",
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.suggestOnTriggerCharacters": false,
+  "editor.quickSuggestions": {
+    "other": false,
+    "comments": false,
+    "strings": false
+  },
+
+  // ---- 關掉 AI 補完（初學階段一定要關，不然是它在寫不是她在寫）----
+  "github.copilot.enable": { "*": false },
+  "github.copilot.nextEditSuggestions.enabled": false,
+  "geminicodeassist.inlineSuggestions.enableAuto": false,
+
+  // ---- 執行前自動存檔，避免「改了卻沒變」----
+  "files.autoSave": "onFocusChange",
+
+  // ---- 終端機字大一點，上課看得清楚 ----
+  "terminal.integrated.fontSize": 15,
+  "editor.fontSize": 15
+}
