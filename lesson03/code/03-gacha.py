@@ -1,29 +1,30 @@
-# ===== 範例 3：抽卡的機率是怎麼做的 =====
+# ===== Example 3: how card draw rates actually work =====
 import random
 
-# 做法：把卡池做成一個清單，稀有的放少張、普通的放多張
-pool = (["SSR 龍騎士"] * 2       # 2 張
-        + ["SR 火法師"] * 8       # 8 張
-        + ["R 弓箭手"] * 30       # 30 張
-        + ["N 村民"] * 60)        # 60 張，合計 100 張
+# The trick: build the card pool as a list.
+# Rare cards get few copies, common cards get many.
+pool = (["SSR Dragon Knight"] * 2       # 2 copies
+        + ["SR Fire Mage"] * 8          # 8 copies
+        + ["R Archer"] * 30             # 30 copies
+        + ["N Villager"] * 60)          # 60 copies, 100 cards in total
 
-print(f"卡池總共有 {len(pool)} 張卡")
-print(f"抽到 SSR 的機率是 {pool.count('SSR 龍騎士')} / {len(pool)}")
+print(f"The pool has {len(pool)} cards")
+print(f"Chance of an SSR: {pool.count('SSR Dragon Knight')} out of {len(pool)}")
 
-card = random.choice(pool)        # 從卡池裡隨機抽一張
-print(f"你抽到了：{card}")
+card = random.choice(pool)        # draw one random card from the pool
+print(f"You drew: {card}")
 
 print()
-print("---- 十連抽 ----")
-results = []                      # 先準備一個空清單裝結果
+print("---- ten draws ----")
+results = []                      # an empty list to collect the results
 for i in range(10):
     card = random.choice(pool)
-    results.append(card)          # 抽到的放進清單
+    results.append(card)          # put every card we drew into the list
     print(f"{i + 1}. {card}")
 
 print()
-print(f"這十抽裡面 SSR 有 {results.count('SSR 龍騎士')} 張")
+print(f"SSR cards in these ten draws: {results.count('SSR Dragon Knight')}")
 
-# 試試看：
-# 1. 把 SSR 改成 10 張，再抽十次，感覺有差嗎？
-# 2. 抽 1000 次，數數看真的抽到幾張 SSR（用 for 跑 1000 次）
+# Try it:
+# 1. Change the SSR to 10 copies and draw again - can you feel the difference?
+# 2. Draw 1000 times and count how many SSR you really get

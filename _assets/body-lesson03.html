@@ -26,18 +26,18 @@
   <h2>一個問題</h2>
   <div class="cols">
     <div class="box bd"><h3>如果背包有 10 樣東西</h3>
-<pre><code>item1 = "木劍"
-item2 = "紅藥水"
-item3 = "麵包"
-item4 = "盾牌"
+<pre><code>item1 = "Wooden Sword"
+item2 = "Red Potion"
+item3 = "Bread"
+item4 = "Shield"
 ...</code></pre>
       <p><small>撿到第 11 樣怎麼辦？要怎麼「印出全部」？</small></p></div>
     <div class="box gd"><h3>用清單</h3>
-<pre><code>bag = ["木劍", "紅藥水",
-       "麵包", "盾牌"]</code></pre>
+<pre><code>bag = ["Wooden Sword", "Red Potion",
+       "Bread", "Shield"]</code></pre>
       <p><small>一個盒子裝<b>一整排</b>東西，數量可以變</small></p></div>
   </div>
-  <div class="callout">上一堂的 <code>drops = ["生鏽的劍", "紅藥水", ...]</code> 其實就是清單——今天正式學它。</div>
+  <div class="callout">上一堂的 <code>drops = ["Rusty Sword", "Red Potion", ...]</code> 其實就是清單——今天正式學它。</div>
   <aside class="notes">先問她：「你玩的遊戲，背包裡有幾格？」→ 很多格，而且會變多 → 十個變數顯然不行。讓問題自己浮出來。
   <br>回顧上堂的 <code>drops</code>，讓她發現「我上週就用過了」，接受度會高很多。</aside>
 </section>
@@ -50,17 +50,17 @@ item4 = "盾牌"
   <div class="pg">打開 <span class="k">01-bag.py</span><b>執行，然後試 bag[10] 看錯誤訊息</b></div>
   <div class="cols">
     <div>
-<pre><code>bag = ["木劍", "紅藥水", "麵包"]
+<pre><code>bag = ["Wooden Sword", "Red Potion", "Bread"]
 
-print(bag[0])    # 木劍
-print(bag[1])    # 紅藥水
-print(bag[-1])   # 麵包（倒數第一個）
+print(bag[0])    # Wooden Sword
+print(bag[1])    # Red Potion
+print(bag[-1])   # Bread（倒數第一個）
 print(len(bag))  # 3（有幾樣）</code></pre>
     </div>
     <div>
       <table style="font-size:18px">
         <tr><th>編號</th><td>0</td><td>1</td><td>2</td></tr>
-        <tr><th>東西</th><td>木劍</td><td>紅藥水</td><td>麵包</td></tr>
+        <tr><th>東西</th><td>Wooden Sword</td><td>Red Potion</td><td>Bread</td></tr>
         <tr><th>倒數</th><td>-3</td><td>-2</td><td>-1</td></tr>
       </table>
       <p><small><b>三樣東西，編號是 0、1、2</b>——沒有 3。<br>跟上堂 <code>range(3)</code> 一樣的規矩。</small></p>
@@ -74,13 +74,13 @@ print(len(bag))  # 3（有幾樣）</code></pre>
   <h2>撿東西、用東西</h2>
   <div class="cols">
     <div>
-<pre><code>bag.append("鐵劍")      # 撿到 → 加到最後面
-bag.remove("紅藥水")    # 用掉 → 拿走這一個
-bag[0] = "鋼劍"         # 換掉第 0 格</code></pre>
-      <div class="term">['木劍', '紅藥水', '麵包']
-['木劍', '紅藥水', '麵包', '鐵劍']
-['木劍', '麵包', '鐵劍']
-['鋼劍', '麵包', '鐵劍']</div>
+<pre><code>bag.append("Iron Sword")   # 撿到 → 加到最後面
+bag.remove("Red Potion")   # 用掉 → 拿走這一個
+bag[0] = "Steel Sword"     # 換掉第 0 格</code></pre>
+      <div class="term">['Wooden Sword', 'Red Potion', 'Bread']
+['Wooden Sword', 'Red Potion', 'Bread', 'Iron Sword']
+['Wooden Sword', 'Bread', 'Iron Sword']
+['Steel Sword', 'Bread', 'Iron Sword']</div>
     </div>
     <div class="box ac"><h3>常用動作</h3>
       <table style="font-size:17px">
@@ -117,7 +117,7 @@ bag[0] = "鋼劍"         # 換掉第 0 格</code></pre>
     </div>
   </div>
   <div class="quiz" data-answer="4">
-    <p class="q"><code>party = ["劍士", "法師", "弓箭手", "牧師"]</code>，<br><code>for x in party:</code> 這個迴圈會跑<b>幾輪</b>？</p>
+    <p class="q"><code>party = ["Swordsman", "Mage", "Archer", "Healer"]</code>，<br><code>for x in party:</code> 這個迴圈會跑<b>幾輪</b>？</p>
     <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
     <div class="fb"></div>
   </div>
@@ -149,10 +149,10 @@ print(sum(hp_list) / len(hp_list))   # 90.0   平均</code></pre>
   <div class="pg">打開 <span class="k">03-gacha.py</span><b>執行十連抽</b></div>
   <div class="cols">
     <div>
-<pre><code>pool = (["SSR 龍騎士"] * 2
-      + ["SR 火法師"] * 8
-      + ["R 弓箭手"] * 30
-      + ["N 村民"] * 60)
+<pre><code>pool = (["SSR Dragon Knight"] * 2
+      + ["SR Fire Mage"] * 8
+      + ["R Archer"] * 30
+      + ["N Villager"] * 60)
 
 card = random.choice(pool)</code></pre>
       <p><small><code>["A"] * 3</code> → <code>["A", "A", "A"]</code><br>清單也可以用乘法複製</small></p>
@@ -176,7 +176,7 @@ for i in range(10):
     results.append(card)           # ② 抽到就放進去
     print(f"{i + 1}. {card}")
 
-print(f"SSR 有 {results.count('SSR 龍騎士')} 張")   # ③ 統計</code></pre>
+print(results.count("SSR Dragon Knight"))   # ③ 統計</code></pre>
   <div class="callout">這就是上一堂<b>累加</b>的清單版：空清單 → 迴圈裡 append → 迴圈外統計。
   <code>.count(x)</code> 數某個東西出現幾次。</div>
   <aside class="notes">三步驟的結構跟上堂的 <code>total = 0</code> 完全一樣，明講出來：<b>「準備 → 迴圈裡累積 → 迴圈外結算」是寫程式最常見的骨架。</b>
@@ -204,17 +204,17 @@ print(f"SSR 有 {results.count('SSR 龍騎士')} 張")   # ③ 統計</code></pr
 <section class="slide sm">
   <h2>轉蛋機</h2>
   <div class="pg">打開 <span class="k">demo-gacha.py</span><b>直接執行，十連抽</b></div>
-  <div class="term">卡池共 100 張，其中 SSR 2 張
-第 3 抽
-   🎰 🏹 R 弓箭手
-   ✨ 🐉 SSR 龍騎士
+  <div class="term">The pool has 100 cards, 2 of them SSR
+Draw 3
+   [ R Archer ]
+   * SSR Dragon Knight *
 
-  小美 的十連抽結果
-  SSR：1 張   SR：2 張   其他：7 張
-   1. 🐷 N 小豬
-   2. 🔥 SR 火法師
+  Amy's ten draws
+  SSR: 1   SR: 2   other: 7
+   1. N Piglet
+   2. SR Fire Mage
    ...
-  😀 運氣不錯，抽到 SSR 了</div>
+  Nice, you got an SSR</div>
   <p><small>轉動的動畫也是迴圈——跳 8 次，每次印一張不同的卡。</small></p>
   <aside class="notes">先讓她抽，抽到滿意為止（每次結果不同，她會一直想再抽——這正是抽卡遊戲的設計）。
   <br>再看程式：① <code>POOL</code> 的張數 ② <code>spin()</code> 裡的 for 跳動 ③ 統計那段 for + if。

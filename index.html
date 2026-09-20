@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>課程總覽 · Python 遊戲程式設計</title>
+<style>
+:root{
+  --ink:#2a2233; --soft:#6b6376; --faint:#9a92a6; --bg:#fff8f3; --panel:#fff; --line:#efe1d8;
+  --brand:#6a3fd6; --brand-soft:#efe9fc; --accent:#ff6b3d; --accent-soft:#fff0e8;
+  --pink:#ff5c8a; --sun:#ffb347; --g:#1f9d6a; --gbg:#e6f6ee; --code:#faf6fd;
+  --mono:"SF Mono","JetBrains Mono",Menlo,Consolas,monospace;
+  --sans:"Helvetica Neue","PingFang TC","Noto Sans TC","Microsoft JhengHei",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);line-height:1.6}
+code{font-family:var(--mono);font-size:.9em;background:var(--code);border:1px solid var(--line);
+  border-radius:4px;padding:1px 6px}
+a{color:var(--brand)}
+
+header{background:linear-gradient(135deg,#6a3fd6 0%,#ff5c8a 60%,#ffb347 100%);color:#fff;
+  padding:34px 0 30px}
+header .in{max-width:1000px;margin:0 auto;padding:0 24px}
+header h1{margin:0 0 6px;font-size:31px}
+header p{margin:0;color:#fff3f7;font-size:16px}
+header .st{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:14px;color:#fff3f7}
+header .st b{color:#fff3b0}
+
+main{max-width:1000px;margin:0 auto;padding:26px 24px 60px}
+section{margin-bottom:34px}
+h2{font-size:22px;color:var(--brand);margin:0 0 4px;padding-bottom:8px;border-bottom:2px solid var(--line)}
+h2 .num{display:inline-block;background:var(--brand);color:#fff;border-radius:6px;
+  width:26px;height:26px;line-height:26px;text-align:center;font-size:15px;margin-right:9px}
+section > p{color:var(--soft);font-size:15px;margin:10px 0 14px}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px}
+.card{display:block;background:var(--panel);border:1px solid var(--line);border-radius:12px;
+  padding:16px 19px;text-decoration:none;color:inherit;transition:.15s}
+.card:hover{border-color:var(--brand);box-shadow:0 3px 14px rgba(106,63,214,.13);transform:translateY(-2px)}
+.card .n{font-size:12px;color:var(--faint);letter-spacing:.08em}
+.card h3{margin:2px 0 6px;font-size:18px;color:var(--brand)}
+.card p{margin:0;font-size:14px;color:var(--soft)}
+.card .tag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 10px;border-radius:20px;
+  background:var(--gbg);color:var(--g);margin-top:10px}
+.card .demo{display:block;margin-top:9px;font-size:13px;color:var(--accent);font-weight:600}
+.card.todo{opacity:.55;pointer-events:none;background:var(--code);border-style:dashed}
+.card.todo h3{color:var(--soft)}
+.card.todo .tag{background:var(--line);color:var(--faint)}
+.card.wide{grid-column:1 / -1}
+.card.setup{border-color:var(--accent);background:var(--accent-soft)}
+.card.setup .tag{background:#ffe0d2;color:var(--accent)}
+
+table{border-collapse:collapse;width:100%;font-size:14.5px;background:var(--panel);
+  border-radius:10px;overflow:hidden}
+th{background:var(--brand-soft);color:var(--brand);text-align:left;padding:9px 13px;font-size:14px}
+td{padding:9px 13px;border-top:1px solid var(--line);vertical-align:top}
+td:first-child{white-space:nowrap}
+
+.callout{background:var(--brand-soft);border-left:5px solid var(--accent);border-radius:0 8px 8px 0;
+  padding:12px 17px;margin:14px 0;font-size:15px;color:var(--soft)}
+.callout b{color:var(--ink)}
+.callout .tag{display:inline-block;background:var(--accent);color:#fff;font-size:11.5px;font-weight:700;
+  padding:2px 10px;border-radius:20px;margin-right:9px;vertical-align:1px}
+
+ol.steps{margin:10px 0 0;padding-left:22px;font-size:15px}
+ol.steps li{margin:7px 0}
+footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-size:13px;color:var(--faint)}
+@media (max-width:640px){header h1{font-size:25px} main{padding:20px 16px 40px}}
+</style>
+</head>
+<body>
+
+<header><div class="in">
+  <h1>Python 遊戲程式設計</h1>
+  <p>從零開始，每一堂做出一個會動的東西，最後做出一款自己的遊戲。</p>
+  <div class="st">
+    <span>已完成 <b>3</b> 堂教材</span>
+    <span>每堂 <b>120</b> 分鐘</span>
+    <span>語言：<b>Python 3</b></span>
+  </div>
+</div></header>
+
+<main>
+
+<section>
+  <h2><span class="num">0</span>第一次使用，先做這個</h2>
+  <div class="grid">
+    <a class="card setup wide" href="SETUP.md">
+      <div class="n">SETUP</div>
+      <h3>安裝與設定</h3>
+      <p>裝 Python 與 VS Code、終端機怎麼用、三個一定要會的操作（存檔 / ↑ / Control+C），以及常見錯誤怎麼處理。Mac 與 Windows 都有。</p>
+      <span class="tag">第 1 堂會一起做完，約 15 分鐘</span>
+    </a>
+  </div>
+  <div class="callout"><span class="tag">每堂課的流程</span>
+    打開 <b>slides.html</b> 上課 → 跟著投影片打開 <code>code/</code> 裡的範例 → 做 <code>practice.py</code> →
+    最後執行當天的 <b>demo</b>，把數值改成自己喜歡的樣子。
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">1</span>課程進度</h2>
+  <p>每一堂的最後都有一個可以執行、看得到變化的 Demo。</p>
+  <div class="grid">
+
+    <a class="card" href="lesson01-trial/slides.html">
+      <div class="n">試教</div>
+      <h3>做一個會動的東西</h3>
+      <p><code>print</code> · <code>input</code> · 第一次寫程式</p>
+      <span class="demo">▶ Demo：猜數字（瀏覽器工坊）</span>
+      <span class="tag">已上課</span>
+    </a>
+
+    <a class="card" href="lesson01/slides.html">
+      <div class="n">第 1 堂</div>
+      <h3>角色與傷害</h3>
+      <p>變數 · 字串與數字 · <code>int()</code> · f-string · <code>if / elif / else</code> · and / or</p>
+      <span class="demo">▶ Demo：<code>demo-boss.py</code> 王戰一回合</span>
+      <span class="tag">教材完成</span>
+    </a>
+
+    <a class="card" href="lesson02/slides.html">
+      <div class="n">第 2 堂</div>
+      <h3>讓它自己打下去</h3>
+      <p><code>for</code> · <code>range</code> · 累加 · <code>random</code> · <code>while</code> · <code>break</code></p>
+      <span class="demo">▶ Demo：<code>demo-auto-battle.py</code> 自動戰鬥</span>
+      <span class="tag">教材完成</span>
+    </a>
+
+    <a class="card" href="lesson03/slides.html">
+      <div class="n">第 3 堂</div>
+      <h3>背包與抽卡</h3>
+      <p>清單 list · 索引 · <code>append</code> / <code>remove</code> · 走訪 · <code>sum</code> / <code>max</code> / <code>count</code></p>
+      <span class="demo">▶ Demo：<code>demo-gacha.py</code> 轉蛋機</span>
+      <span class="tag">教材完成</span>
+    </a>
+
+    <a class="card todo">
+      <div class="n">第 4 堂</div>
+      <h3>函式：把功能包起來</h3>
+      <p><code>def</code> · 參數與回傳值 · 把前三堂組成一支程式</p>
+      <span class="demo">▶ Demo：完整的文字 RPG</span>
+      <span class="tag">尚未製作</span>
+    </a>
+
+    <a class="card todo">
+      <div class="n">之後</div>
+      <h3>有畫面的遊戲</h3>
+      <p>pygame：視窗、圖片、鍵盤控制、碰撞</p>
+      <span class="demo">▶ Demo：可以玩的 2D 小遊戲</span>
+      <span class="tag">尚未製作</span>
+    </a>
+
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">2</span>每一堂的檔案</h2>
+  <table>
+    <tr><th>檔案</th><th>是什麼</th><th>誰用</th></tr>
+    <tr><td><code>lessonNN/slides.html</code></td>
+        <td>上課簡報。<b>N</b> 教師備註、<b>O</b> 總覽、<b>F</b> 全螢幕、<b>← →</b> 翻頁</td><td>上課</td></tr>
+    <tr><td><code>lessonNN/code/01-*.py</code></td>
+        <td>課堂範例，照號碼順序講。每支最後都有「Try it」可以改</td><td>學生</td></tr>
+    <tr><td><code>lessonNN/code/practice.py</code></td>
+        <td>課堂練習，<b>只有題目沒有答案</b></td><td>學生</td></tr>
+    <tr><td><code>lessonNN/code/demo-*.py</code></td>
+        <td>當堂的成果 Demo，直接執行就會動</td><td>學生</td></tr>
+    <tr><td><code>notes/lessonNN-solutions.py</code></td>
+        <td>練習參考解答＋常見錯誤與提示方式</td><td><b>只有老師</b></td></tr>
+    <tr><td><code>notes/</code> 其他</td>
+        <td>教學計畫、選購建議等</td><td><b>只有老師</b></td></tr>
+  </table>
+  <div class="callout"><span class="tag">程式碼都是英文</span>
+    變數名稱、註解、印出來的訊息都用英文寫，順便練英文；投影片與說明維持中文。
+  </div>
+</section>
+
+<section>
+  <h2><span class="num">3</span>上課前 2 分鐘檢查</h2>
+  <ol class="steps">
+    <li>在學生電腦的終端機打 <code>python3 --version</code>，有版本號就 OK。</li>
+    <li><code>cd</code> 到今天的 <code>lessonNN/code/</code>，隨便跑一個範例。</li>
+    <li>打開今天的 <code>slides.html</code>，按 <b>N</b> 確認教師備註看得到。</li>
+    <li>先自己執行一次今天的 <code>demo-*.py</code>，確認沒問題。</li>
+  </ol>
+  <div class="callout"><span class="tag">改教材</span>
+    投影片內容在 <code>_assets/body-lessonNN.html</code>，改完跑 <code>python3 tools-build-decks.py</code> 重新組版；
+    範例程式直接改 <code>lessonNN/code/*.py</code>，沒有建置步驟。Demo 的動畫速度都在檔案最上面的 <code>SPEED</code>。
+  </div>
+</section>
+
+<footer>
+  Python 遊戲程式設計 · 國一課程 · 教材與程式碼放在
+  <code>~/Desktop/coding-tutor/python-junior-2026/</code>
+</footer>
+
+</main>
+</body>
+</html>

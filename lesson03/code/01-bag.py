@@ -1,29 +1,29 @@
-# ===== 範例 1：背包（清單 list）=====
-# 清單 = 一排有順序的盒子，用中括號 [] 裝起來
+# ===== Example 1: the bag (a list) =====
+# A list is a row of boxes in order, written inside square brackets [ ]
 
-bag = ["木劍", "紅藥水", "麵包"]
+bag = ["Wooden Sword", "Red Potion", "Bread"]
 
-print(bag)                 # 整個清單印出來
-print(len(bag))            # len() = 裡面有幾個東西
+print(bag)                 # print the whole list
+print(len(bag))            # len() = how many items are inside
 
-# 用「編號」拿出其中一個，編號從 0 開始！
-print(f"第 1 格：{bag[0]}")
-print(f"第 2 格：{bag[1]}")
-print(f"最後一格：{bag[-1]}")     # -1 代表倒數第一個
+# Take one item out by its POSITION - positions start at 0!
+print(f"slot 1: {bag[0]}")
+print(f"slot 2: {bag[1]}")
+print(f"last slot: {bag[-1]}")     # -1 means the last one
 
-# 撿到東西 → append（加到最後面）
-bag.append("鐵劍")
-print(f"撿到鐵劍，現在背包：{bag}")
+# Picked something up -> append (add to the end)
+bag.append("Iron Sword")
+print(f"picked up an iron sword: {bag}")
 
-# 用掉東西 → remove（拿掉指定的那個）
-bag.remove("紅藥水")
-print(f"喝掉藥水，現在背包：{bag}")
+# Used something -> remove (take that item out)
+bag.remove("Red Potion")
+print(f"drank the potion: {bag}")
 
-# 換掉某一格
-bag[0] = "鋼劍"
-print(f"換武器，現在背包：{bag}")
+# Replace one slot
+bag[0] = "Steel Sword"
+print(f"upgraded the weapon: {bag}")
 
-# 試試看：
-# 1. 印出 bag[10] 會發生什麼事？（看錯誤訊息在說什麼）
-# 2. 再撿三樣東西進背包
-# 3. 印出「背包裡目前有 N 樣東西」
+# Try it:
+# 1. What happens if you print bag[10]? Read the error message
+# 2. Pick up three more items
+# 3. Print "You are carrying N items"

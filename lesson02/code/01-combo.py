@@ -1,23 +1,23 @@
-# ===== 範例 1：連段攻擊（for 迴圈）=====
-# for 就是「重複做固定次數」
+# ===== Example 1: combo attacks (the for loop) =====
+# "for" repeats something a fixed number of times.
 
 atk = 12
 
-for i in range(5):           # range(5) 會給出 0, 1, 2, 3, 4 共五個數字
-    print(f"第 {i} 下攻擊，傷害 {atk}")
+for i in range(5):           # range(5) gives 0, 1, 2, 3, 4  (five numbers)
+    print(f"Hit {i}: {atk} damage")
 
-print("---- 換個寫法，讓招式編號從 1 開始 ----")
+print("---- same thing, but starting from 1 ----")
 
-for i in range(1, 6):        # range(1, 6) 會給出 1, 2, 3, 4, 5（不含 6）
-    print(f"第 {i} 下攻擊，傷害 {atk}")
+for i in range(1, 6):        # range(1, 6) gives 1, 2, 3, 4, 5  (6 not included)
+    print(f"Hit {i}: {atk} damage")
 
-print("---- 連段：每一下比前一下痛 ----")
+print("---- a combo: every hit is stronger ----")
 
 for i in range(1, 6):
-    damage = atk * i         # 第 i 下的傷害是 atk 的 i 倍
-    print(f"第 {i} 下：{damage}")
+    damage = atk * i         # hit number i does i times the damage
+    print(f"Hit {i}: {damage} damage")
 
-# 試試看：
-# 1. 改成 8 連段
-# 2. range(0, 10, 2) 會印出什麼？自己試一次
-# 3. 印出 5 行「⚔️」，每行比前一行多一個（提示：字串可以用 * 乘）
+# Try it:
+# 1. Make it an 8-hit combo
+# 2. What does range(0, 10, 2) print? Try it yourself
+# 3. Print 5 lines of swords, one more on each line (hint: text can be * multiplied)

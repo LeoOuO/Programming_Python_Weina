@@ -1,21 +1,21 @@
-# ===== 範例 3：讓電腦擲骰子（random）=====
-# import 就是「借用別人寫好的工具箱」
+# ===== Example 3: let the computer roll dice (random) =====
+# "import" means: borrow a toolbox somebody else already wrote.
 
 import random
 
-# randint(a, b)：隨機給一個 a 到 b 之間的整數（含 a 和 b）
+# randint(a, b): a random whole number between a and b (both included)
 roll = random.randint(1, 100)
-print(f"骰出了 {roll}")
+print(f"You rolled {roll}")
 
-# choice(清單)：從清單裡隨機挑一個
-drops = ["生鏽的劍", "紅藥水", "金幣 x10", "什麼都沒有"]
-print(f"打倒怪物，掉落：{random.choice(drops)}")
+# choice(list): pick one random item from a list
+drops = ["Rusty Sword", "Red Potion", "10 Gold", "Nothing"]
+print(f"The monster drops: {random.choice(drops)}")
 
-print("---- 打十隻怪，看看掉什麼 ----")
+print("---- fight ten monsters and see what drops ----")
 for i in range(1, 11):
-    print(f"第 {i} 隻：{random.choice(drops)}")
+    print(f"Monster {i}: {random.choice(drops)}")
 
-# 每次執行結果都不一樣，這就是遊戲好玩的地方
-# 試試看：
-# 1. 多加幾個掉落物，把「傳說之劍」加進去
-# 2. 讓傷害變成 random.randint(10, 20)，每一下都不一樣
+# Every run gives a different result - that is what makes games fun.
+# Try it:
+# 1. Add more drops, put a "Legendary Sword" in there
+# 2. Make the damage random.randint(10, 20) so every hit is different

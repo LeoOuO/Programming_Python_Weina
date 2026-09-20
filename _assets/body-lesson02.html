@@ -47,12 +47,12 @@
   <div class="cols">
     <div>
 <pre><code>for i in range(5):
-    print(f"第 {i} 下攻擊")</code></pre>
-      <div class="term">第 0 下攻擊
-第 1 下攻擊
-第 2 下攻擊
-第 3 下攻擊
-第 4 下攻擊</div>
+    print(f"Hit {i}")</code></pre>
+      <div class="term">Hit 0
+Hit 1
+Hit 2
+Hit 3
+Hit 4</div>
     </div>
     <div class="box ac"><h3>三個部分</h3>
       <ul style="font-size:18px">
@@ -75,14 +75,14 @@
 
 for i in range(1, 6):
     damage = atk * i
-    print(f"第 {i} 下：{damage}")</code></pre>
+    print(f"Hit {i}: {damage}")</code></pre>
     </div>
     <div>
-      <div class="term">第 1 下：12
-第 2 下：24
-第 3 下：36
-第 4 下：48
-第 5 下：60</div>
+      <div class="term">Hit 1: 12
+Hit 2: 24
+Hit 3: 36
+Hit 4: 48
+Hit 5: 60</div>
     </div>
   </div>
   <div class="callout"><code>i</code> 不只是編號，<b>可以拿來算</b>——連段倍率、關卡難度、敵人數量都靠它。</div>
@@ -103,9 +103,9 @@ for i in range(1, 6):
 for i in range(1, 6):
     damage = 12 * i
     total = total + damage     # ② 每輪把新的加進去
-    print(f"第 {i} 下 {damage}，目前累積 {total}")
+    print(f"Hit {i}: {damage}, total {total}")
 
-print(f"總傷害：{total}")        # ③ 迴圈跑完才印</code></pre>
+print(f"Combo total: {total}")  # ③ 迴圈跑完才印</code></pre>
   <div class="cols">
     <div class="box ac"><h3>累加三步驟</h3><p>① 迴圈<b>外面</b>歸零<br>② 迴圈<b>裡面</b>累加<br>③ 迴圈<b>外面</b>印結果</p></div>
     <div class="box gd"><h3>同一招能做什麼</h3><p>總傷害、總金幣、總經驗、<b>數次數</b>（暴擊幾次、贏幾場）</p></div>
@@ -126,10 +126,10 @@ print(f"總傷害：{total}")        # ③ 迴圈跑完才印</code></pre>
 <pre><code>import random     # 借用工具箱
 
 roll = random.randint(1, 100)
-print(f"骰出了 {roll}")
+print(f"You rolled {roll}")
 
-drops = ["生鏽的劍", "紅藥水",
-         "金幣 x10", "什麼都沒有"]
+drops = ["Rusty Sword", "Red Potion",
+         "10 Gold", "Nothing"]
 print(random.choice(drops))</code></pre>
     </div>
     <div>
@@ -161,9 +161,9 @@ while hp &gt; 0:
     turn = turn + 1
     damage = random.randint(10, 25)
     hp = hp - damage
-    print(f"第 {turn} 回合，剩 {hp}")
+    print(f"Turn {turn}: {hp} HP left")
 
-print(f"撐了 {turn} 回合")</code></pre>
+print(f"Survived {turn} turns")</code></pre>
     </div>
     <div>
       <table>
@@ -184,12 +184,12 @@ print(f"撐了 {turn} 回合")</code></pre>
     <div class="box bd"><h3>❌ 永遠停不下來</h3>
 <pre><code>hp = 100
 while hp &gt; 0:
-    print("攻擊！")</code></pre>
+    print("Attack!")</code></pre>
       <p><small>血量<b>從來沒有變少</b>，條件永遠成立</small></p></div>
     <div class="box gd"><h3>✅ 會結束</h3>
 <pre><code>hp = 100
 while hp &gt; 0:
-    print("攻擊！")
+    print("Attack!")
     hp = hp - 10</code></pre>
       <p><small>每輪血量減少，總有一天 ≤ 0</small></p></div>
   </div>
@@ -204,7 +204,7 @@ while hp &gt; 0:
   <h2>換你寫</h2>
   <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
   <ul class="check two">
-    <li><div><b>1. 印 10 行攻擊</b><small>暖身，確認 for 的寫法</small></div></li>
+    <li><div><b>1. 印 10 行 Attack!</b><small>暖身，確認 for 的寫法</small></div></li>
     <li><div><b>2. 經驗值總和</b><small>第 i 隻怪給 i × 15 點，印每隻＋總和</small></div></li>
     <li><div><b>3. 抽獎轉盤</b><small>獎品清單 + random.choice 抽 5 次</small></div></li>
     <li><div><b>4. 怪物要打幾下</b><small>while + 隨機傷害，印「打了 N 下」</small></div></li>
@@ -221,15 +221,15 @@ while hp &gt; 0:
 <section class="slide sm">
   <h2>全自動戰鬥</h2>
   <div class="pg">打開 <span class="k">demo-auto-battle.py</span><b>直接執行，看它自己打完</b></div>
-  <div class="term">── 第 7 回合 ──
-💥 勇者 暴擊！ 造成 28 點傷害
-⚔️  熔岩巨龍 攻擊 造成 16 點傷害
-  勇者   ████░░░░░░░░░░░░░░░░  28/120
-  熔岩巨龍 ███████░░░░░░░░░░░░░  59/160
-🧪 勇者 喝下藥水，血量回到 68（剩 1 瓶）
+  <div class="term">-- Turn 7 --
+Hero lands a CRITICAL HIT for 28 damage!
+Lava Dragon attacks for 16 damage
+  Hero         ████░░░░░░░░░░░░░░░░  28/120
+  Lava Dragon  ███████░░░░░░░░░░░░░  59/160
+Hero drinks a potion, back to 68 HP (1 left)
 
-🎉 第 11 回合，熔岩巨龍 倒下了！
-   勇者 總共打出 165 點傷害</div>
+  The Lava Dragon falls on turn 11!
+  Total damage by Hero: 165</div>
   <p><small>裡面只有 <code>while</code>、<code>if</code>、<code>random</code>、變數——全部是你會的。</small></p>
   <aside class="notes">先執行兩三次，讓她看到<b>結果每次都不一樣，有時候還會輸</b>。
   <br>對照程式：① 外層 <code>while hero_hp &gt; 0 and boss_hp &gt; 0</code>（兩個條件 and） ② 藥水那段 if（她上堂寫過類似的） ③ 最後的統計（今天的累加）。

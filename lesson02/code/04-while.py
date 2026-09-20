@@ -1,23 +1,24 @@
-# ===== 範例 4：不知道要跑幾次的時候用 while =====
-# for  = 重複「固定次數」
-# while = 重複「直到條件不成立為止」
+# ===== Example 4: use while when you do not know how many times =====
+# for   = repeat a FIXED number of times
+# while = repeat UNTIL the condition stops being true
 
 import random
 
 hp = 100
 turn = 0
 
-while hp > 0:                       # 只要血量還大於 0，就一直打下去
+while hp > 0:                       # keep going while HP is above 0
     turn = turn + 1
     damage = random.randint(10, 25)
     hp = hp - damage
-    print(f"第 {turn} 回合：受到 {damage} 點傷害，剩下 {hp} 點血")
+    print(f"Turn {turn}: took {damage} damage, {hp} HP left")
 
-print(f"撐了 {turn} 回合才倒下")
+print(f"You survived {turn} turns")
 
-# ⚠️ while 一定要有「會讓條件變成不成立」的那一行（這裡是 hp = hp - damage）
-#    不然程式會永遠跑下去，要按 Control + C 才停得下來
+# WARNING: a while loop needs a line that makes the condition false one day
+# (here it is  hp = hp - damage ).  Without it the program never stops
+# and you have to press Control + C.
 
-# 試試看：
-# 1. 把傷害改成 random.randint(1, 5)，大概會撐幾回合？
-# 2. 加一行：如果回合數超過 50 就 break（強制跳出迴圈）
+# Try it:
+# 1. Change the damage to random.randint(1, 5) - how many turns now?
+# 2. Add: if the turn number goes over 50, break out of the loop

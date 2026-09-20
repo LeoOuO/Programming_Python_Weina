@@ -1,22 +1,22 @@
-# ===== 範例 4：什麼時候該喝藥水（and / or / not）=====
+# ===== Example 4: when should you drink a potion? (and / or / not) =====
 
-hp = int(input("你現在的血量是多少？ "))
-potions = int(input("身上有幾瓶藥水？ "))
+hp = int(input("How much HP do you have? "))
+potions = int(input("How many potions are in your bag? "))
 
-# and：兩邊都成立才算成立
-# or ：只要有一邊成立就算成立
-# not：反過來
+# and : both sides must be true
+# or  : at least one side must be true
+# not : the opposite
 
 if hp < 30 and potions > 0:
-    print("🧪 快喝藥水！血太低了")
+    print("Drink a potion, your HP is too low!")
 elif hp < 30 and potions == 0:
-    print("😱 沒藥水了，快逃！")
+    print("No potions left. RUN!")
 elif hp >= 80 or potions >= 5:
-    print("💪 狀態很好，衝吧")
+    print("You are in good shape. Go!")
 else:
-    print("🙂 還好，繼續前進")
+    print("Not bad. Keep going.")
 
-# 試試看：
-# 1. 輸入 hp=20、藥水=0，看看會走到哪一條
-# 2. 自己加一條規則：血量剛好 100 的時候印「滿血！」
-#    （提示：要放在最前面，為什麼？）
+# Try it:
+# 1. Enter hp = 20 and potions = 0 - which line runs?
+# 2. Add your own rule: when HP is exactly 100, print "Full health!"
+#    (hint: it has to go first - why?)

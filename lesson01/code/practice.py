@@ -1,35 +1,35 @@
-# ===== 第 1 堂 課堂練習：做你自己的角色 =====
-# 照著下面的提示把程式補完。每做完一題就執行一次看看對不對。
-# 執行：python3 practice.py
+# ===== Lesson 1 practice: build your own character =====
+# Fill in each part below. Run the file after every question.
+# Run it with:  python3 practice.py
 
-# --- 練習 1：角色卡 -------------------------------------------------
-# 建立四個變數：name（你的角色名）、job（職業）、hp、atk
-# 然後用 f-string 印成一行，例如：
-#   小雷 是劍士，HP 100 / ATK 18
+# --- Question 1: character card --------------------------------------
+# Make four variables: name, job, hp, atk
+# Then print one line with an f-string, for example:
+#   Rain is a Swordsman with 100 HP and 18 ATK
 
-# 你的程式寫在這裡
-
-
-# --- 練習 2：問玩家問題 ---------------------------------------------
-# 用 input() 問玩家「你的等級是多少？」
-# 把等級轉成數字，算出 攻擊力 = 10 + 等級 * 2，印出來
-# 提示：input() 拿到的是字，要用 int() 轉
-
-# 你的程式寫在這裡
+# your code here
 
 
-# --- 練習 3：藥水夠不夠 ---------------------------------------------
-# 問玩家現在的血量，然後判斷：
-#   血量 >= 70  →  印「狀態良好」
-#   血量 >= 30  →  印「小心一點」
-#   其他        →  印「快喝藥水！」
+# --- Question 2: ask the player --------------------------------------
+# Use input() to ask "What is your level?"
+# Turn it into a number, then print  attack = 10 + level * 2
+# Hint: input() gives you text, so you need int()
 
-# 你的程式寫在這裡
+# your code here
 
 
-# --- 練習 4（挑戰）：兩個角色比大小 ---------------------------------
-# 角色 A 攻擊 18、防禦 5；角色 B 攻擊 14、防禦 12
-# 戰力 = 攻擊 * 2 + 防禦
-# 算出兩邊的戰力，印出誰比較強（平手也要處理）
+# --- Question 3: how is your health? ---------------------------------
+# Ask for the player's HP, then decide:
+#   hp >= 70  ->  print "Looking good"
+#   hp >= 30  ->  print "Be careful"
+#   otherwise ->  print "Drink a potion now!"
 
-# 你的程式寫在這裡
+# your code here
+
+
+# --- Question 4 (challenge): who is stronger? ------------------------
+# Hero A: attack 18, defense 5.  Hero B: attack 14, defense 12.
+# power = attack * 2 + defense
+# Work out both powers and print who is stronger (a tie counts too!)
+
+# your code here

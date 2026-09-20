@@ -1,36 +1,38 @@
-# ===== 第 3 堂 課堂練習：清單 =====
-# 執行：python3 practice.py
+# ===== Lesson 3 practice: lists =====
+# Run it with:  python3 practice.py
 import random
 
-# --- 練習 1：我的背包 -----------------------------------------------
-# 建一個 bag 清單放 3 樣東西，印出來，
-# 再 append 兩樣、remove 一樣，每一步都印一次看變化
+# --- Question 1: my bag ----------------------------------------------
+# Make a list called bag with 3 items and print it.
+# Then append two items and remove one, printing the bag after every step.
 
-# 你的程式寫在這裡
-
-
-# --- 練習 2：隊伍報到 -----------------------------------------------
-# party = ["劍士", "法師", "弓箭手"]
-# 用 for 印成「1. 劍士」「2. 法師」…（編號從 1 開始）
-
-# 你的程式寫在這裡
+# your code here
 
 
-# --- 練習 3：血量統計 -----------------------------------------------
+# --- Question 2: party roll call -------------------------------------
+# party = ["Swordsman", "Mage", "Archer"]
+# Use a for loop to print "1. Swordsman", "2. Mage", ... (numbers start at 1)
+
+# your code here
+
+
+# --- Question 3: HP stats --------------------------------------------
 # hp_list = [120, 70, 90, 80, 55]
-# 印出：總和、最高、最低、平均（平均用 sum() / len()）
+# Print the total, the highest, the lowest and the average
+# (average = sum() divided by len())
 
-# 你的程式寫在這裡
-
-
-# --- 練習 4：只留下強的 ---------------------------------------------
-# 用 for + if，把 hp_list 裡「大於 80」的血量放進新清單 strong，最後印出來
-
-# 你的程式寫在這裡
+# your code here
 
 
-# --- 練習 5（挑戰）：自己的卡池 -------------------------------------
-# 做一個卡池（稀有的放少張、普通的放多張），抽 100 次，
-# 數數看抽到幾張稀有卡，印出「100 抽裡有 N 張」
+# --- Question 4: keep only the strong ---------------------------------
+# Use for + if to put every HP above 80 into a new list called strong,
+# then print it.
 
-# 你的程式寫在這裡
+# your code here
+
+
+# --- Question 5 (challenge): your own card pool -----------------------
+# Build a card pool (few rare copies, many common ones), draw 100 times,
+# and count how many rare cards you got. Print "N rare cards in 100 draws".
+
+# your code here

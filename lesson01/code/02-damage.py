@@ -1,25 +1,26 @@
-# ===== 範例 2：傷害公式 =====
-# 遊戲裡的傷害其實就是一條算式
+# ===== Example 2: the damage formula =====
+# Damage in a game is just a piece of maths.
 
-atk = 18          # 我方攻擊力
-defense = 5       # 對方防禦力
-skill = 1.5       # 技能倍率
+atk = 18          # my attack
+defense = 5       # enemy defense
+skill = 1.5       # skill multiplier
 
-# 運算子：+ 加  - 減  * 乘  / 除  // 整數除法  % 餘數  ** 次方
+# Operators:  + add   - subtract   * multiply
+#             / divide   // divide and drop the decimals   % remainder
 damage = (atk - defense) * skill
 
-print(f"攻擊 {atk}，對方防禦 {defense}，技能倍率 {skill}")
-print(f"傷害 = ({atk} - {defense}) × {skill} = {damage}")
+print(f"ATK {atk}, enemy DEF {defense}, skill x{skill}")
+print(f"damage = ({atk} - {defense}) * {skill} = {damage}")
 
-# 注意：用 / 或乘上小數，算出來會帶小數點（叫做「浮點數」）
-# 遊戲的傷害通常取整數，用 int() 把小數點後面砍掉
-print(f"取整數後的傷害：{int(damage)}")
+# Careful: / and decimal multipliers give a number with a dot (a "float").
+# Games usually want whole numbers, so int() cuts the decimals off.
+print(f"damage as a whole number: {int(damage)}")
 
-# 連續攻擊的總傷害
 hits = 3
-print(f"連續 {hits} 下，總傷害 {int(damage) * hits}")
+print(f"{hits} hits in a row deal {int(damage) * hits} damage")
 
-# 試試看：
-# 1. 把 skill 改成 2，傷害變多少？
-# 2. 如果對方防禦力比攻擊力還高，會發生什麼事？（把 defense 改成 25 試試）
-# 3. 算算看 7 // 2 和 7 % 2 各是多少，印出來對答案
+# Try it:
+# 1. Change skill to 2 - how much damage now?
+# 2. What happens when the enemy defense is higher than your attack?
+#    (set defense to 25 and run it)
+# 3. Print 7 // 2 and 7 % 2 and check the answers

@@ -58,9 +58,9 @@
   </div>
   <div class="term">$ cd Desktop/python/lesson01/code
 $ python3 01-character.py
-<b>=== 角色卡 ===</b>
-名字：小雷
-職業：劍士</div>
+<b>=== CHARACTER ===</b>
+Name: Rain
+Job: Swordsman</div>
   <p><small>沒存檔就執行 = 跑的是舊的程式。這是初學者最常見的「怎麼沒變」。</small></p>
   <aside class="notes">這一頁是今天最重要的操作。實際帶她做一次，然後<b>讓她自己重做一次</b>，你不要碰鍵盤。
   <br>Mac 終端機：Launchpad 搜「終端機」，或 ⌘空白鍵 打 terminal。
@@ -88,13 +88,13 @@ $ python3 01-character.py
 <section class="slide sm">
   <h2>先看一張角色卡</h2>
   <div class="pg">打開 <span class="k">01-character.py</span><b>執行一次，再改成你的角色</b></div>
-  <pre><code>name = "小雷"
-job = "劍士"
+  <pre><code>name = "Rain"
+job = "Swordsman"
 level = 3
 hp = 100
 atk = 18
 
-print(f"{name} 是 {level} 等的{job}，HP {hp}／ATK {atk}")</code></pre>
+print(f"{name} is a level {level} {job} with {hp} HP")</code></pre>
   <p>遊戲裡看到的每一個數字，在程式裡都是一個<b>變數</b>。</p>
   <aside class="notes">先讓她執行，看到輸出，再逐行看。
   <br>問她：「如果要做一個遊戲，還有哪些東西需要變數？」——金幣、經驗值、等級、武器名稱……讓她講，越多越好，她會發現「整個遊戲就是一堆變數」。
@@ -106,9 +106,9 @@ print(f"{name} 是 {level} 等的{job}，HP {hp}／ATK {atk}")</code></pre>
   <div class="cols">
     <div class="box pk"><h3>字串 str（文字）</h3>
       <p>用<b>引號</b>包起來</p>
-      <pre><code>name = "小雷"
-job = "劍士"</code></pre>
-      <p><small>可以相加 → 接在一起<br><code>"小" + "雷"</code> → <code>"小雷"</code></small></p></div>
+      <pre><code>name = "Rain"
+job = "Swordsman"</code></pre>
+      <p><small>可以相加 → 接在一起<br><code>"Fire" + "Mage"</code> → <code>"FireMage"</code></small></p></div>
     <div class="box sn"><h3>整數 int（數字）</h3>
       <p><b>沒有</b>引號</p>
       <pre><code>hp = 100
@@ -126,24 +126,24 @@ atk = 18</code></pre>
   <h2>f-string：把變數塞進句子裡</h2>
   <div class="tabs">
     <div class="pane"><h4>1) 三種寫法</h4>
-<pre><code>print("名字：" + name)        # 用 + 接，只能接字串
-print("血量：", hp)           # 用逗號，什麼都能印
-print(f"{name} 的血量是 {hp}")  # f-string，最好用</code></pre>
+<pre><code>print("Name: " + name)        # 用 + 接，只能接字串
+print("HP:", hp)              # 用逗號，什麼都能印
+print(f"{name} has {hp} HP")  # f-string，最好用</code></pre>
     </div>
     <div class="pane"><h4>2) f-string 的規則</h4>
       <ul>
         <li>引號<b>前面</b>加一個 <code>f</code></li>
         <li>要放變數的地方用 <b>大括號</b> <code>{ }</code></li>
-        <li>大括號裡面可以直接算：<code>f"總攻擊 {atk * 2}"</code></li>
+        <li>大括號裡面可以直接算：<code>f"total {atk * 2}"</code></li>
       </ul>
     </div>
   </div>
-  <div class="quiz" data-answer="小雷 的 HP 是 100">
-    <p class="q">如果 <code>name = "小雷"</code>、<code>hp = 100</code>，<br><code>print(f"{name} 的 HP 是 {hp}")</code> 會印出什麼？</p>
+  <div class="quiz" data-answer="Rain has 100 HP">
+    <p class="q">如果 <code>name = "Rain"</code>、<code>hp = 100</code>，<br><code>print(f"{name} has {hp} HP")</code> 會印出什麼？</p>
     <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
     <div class="fb"></div>
   </div>
-  <aside class="notes">答案：<code>小雷 的 HP 是 100</code>。大括號被換掉，其他字原封不動。
+  <aside class="notes">答案：<code>Rain has 100 HP</code>。大括號被換掉，其他字原封不動。
   <br>之後全部用 f-string，不要再用 <code>+</code> 接字串——省掉「型別不同不能相加」的麻煩。
   <br>小測驗打錯字也沒關係，重點是她有沒有理解「大括號會被換成盒子裡的東西」。</aside>
 </section>
@@ -159,7 +159,7 @@ defense = 5       # 對方防禦
 skill = 1.5       # 技能倍率
 
 damage = (atk - defense) * skill     # → 19.5
-print(f"傷害 {int(damage)}")          # → 19</code></pre>
+print(f"damage {int(damage)}")       # → 19</code></pre>
   <div class="cols">
     <div class="box"><h3>運算子</h3>
       <table style="font-size:17px">
@@ -183,13 +183,13 @@ print(f"傷害 {int(damage)}")          # → 19</code></pre>
   <div class="cols">
     <div>
 <pre><code>if roll &gt;= 95:
-    print("✨ 完美暴擊！")
+    print("PERFECT CRITICAL!")
 elif roll &gt;= 80:
-    print("💥 暴擊！")
+    print("CRITICAL HIT!")
 elif roll &lt;= 5:
-    print("😵 失手了")
+    print("You missed")
 else:
-    print("⚔️ 普通攻擊")</code></pre>
+    print("Normal attack")</code></pre>
     </div>
     <div>
       <div class="box ac"><h3>三個規則</h3>
@@ -212,20 +212,20 @@ else:
   <div class="cols">
     <div class="box bd"><h3>❌ 寫反的版本</h3>
 <pre><code>if roll &gt;= 80:
-    print("💥 暴擊")
+    print("CRITICAL HIT!")
 elif roll &gt;= 95:
-    print("✨ 完美暴擊")</code></pre>
+    print("PERFECT CRITICAL!")</code></pre>
       <p><small>擲到 97 會印什麼？</small></p></div>
     <div class="box gd"><h3>✅ 正確的版本</h3>
 <pre><code>if roll &gt;= 95:
-    print("✨ 完美暴擊")
+    print("PERFECT CRITICAL!")
 elif roll &gt;= 80:
-    print("💥 暴擊")</code></pre>
+    print("CRITICAL HIT!")</code></pre>
       <p><small>條件<b>嚴格的放前面</b></small></p></div>
   </div>
   <details class="reveal"><summary>答案</summary>
-    <div class="body"><p>左邊擲到 97 會印「💥 暴擊」——因為 97 也 <code>&gt;= 80</code>，第一條就成立了，
-    後面的「完美暴擊」<b>永遠不會執行</b>。這種 bug 不會報錯，只是遊戲怪怪的，最難抓。</p></div>
+    <div class="body"><p>左邊擲到 97 會印 <code>CRITICAL HIT!</code>——因為 97 也 <code>&gt;= 80</code>，第一條就成立了，
+    後面的 <code>PERFECT CRITICAL!</code> <b>永遠不會執行</b>。這種 bug 不會報錯，只是遊戲怪怪的，最難抓。</p></div>
   </details>
   <div class="pg">打開 <span class="k">03-critical.py</span><b>執行幾次，試不同的點數</b></div>
   <aside class="notes">先讓她自己想，再展開答案。如果她答對，請她解釋為什麼——能解釋才是真的懂。
@@ -238,11 +238,11 @@ elif roll &gt;= 80:
   <div class="cols">
     <div>
 <pre><code>if hp &lt; 30 and potions &gt; 0:
-    print("🧪 快喝藥水！")
+    print("Drink a potion!")
 elif hp &lt; 30 and potions == 0:
-    print("😱 沒藥水了，快逃！")
+    print("No potions left. RUN!")
 elif hp &gt;= 80 or potions &gt;= 5:
-    print("💪 狀態很好，衝吧")</code></pre>
+    print("You are in good shape")</code></pre>
     </div>
     <div>
       <table>
@@ -279,21 +279,21 @@ elif hp &gt;= 80 or potions &gt;= 5:
 <section class="slide sm">
   <h2>今天的成果</h2>
   <div class="pg">打開 <span class="k">demo-boss.py</span><b>直接執行，玩一回合</b></div>
-  <div class="term">勇者，你叫什麼名字？ <b>小美</b>
-==================================
-  小美  HP 100  ATK 18
-  史萊姆王  HP 120  ATK 15
-==================================
+  <div class="term">Hero, what is your name? <b>Amy</b>
+======================================
+  Amy  HP 100  ATK 18
+  Slime King  HP 120  ATK 15
+======================================
 
-你要做什麼？輸入 1、2 或 3： <b>2</b>
+What do you do? Type 1, 2 or 3: <b>2</b>
 
-🔥 小美 蓄力……全力一擊！
-   造成 36 點傷害！
-   史萊姆王  ██████████████░░░░░░  84/120
-💢 史萊姆王 反擊，造成 15 點傷害！</div>
+Amy charges up... POWER STRIKE!
+   36 damage!
+   Slime King  ██████████████░░░░░░  84/120
+The Slime King hits back for 15 damage!</div>
   <p><small>裡面<b>沒有一行</b>是今天沒學過的：變數、<code>int()</code>、算式、<code>if</code>。</small></p>
   <aside class="notes">先讓她玩兩三次（三個選項各試一次），再打開程式碼對照——<b>先玩再看碼</b>。
-  <br>指給她看三個地方就好：① 最上面的角色變數 ② <code>if choice == "1"</code> 那一段 ③ 血條是怎麼畫的（<code>"█" * 格數</code>，上一堂的字串乘法）。
+  <br>指給她看三個地方就好：① 最上面的角色變數 ② <code>if choice == "1"</code> 那一段 ③ 血條是怎麼畫的（<code>"█" * blocks</code>，上一堂的字串乘法）。
   <br><code>def</code> 和 <code>time.sleep</code> 先不解釋，她問再說「那是把一段程式取名字，之後會學」。
   <br>剩下時間讓她改數字：攻擊力、血量、藥水回復量、<code>SPEED</code>。改完執行，感覺完全不同——這就是「做遊戲」的感覺。</aside>
 </section>
