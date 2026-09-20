@@ -76,14 +76,30 @@ python 01-character.py
 螢幕右上角的輸入法如果是**注音／拼音**，空白鍵是拿來「選字」的，不會打出空格。
 寫程式時一定要切回 **ABC／英文**（按 **Caps Lock** 或 **⌃空白鍵** 切換）。
 
-### VS Code 設定（Tab 最常見的原因）
-1. **AI 補完搶走 Tab**：如果裝了 GitHub Copilot 或 Gemini Code Assist，
-   出現灰色的建議文字時，Tab 會變成「接受建議」而不是縮排。
-   → 把 `notes/vscode-student-settings.json` 的內容貼進 VS Code 設定（⌘, → 右上角 Open Settings (JSON)）。
-   初學階段本來就該關掉 AI 補完，不然是它在寫程式，不是你。
-2. **自動完成選單開著**：打字時跳出的建議清單也會吃掉 Tab／Enter。同上設定可一起關掉。
-3. **Tab Moves Focus 模式被切到**：視窗最下面那條狀態列會出現 "Tab Moves Focus"。
-   按 **⌃⇧M**（Control + Shift + M）切回來，或用 ⇧⌘P 搜尋 `Toggle Tab Key Moves Focus`。
+### Tab 按了沒反應、或跳到別的區域
+這就是 **Tab Moves Focus 模式**：Tab 不再縮排，改成在視窗各區域之間移動焦點。
+
+1. 看視窗最下面的狀態列，會出現 **"Tab Moves Focus"**。
+2. 按 **⌃⇧M**（Control + Shift + M）關掉；或 ⇧⌘P 搜尋 `Toggle Tab Key Moves Focus`。
+3. 一勞永逸：把 `notes/vscode-student-settings.json` 貼進設定，裡面有
+   `"editor.tabFocusMode": false` 和 `"editor.accessibilitySupport": "off"`
+   （VS Code 偵測到螢幕閱讀器／輔助使用時，也會自動把 Tab 變成切換焦點）。
+
+### 空白鍵卡住，點一下別的地方再點回來就好
+這是**焦點跑掉**，不是鍵盤壞掉——游標看起來在編輯器裡，其實鍵盤輸入被別的元件接走了。
+
+1. 先試：⇧⌘P 執行 `Developer: Toggle Keyboard Shortcuts Troubleshooting`，
+   再按幾次空白鍵和 Tab，看 Output 面板記錄到什麼——
+   有記錄到但沒反應＝被某個指令吃掉；完全沒記錄＝焦點不在編輯器。
+2. 關掉硬體加速（Intel Mac 上這個很常見）：⇧⌘P → `Preferences: Configure Runtime Arguments`，
+   在 `argv.json` 加一行 `"disable-hardware-acceleration": true`，重開 VS Code。
+3. 還是有的話，找是哪個擴充套件：⇧⌘P → `Help: Start Extension Bisect`，
+   它會自動二分法關擴充套件，幾輪就能指出兇手。
+4. 順手把 VS Code 更新到最新版。
+
+### AI 補完（順便處理）
+裝了 Copilot／Gemini Code Assist 的話，出現灰色建議文字時 Tab 會變成「接受建議」。
+初學階段建議直接關掉——不然是它在寫程式，不是她。同一份設定檔已經幫你關好。
 
 ### 鍵盤硬體
 2016～2019 年的 MacBook Pro（**蝶式鍵盤**）有公認的問題：某些鍵會**間歇性沒反應或連打**，

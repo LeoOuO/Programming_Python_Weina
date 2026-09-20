@@ -2,6 +2,10 @@
 // 貼到：Code → Settings → Settings (⌘,) → 右上角「Open Settings (JSON)」
 // 目的：① 把 Tab 還給縮排（不要被 AI 補完搶走）② 初學者不要用 AI 自動補完
 {
+  // ---- Tab 一定要是縮排，不要變成「切換區域」----
+  "editor.tabFocusMode": false,
+  "editor.accessibilitySupport": "off",
+
   // ---- 縮排：Python 一律 4 個空格 ----
   "editor.tabSize": 4,
   "editor.insertSpaces": true,
