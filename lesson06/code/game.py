@@ -1,28 +1,27 @@
 # =====================================================================
-#  SLIME  TOWER  -  你的第一個完整遊戲
-#  生字：tower 塔 · floor 樓層 · rest 休息 · escape 逃跑 · final 最終的
+#  SLIME  TOWER  -  your first complete game
 #
-#  用到的東西全部來自第 1~5 堂：
-#    變數與 if      (第 1 堂)
-#    for / while / random  (第 2 堂)
-#    清單 list      (第 3 堂)
-#    函式 def       (第 4 堂)
-#    字典 dict      (第 5 堂)
+#  Everything in here comes from lessons 1 to 5:
+#    variables and if        (lesson 1)
+#    for / while / random    (lesson 2)
+#    lists                   (lesson 3)
+#    functions               (lesson 4)
+#    dictionaries            (lesson 5)
 #
-#  執行：python3 game.py
+#  Run it with:  python3 game.py
 # =====================================================================
 import random
 import time
 
-SPEED = 0.3          # 想快一點就改成 0
-MAX_POTIONS = 3      # 背包最多只能放 3 瓶藥水
+SPEED = 0.3          # set it to 0 to skip the animation
+MAX_POTIONS = 3      # you can only carry 3 potions 藥水
 
-# ---------------------------------------------------------------- 資料
+# ------------------------------------------------------------------ data
 game = {
     "hero": {"name": "Hero", "hp": 60, "max_hp": 60, "atk": 12},
     "gold": 30,
     "potions": 1,
-    "floor": 1,
+    "floor": 1,          # which floor 樓層 we are on
 }
 
 MONSTERS = [
@@ -30,7 +29,7 @@ MONSTERS = [
     {"name": "Bat",        "hp": 28, "atk": 8,  "gold": 30},
     {"name": "Goblin",     "hp": 36, "atk": 10, "gold": 40},
     {"name": "Orc",        "hp": 48, "atk": 13, "gold": 55},
-    {"name": "Slime King", "hp": 70, "atk": 15, "gold": 99},   # 最後一層的王
+    {"name": "Slime King", "hp": 70, "atk": 15, "gold": 99},   # the boss on the top floor
 ]
 
 SHOP = {
@@ -40,7 +39,7 @@ SHOP = {
 }
 
 
-# ------------------------------------------------------------ 小工具函式
+# ------------------------------------------------------------ small helpers
 def say(text):
     print(text)
     time.sleep(SPEED)
@@ -65,7 +64,7 @@ def is_alive(hp):
 
 
 def hero_damage():
-    """算出主角這一擊的傷害（10% 機率暴擊）"""
+    """Work out this hit. 10% chance of a critical hit 暴擊."""
     atk = game["hero"]["atk"]
     if random.randint(1, 100) <= 10:
         return atk * 2, True
@@ -73,7 +72,7 @@ def hero_damage():
 
 
 def drink_potion():
-    """喝藥水。沒有藥水的話回傳 False"""
+    """Drink a potion. Returns False when there are none left."""
     if game["potions"] <= 0:
         return False
     hero = game["hero"]
@@ -83,9 +82,9 @@ def drink_potion():
     return True
 
 
-# ---------------------------------------------------------------- 戰鬥
+# ---------------------------------------------------------------- battle
 def battle(monster):
-    """打一隻怪。贏了回傳 True，倒下回傳 False。"""
+    """Fight one monster. True = you won, False = you went down."""
     hero = game["hero"]
     hp = monster["hp"]
     say(f"\n  A {monster['name']} blocks the stairs!  HP {hp}  ATK {monster['atk']}")
@@ -98,9 +97,9 @@ def battle(monster):
         if choice == "2":
             if not drink_potion():
                 say("  No potions left!")
-                continue                      # 沒喝到，不算用掉一回合
+                continue                      # nothing happened, so it costs no turn
         elif choice == "3":
-            if random.randint(1, 100) <= 50:  # 50% 逃跑成功
+            if random.randint(1, 100) <= 50:  # 50% chance to escape 逃跑
                 say("  You escaped!")
                 return False
             say("  You failed to escape!")
@@ -114,7 +113,7 @@ def battle(monster):
             if not is_alive(hp):
                 break
 
-        # 怪物反擊
+        # the monster strikes back
         damage = random.randint(monster["atk"] - 2, monster["atk"] + 2)
         hero["hp"] = hero["hp"] - damage
         say(f"  The {monster['name']} hits you for {damage}")
@@ -128,7 +127,7 @@ def battle(monster):
     return True
 
 
-# ---------------------------------------------------------------- 商店
+# ------------------------------------------------------------------ shop
 def shop():
     while True:
         print("\n" + "-" * 44)
@@ -170,7 +169,7 @@ def shop():
         show_status()
 
 
-# ------------------------------------------------------------ 主程式
+# ---------------------------------------------------------- main program
 print("=" * 46)
 print("            S L I M E   T O W E R")
 print("=" * 46)
@@ -187,7 +186,7 @@ for floor in range(len(MONSTERS)):
     print(f"  FLOOR {game['floor']}")
     print("=" * 46)
 
-    shop()                                   # 每層樓前面都有商店
+    shop()                                   # there is a shop before every floor
 
     won = battle(MONSTERS[floor])
     if not is_alive(game["hero"]["hp"]):
@@ -196,10 +195,10 @@ for floor in range(len(MONSTERS)):
         print(f"  Gold collected: {game['gold']}")
         print("=" * 46)
         break
-    if not won:                              # 逃跑成功，這層不算過
+    if not won:                              # you escaped, so this floor does not count
         say("  You run back down the stairs and try again.")
 
-    # 過關休息
+    # rest after clearing the floor
     hero = game["hero"]
     hero["hp"] = min(hero["hp"] + 15, hero["max_hp"])
     say(f"\n  You rest on the stairs. HP {hero['hp']}")

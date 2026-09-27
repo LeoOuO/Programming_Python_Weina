@@ -1,29 +1,27 @@
 # ===== Example 3: critical hits (if / elif / else) =====
-# 生字：critical hit 暴擊 · roll 擲（骰子）· miss 沒打中 · normal 普通
-# if 的意思是「如果」：條件成立（true 真）才做縮排裡面的那幾行。
-# condition 條件 · indent 縮排
+# "if" means: only do the indented 縮排 lines when the condition 條件 is true.
 
 atk = 20
-roll = int(input("Roll a 100-sided dice (type 1-100): "))   # dice 骰子；input 拿到的是文字，int() 把它變成數字
+roll = int(input("Roll a 100-sided dice (type 1-100): "))   # dice 骰子；input gives text, int() makes it a number
 
 if roll >= 95:
     damage = atk * 3
     print("PERFECT CRITICAL! Triple damage")
-elif roll >= 80:            # 上面那條不成立（false 假）才會檢查這一條
+elif roll >= 80:            # only checked when the line above was false
     damage = atk * 2
     print("CRITICAL HIT! Double damage")
 elif roll <= 5:
     damage = 0
     print("You missed completely")
-else:                       # 前面全部都不成立的時候
+else:                       # none of the above were true
     damage = atk
     print("Normal attack")
 
 print(f"This hit deals {damage} damage")
 
-# 比較 comparison：  >   <   >=   <=   ==（等於 equal）  !=（不等於 not equal）
-# 注意：比較要用「兩個」等號 ==；一個 = 是把值放進盒子。
+# Comparisons:  >   <   >=   <=   == (equal)   != (not equal)
+# Careful: use TWO equal signs == to compare. One = puts a value in a box.
 
-# Try it 試試看：
-# 1. 把暴擊的門檻（threshold 門檻）從 80 改成 50，暴擊就變容易了
-# 2. 加一條：剛好擲到 50 的時候印 "Right in the middle"
+# Try it:
+# 1. Change the critical 暴擊 threshold 門檻 from 80 to 50 - criticals get easier
+# 2. Add a case: when the roll is exactly 50, print "Right in the middle"

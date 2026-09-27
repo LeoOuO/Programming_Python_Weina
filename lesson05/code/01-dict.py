@@ -1,33 +1,34 @@
 # ===== Example 1: a character sheet (dictionary) =====
-# 生字：dictionary 字典 · key 鍵（名稱）· value 值 · sheet 資料表
 #
-# 清單 list 是「一排東西」，用位置 0、1、2 拿。
-# 字典 dict 是「一組有名稱的資料」，用名稱拿 —— 像查字典一樣。
+# A list is a row of things, taken out by position: 0, 1, 2.
+# A dictionary 字典 is a set of named data, taken out by name -
+# just like looking a word up in a real dictionary.
 
-hero = {                       # 大括號 { }，每一項是  "名稱": 值
+hero = {                       # curly brackets 大括號; every item is  "name": value
     "name": "Luna",
     "hp": 100,
     "atk": 18,
-    "gold": 50,
+    "gold": 50,            # gold 金幣
 }
 
 print(hero)
-print(hero["name"])            # 用「名稱」拿值，不是用數字位置
+print(hero["name"])            # take a value by NAME, not by a number
 print(hero["hp"])
 
-# 改一項
-hero["hp"] = hero["hp"] - 30   # 被打了
+# change one item
+hero["hp"] = hero["hp"] - 30   # took a hit
 print(f"{hero['name']} now has {hero['hp']} HP")
 
-# 加一項（本來沒有的名稱，寫進去就會多一項）
+# add a new item (writing a name that was not there adds it)
 hero["level"] = 5
 print(hero)
 
-# 檢查有沒有某一項
+# check whether an item exists
 if "gold" in hero:
     print(f"gold: {hero['gold']}")
 
-# Try it 試試看：
-# 1. 把 hero 改成你自己的角色，多加一項 "job"
-# 2. 讓她賺 100 金幣（gold 加 100）再印出來
-# 3. 印 hero["mana"] 會怎樣？看看錯誤訊息（KeyError 找不到這個鍵）
+# Try it:
+# 1. Change hero into your own character and add a "job" item
+# 2. Give the hero 100 more gold, then print it
+# 3. What happens if you print hero["mana"]? Read the error
+#    (KeyError = there is no such key 鍵)

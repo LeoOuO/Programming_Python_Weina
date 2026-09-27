@@ -1,39 +1,39 @@
 # ===== Lesson 4 final demo: a three-room dungeon =====
-# 生字：dungeon 地城 · room 房間 · monster 怪物 · skill 技能 · victory 勝利
 #
-# 整支程式是用「函式」堆出來的：每個函式做一件事，主程式只負責把它們串起來。
-# 這就是真正的遊戲程式長的樣子。
-# 執行：python3 demo-dungeon.py
+# The whole program is built out of functions: each one does a single job,
+# and the main program just puts them together.
+# This is what real game code looks like.
+# Run it with:  python3 demo-dungeon.py
 import random
 import time
 
 SPEED = 0.4
 MAX_HP = 90
-FIREBALL_COST = 3      # 火球要花 3 點魔力（mana 魔力）
+FIREBALL_COST = 3      # a fireball costs 3 mana 魔力
 
 
 def say(text):
-    """印一行字然後停一下"""
+    """Print one line, then pause"""
     print(text)
     time.sleep(SPEED)
 
 
 def bar(hp, max_hp):
-    """把血量畫成 20 格方塊"""
+    """Draw the HP as 20 blocks 方塊"""
     blocks = int(hp / max_hp * 20)
     if blocks < 0:
         blocks = 0
     return "█" * blocks + "░" * (20 - blocks)
 
 
-# ---------- 技能：每個都是一個函式，回傳 (傷害, 訊息) ----------
+# ---------- skills 技能: each one is a function returning (damage, message) ----------
 def slash(atk):
     damage = random.randint(atk - 2, atk + 2)
     return damage, f"Slash! {damage} damage"
 
 
 def fireball(atk):
-    if random.randint(1, 100) <= 25:          # 25% 失手
+    if random.randint(1, 100) <= 25:          # 25% chance to miss
         return 0, "Fireball misses!"
     damage = atk * 2
     return damage, f"FIREBALL! {damage} damage"
@@ -48,9 +48,9 @@ def is_alive(hp):
     return hp > 0
 
 
-# ---------- 一場戰鬥：也是一個函式 ----------
+# ---------- one battle 戰鬥: also just a function ----------
 def fight(hero_hp, mana, monster_name, monster_hp, monster_atk):
-    """打一隻怪，回傳戰鬥後的 (血量, 魔力)"""
+    """Fight one monster. Returns the (hp, mana) you are left with."""
     say(f"\nA {monster_name} appears!  HP {monster_hp}")
 
     while is_alive(hero_hp) and is_alive(monster_hp):
@@ -82,14 +82,14 @@ def fight(hero_hp, mana, monster_name, monster_hp, monster_atk):
     return hero_hp, mana
 
 
-# ---------- 主程式：只負責把函式串起來 ----------
+# ---------- the main program: it only chains the functions together ----------
 print("=" * 40)
 print("           DUNGEON  QUEST")
 print("=" * 40)
 
 hero_hp = MAX_HP
-mana = 6                                                             # 整趟地城只有 6 點魔力
-rooms = [("Slime", 30, 9), ("Goblin", 45, 12), ("Dragon", 65, 15)]   # 三個房間，越來越難
+mana = 6                                                             # only 6 mana for the whole dungeon 地城
+rooms = [("Slime", 30, 9), ("Goblin", 45, 12), ("Dragon", 65, 15)]   # goblin 哥布林; harder each room
 
 for i in range(len(rooms)):
     name, monster_hp, monster_atk = rooms[i]
@@ -102,7 +102,7 @@ for i in range(len(rooms)):
         print("=" * 40)
         break
 
-    # 過關後回血
+    # rest after clearing a room
     hero_hp = hero_hp + 15
     if hero_hp > MAX_HP:
         hero_hp = MAX_HP

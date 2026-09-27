@@ -1,9 +1,9 @@
 # ===== Lesson 5 final demo: fight, loot, shop =====
-# 生字：loot 戰利品 · shop 商店 · stock 庫存 · equip 裝備 · afford 買得起
 #
-# 這次每個角色、每件道具都是一個「字典」，資料整整齊齊放在一起。
-# 流程：打一隻怪 -> 拿金幣 -> 去商店買東西 -> 再打下一隻
-# 執行：python3 demo-shop.py
+# Every character and every item 道具 is a dictionary, so all the data
+# for one thing stays in one place.
+# The loop: fight a monster -> take the gold -> go shopping -> fight again
+# Run it with:  python3 demo-shop.py
 import random
 import time
 
@@ -22,7 +22,7 @@ def bar(hp, max_hp):
     return "█" * blocks + "░" * (20 - blocks)
 
 
-# ---------- 主角：一個字典裝完所有資料 ----------
+# ---------- the hero: one dictionary holds everything ----------
 hero = {
     "name": "Hero",
     "hp": 85,
@@ -32,14 +32,14 @@ hero = {
     "potions": 1,
 }
 
-# ---------- 怪物圖鑑：清單裡放字典 ----------
+# ---------- the monster book 圖鑑: a list of dictionaries ----------
 monsters = [
     {"name": "Slime",  "hp": 26, "atk": 7,  "gold": 30},
     {"name": "Goblin", "hp": 40, "atk": 10, "gold": 55},
-    {"name": "Ogre",   "hp": 56, "atk": 13, "gold": 80},
+    {"name": "Ogre",   "hp": 56, "atk": 13, "gold": 80},   # ogre 食人魔
 ]
 
-# ---------- 商店：名稱 -> 資料 ----------
+# ---------- the shop: name -> data ----------
 shop = {
     "Potion":     {"price": 20, "effect": "heal",  "amount": 30},
     "Sharp Sword": {"price": 55, "effect": "atk",  "amount": 5},
@@ -54,7 +54,7 @@ def show_hero():
 
 
 def fight(monster):
-    """打一隻怪。贏了回傳 True 並拿到金幣，輸了回傳 False。"""
+    """Fight one monster. Returns True and takes the gold if you win."""
     hp = monster["hp"]
     say(f"\nA {monster['name']} appears!  HP {hp}  ATK {monster['atk']}")
 
@@ -88,12 +88,12 @@ def fight(monster):
 
 
 def visit_shop():
-    """逛商店，可以買到不想買為止。"""
+    """Visit the shop. Keep buying until you leave."""
     while True:
         print("\n" + "=" * 42)
         print(f"  SHOP        you have {hero['gold']} gold")
         print("=" * 42)
-        names = []                      # 把商品名稱收成清單，才能用編號選
+        names = []                      # collect the names so we can pick by number
         for item in shop:
             names.append(item)
         for i in range(len(names)):
@@ -107,7 +107,7 @@ def visit_shop():
         if choice == "0":
             return
 
-        # 把輸入的編號變成商品名稱
+        # turn the number the player typed into an item name
         if choice not in ["1", "2", "3"]:
             print("  ...what?")
             continue
@@ -130,7 +130,7 @@ def visit_shop():
         show_hero()
 
 
-# ---------- 主程式 ----------
+# ---------- the main program ----------
 print("=" * 42)
 print("        SHOP  &  SWORD")
 print("=" * 42)

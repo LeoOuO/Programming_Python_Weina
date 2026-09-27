@@ -1,7 +1,6 @@
 # ===== Example 3: a shop (dictionaries + a bag) =====
-# 生字：shop 商店 · item 道具 · price 價格 · buy 買 · afford 買得起
 #
-# 商品也是字典：一個名稱對一個價格。
+# The stock 商品 is a dictionary too: one name for one price 價格.
 
 prices = {
     "Potion": 20,
@@ -9,18 +8,18 @@ prices = {
     "Shield": 60,
 }
 
-gold = 100
-bag = []
+gold = 100                             # gold 金幣
+bag = []                               # what we have bought
 
 print("=== SHOP ===")
-for item in prices:                    # for 跑字典會拿到「名稱」
+for item in prices:                    # looping a dictionary gives you the NAMES
     print(f"  {item:<12} {prices[item]} gold")
 
 print(f"\nYou have {gold} gold")
 
 # 買一樣東西
 want = "Shield"
-if prices[want] <= gold:               # 錢夠嗎？（afford 負擔得起）
+if prices[want] <= gold:               # can we afford 買得起 it?
     gold = gold - prices[want]
     bag.append(want)
     print(f"Bought {want}! {gold} gold left")
@@ -38,7 +37,7 @@ else:
 
 print(f"\nBag: {bag}")
 
-# Try it 試試看：
-# 1. 在商店加兩樣新商品
-# 2. 把 gold 改成 300，看第二次買會不會成功
-# 3. 想一想：如果要買同一樣東西兩次，程式會怎樣？
+# Try it:
+# 1. Add two new items to the shop
+# 2. Change gold to 300 and see whether the second purchase works
+# 3. Think about it: what happens if you buy the same item twice?
