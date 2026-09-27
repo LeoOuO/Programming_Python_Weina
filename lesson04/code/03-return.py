@@ -1,11 +1,12 @@
 # ===== Example 3: getting an answer back (return) =====
 
 # print shows something to a person.
-# return 回傳 hands the answer back to the program, so it can be used again.
+# return hands the answer back to the program, so it can be used again.
+#   return 回傳
 
-def damage_of(atk, defense):       # work out the damage 傷害, then hand it back
+def damage_of(atk, defense):       # work out the damage, then hand it back
     damage = atk - defense
-    if damage < 1:                 # damage is never negative 負的 in a game
+    if damage < 1:                 # damage is never negative in a game
         damage = 1
     return damage                  # send the value back to where it was called
 

@@ -1,21 +1,22 @@
 # ===== Example 1: the bag (a list) =====
-# A list is a row of boxes in order, written inside square brackets 中括號 [ ]
+# A list is a row of boxes in order, written inside square brackets [ ]
+#   square brackets 中括號 · index 索引（位置）
 
-bag = ["Wooden Sword", "Red Potion", "Bread"]   # wooden 木製的 · potion 藥水
+bag = ["Wooden Sword", "Red Potion", "Bread"]   # potion 藥水
 
 print(bag)                 # print the whole list
 print(len(bag))            # len() = how many items are inside
 
-# Take one item out by its POSITION 位置 - positions start at 0!
+# Take one item out by its POSITION - positions start at 0!
 print(f"slot 1: {bag[0]}")
 print(f"slot 2: {bag[1]}")
-print(f"last slot: {bag[-1]}")     # slot 格子; -1 means the last one
+print(f"last slot: {bag[-1]}")     # -1 means the last one
 
-# Picked something up -> append 附加 (add to the end)
+# Picked something up -> append (add to the end)
 bag.append("Iron Sword")
 print(f"picked up an iron sword: {bag}")
 
-# Used something -> remove 移除 (take that item out)
+# Used something -> remove (take that item out)
 bag.remove("Red Potion")
 print(f"drank the potion: {bag}")
 

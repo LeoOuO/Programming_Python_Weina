@@ -8,16 +8,16 @@ import time
 SPEED = 0.45          # animation speed - make it smaller to fight faster
 
 HERO = "Hero"
-HERO_MAX_HP = 120      # max hp 血量上限
-HERO_ATK = 14          # attack power 攻擊力
+HERO_MAX_HP = 120
+HERO_ATK = 14
 
-BOSS = "Lava Dragon"   # lava 熔岩 · dragon 龍
+BOSS = "Lava Dragon"
 BOSS_MAX_HP = 160
 BOSS_ATK = 14
 
 
 def bar(hp, max_hp):
-    """HP bar made of 20 blocks 方塊"""
+    """HP bar made of 20 blocks"""
     blocks = int(hp / max_hp * 20)
     if blocks < 0:
         blocks = 0
@@ -30,11 +30,11 @@ def show(hero_hp, boss_hp):
 
 
 def attack(name, base_atk):
-    """Work out this hit and print what happened. Returns 回傳 the damage."""
+    """Work out this hit and print what happened. Returns the damage."""
     roll = random.randint(1, 100)          # a dice roll decides how good the hit is
     if roll >= 90:
         damage = base_atk * 2
-        print(f"{name} lands a CRITICAL HIT for {damage} damage!")   # critical hit 暴擊
+        print(f"{name} lands a CRITICAL HIT for {damage} damage!")
     elif roll <= 10:
         damage = 0
         print(f"{name} swings and misses")
@@ -47,7 +47,7 @@ def attack(name, base_atk):
 hero_hp = HERO_MAX_HP
 boss_hp = BOSS_MAX_HP
 turn = 0
-hero_total = 0        # stats 統計: total damage the hero deals
+hero_total = 0        # stats: total damage the hero deals
 potions = 2           # only two potions 藥水 - once they are gone, they are gone
 
 print("=" * 42)
@@ -67,7 +67,7 @@ while hero_hp > 0 and boss_hp > 0:
     hero_total = hero_total + damage
     time.sleep(SPEED)
 
-    # no counter-attack 反擊 if the boss is already down
+    # no counter-attack if the boss is already down
     if boss_hp <= 0:
         break
 

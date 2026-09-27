@@ -1,26 +1,27 @@
 # ===== Example 4: a skill system made of functions =====
 import random
 
-# Each skill 技能 is one function that returns (damage, message).
+# Each skill is one function that returns (damage, message).
 # To add a new skill you just write one more function -
 # the battle code does not change at all.
+#   skill 技能 · slash 斬擊 · fireball 火球
 
 def slash(atk):
-    """Slash 斬擊: steady damage"""
+    """Slash: steady damage"""
     damage = random.randint(atk - 2, atk + 2)
     return damage, f"Slash! {damage} damage"
 
 
 def fireball(atk):
-    """Fireball 火球: big damage, but it sometimes misses"""
-    if random.randint(1, 100) <= 25:          # 25% chance 機率 to miss
+    """Fireball: big damage, but it sometimes misses"""
+    if random.randint(1, 100) <= 25:          # 25% chance to miss
         return 0, "Fireball misses!"
     damage = atk * 2
     return damage, f"FIREBALL! {damage} damage"
 
 
 def heal_self(hp, max_hp):
-    """Heal 治療: +30 HP, but never above the maximum"""
+    """Heal: +30 HP, but never above the maximum"""
     hp = hp + 30
     if hp > max_hp:
         hp = max_hp

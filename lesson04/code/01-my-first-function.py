@@ -1,15 +1,16 @@
 # ===== Example 1: your first function =====
-# A function 函式 packs a few lines together and gives them a name.
+# A function packs a few lines together and gives them a name.
 # After that, saying the name runs all of them.
+#   function 函式 · define 定義 · call 呼叫
 
-def greet():                       # def = define 定義 a function called greet
+def greet():                       # def = define a function called greet
     print("=" * 30)
     print("  WELCOME, HERO!")
     print("=" * 30)
 
 
 # Defining does NOT run it. You have to CALL it by name:
-greet()                            # call 呼叫 it
+greet()                            # call it
 print("something happens...")
 greet()                            # call it as many times as you like
 

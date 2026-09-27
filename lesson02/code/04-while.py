@@ -1,11 +1,11 @@
 # ===== Example 4: use while when you do not know how many times =====
 # for   = repeat a FIXED number of times
-# while = repeat UNTIL 直到 the condition 條件 stops being true
+# while = repeat UNTIL the condition stops being true
 
 import random
 
-hp = 100         # hp 血量
-turn = 0         # turn 回合
+hp = 100
+turn = 0
 
 while hp > 0:                       # keep going while HP is above 0
     turn = turn + 1

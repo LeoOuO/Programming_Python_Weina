@@ -1,14 +1,15 @@
 # ===== Example 1: a character sheet (dictionary) =====
 #
 # A list is a row of things, taken out by position: 0, 1, 2.
-# A dictionary 字典 is a set of named data, taken out by name -
+# A dictionary is a set of named data, taken out by name -
 # just like looking a word up in a real dictionary.
+#   dictionary 字典 · key 鍵（名稱）· value 值
 
-hero = {                       # curly brackets 大括號; every item is  "name": value
+hero = {                       # curly brackets { }; every item is  "name": value
     "name": "Luna",
     "hp": 100,
     "atk": 18,
-    "gold": 50,            # gold 金幣
+    "gold": 50,
 }
 
 print(hero)
@@ -31,4 +32,5 @@ if "gold" in hero:
 # 1. Change hero into your own character and add a "job" item
 # 2. Give the hero 100 more gold, then print it
 # 3. What happens if you print hero["mana"]? Read the error
-#    (KeyError = there is no such key 鍵)
+#    (KeyError = there is no such key)
+#   curly brackets 大括號

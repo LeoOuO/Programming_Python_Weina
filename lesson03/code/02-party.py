@@ -1,7 +1,7 @@
 # ===== Example 2: going through the whole party (for + list) =====
 
 party = ["Swordsman", "Mage", "Archer", "Healer"]   # mage 法師 · archer 弓箭手 · healer 牧師
-hp_list = [120, 70, 90, 80]                         # each member's hp 血量
+hp_list = [120, 70, 90, 80]                         # each member's hp
 
 print("=== PARTY ===")
 for member in party:               # take out one item at a time until they run out
@@ -25,5 +25,5 @@ if "Mage" in party:
     print("There is a mage in the party, we can use magic")
 
 # Try it:
-# 1. Work out the average 平均 HP of the party (hint: total divided by size)
+# 1. Work out the average HP of the party (hint: total divided by size)
 # 2. Use for + if to print only the members with less than 90 HP

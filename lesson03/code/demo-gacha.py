@@ -1,12 +1,13 @@
 # ===== Lesson 3 final demo: the gacha machine =====
-# Lists everywhere: the card pool 卡池, the bag, and the stats 統計 at the end.
+# Lists everywhere: the card pool, the bag, and the stats at the end.
+#   gacha 轉蛋 · card pool 卡池 · stats 統計
 # Run it with:  python3 demo-gacha.py
 import random
 import time
 
 SPEED = 0.25
 
-# ---------- the card pool: few rare 稀有 copies, many common ones ----------
+# ---------- the card pool: few rare copies, many common ones ----------
 POOL = (["SSR Dragon Knight"] * 1
         + ["SSR Unicorn"] * 1
         + ["SR Fire Mage"] * 4
@@ -18,7 +19,7 @@ POOL = (["SSR Dragon Knight"] * 1
 
 
 def spin():
-    """Spinning 轉動 animation: flash random cards, then stop on the real one."""
+    """Spinning animation: flash random cards, then stop on the real one."""
     card = random.choice(POOL)
     for i in range(8):          # flash 8 times to make it feel like spinning
         print("\r   [ " + random.choice(POOL) + " ]" + " " * 20, end="", flush=True)
@@ -51,7 +52,7 @@ for i in range(10):
     bag.append(card)           # every card we draw goes into the bag
     time.sleep(SPEED / 2)
 
-# ---------- stats 統計 ----------
+# ---------- stats ----------
 print()
 print("=" * 44)
 print(f"  {name}'s ten draws")

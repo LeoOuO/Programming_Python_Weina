@@ -1,9 +1,9 @@
 # ===== Example 1: the game loop (a menu that keeps coming back) =====
 #
 # Every game has one big loop around everything:
-# show the menu 選單 -> wait for the player -> do it -> back to the menu.
+# show the menu -> wait for the player -> do it -> back to the menu.
 
-gold = 100                         # gold 金幣
+gold = 100
 playing = True                     # this variable decides whether the game goes on
 
 while playing:
@@ -23,10 +23,11 @@ while playing:
         playing = False            # the loop condition turns False -> it stops
         print("Bye!")
     else:
-        print("That is not an option.")     # an invalid 無效的 choice
+        print("That is not an option.")     # the player typed something else
 
 print(f"You finished with {gold} gold")
 
 # Try it:
-# 1. Add a 4) Gamble 賭一把 option: 50% chance +50 gold, 50% chance -30
+# 1. Add a 4) Gamble option: 50% chance +50 gold, 50% chance -30
 # 2. Replace playing = False with break - is the result the same?
+#   gamble 賭一把

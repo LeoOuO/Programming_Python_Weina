@@ -1,6 +1,7 @@
 # ===== Example 3: a shop (dictionaries + a bag) =====
 #
-# The stock 商品 is a dictionary too: one name for one price 價格.
+# The stock is a dictionary too: one name for one price.
+#   stock 商品 · afford 買得起
 
 prices = {
     "Potion": 20,
@@ -8,7 +9,7 @@ prices = {
     "Shield": 60,
 }
 
-gold = 100                             # gold 金幣
+gold = 100
 bag = []                               # what we have bought
 
 print("=== SHOP ===")
@@ -17,16 +18,16 @@ for item in prices:                    # looping a dictionary gives you the NAME
 
 print(f"\nYou have {gold} gold")
 
-# 買一樣東西
+# buy something
 want = "Shield"
-if prices[want] <= gold:               # can we afford 買得起 it?
+if prices[want] <= gold:               # can we afford it?
     gold = gold - prices[want]
     bag.append(want)
     print(f"Bought {want}! {gold} gold left")
 else:
     print(f"You cannot afford the {want}")
 
-# 再買一樣
+# buy one more thing
 want = "Iron Sword"
 if prices[want] <= gold:
     gold = gold - prices[want]

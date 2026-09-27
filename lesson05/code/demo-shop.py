@@ -1,9 +1,10 @@
 # ===== Lesson 5 final demo: fight, loot, shop =====
 #
-# Every character and every item 道具 is a dictionary, so all the data
+# Every character and every item is a dictionary, so all the data
 # for one thing stays in one place.
 # The loop: fight a monster -> take the gold -> go shopping -> fight again
 # Run it with:  python3 demo-shop.py
+#   item 道具 · stock 商品 · ogre 食人魔
 import random
 import time
 
@@ -32,11 +33,11 @@ hero = {
     "potions": 1,
 }
 
-# ---------- the monster book 圖鑑: a list of dictionaries ----------
+# ---------- the monster book: a list of dictionaries ----------
 monsters = [
     {"name": "Slime",  "hp": 26, "atk": 7,  "gold": 30},
     {"name": "Goblin", "hp": 40, "atk": 10, "gold": 55},
-    {"name": "Ogre",   "hp": 56, "atk": 13, "gold": 80},   # ogre 食人魔
+    {"name": "Ogre",   "hp": 56, "atk": 13, "gold": 80},
 ]
 
 # ---------- the shop: name -> data ----------

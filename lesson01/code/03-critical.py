@@ -1,8 +1,9 @@
 # ===== Example 3: critical hits (if / elif / else) =====
-# "if" means: only do the indented 縮排 lines when the condition 條件 is true.
+# "if" means: only do the indented lines when the condition is true.
+#   indent 縮排 · condition 條件 · critical hit 暴擊
 
 atk = 20
-roll = int(input("Roll a 100-sided dice (type 1-100): "))   # dice 骰子；input gives text, int() makes it a number
+roll = int(input("Roll a 100-sided dice (type 1-100): "))   # input gives text, int() makes it a number
 
 if roll >= 95:
     damage = atk * 3
@@ -23,5 +24,6 @@ print(f"This hit deals {damage} damage")
 # Careful: use TWO equal signs == to compare. One = puts a value in a box.
 
 # Try it:
-# 1. Change the critical 暴擊 threshold 門檻 from 80 to 50 - criticals get easier
+# 1. Change the critical threshold from 80 to 50 - criticals get easier
 # 2. Add a case: when the roll is exactly 50, print "Right in the middle"
+#   threshold 門檻

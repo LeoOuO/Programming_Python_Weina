@@ -1,6 +1,6 @@
 # ===== Example 2: a whole party (a list of dictionaries) =====
 
-# A list of dictionaries = a whole party 隊伍, each member with its own data.
+# A list of dictionaries = a whole party, each member with its own data.
 party = [
     {"name": "Luna",  "hp": 100, "atk": 18},
     {"name": "Borin", "hp": 140, "atk": 12},
@@ -14,7 +14,7 @@ print()
 for member in party:           # one at a time; each one is a dictionary
     print(f"{member['name']:<6} HP {member['hp']:>4}  ATK {member['atk']}")
 
-# find the strongest 最強的 one
+# find the strongest one
 print()
 best = party[0]
 for member in party:

@@ -21,7 +21,7 @@ game = {
     "hero": {"name": "Hero", "hp": 60, "max_hp": 60, "atk": 12},
     "gold": 30,
     "potions": 1,
-    "floor": 1,          # which floor 樓層 we are on
+    "floor": 1,          # which floor we are on
 }
 
 MONSTERS = [
@@ -64,7 +64,7 @@ def is_alive(hp):
 
 
 def hero_damage():
-    """Work out this hit. 10% chance of a critical hit 暴擊."""
+    """Work out this hit. 10% chance of a critical hit."""
     atk = game["hero"]["atk"]
     if random.randint(1, 100) <= 10:
         return atk * 2, True
@@ -99,7 +99,7 @@ def battle(monster):
                 say("  No potions left!")
                 continue                      # nothing happened, so it costs no turn
         elif choice == "3":
-            if random.randint(1, 100) <= 50:  # 50% chance to escape 逃跑
+            if random.randint(1, 100) <= 50:  # 50% chance to escape
                 say("  You escaped!")
                 return False
             say("  You failed to escape!")

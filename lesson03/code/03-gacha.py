@@ -1,22 +1,23 @@
 # ===== Example 3: how card draw rates actually work =====
 import random
 
-# The trick: build the card pool 卡池 as a list.
-# Rare 稀有 cards get few copies, common cards get many.
+# The trick: build the card pool as a list.
+# Rare cards get few copies, common cards get many.
+#   card pool 卡池 · rare 稀有 · copy 張（同一張卡）
 pool = (["SSR Dragon Knight"] * 2       # 2 copies
-        + ["SR Fire Mage"] * 8          # 8 copies 張
+        + ["SR Fire Mage"] * 8          # 8 copies
         + ["R Archer"] * 30             # 30 copies
-        + ["N Villager"] * 60)          # villager 村民; 100 cards in total
+        + ["N Villager"] * 60)          # 100 cards in total
 
 print(f"The pool has {len(pool)} cards")
 print(f"Chance of an SSR: {pool.count('SSR Dragon Knight')} out of {len(pool)}")
 
-card = random.choice(pool)        # draw 抽 one random card from the pool
+card = random.choice(pool)        # draw one random card from the pool
 print(f"You drew: {card}")
 
 print()
-print("---- ten draws 十連抽 ----")
-results = []                      # an empty 空的 list to collect the results
+print("---- ten draws ----")
+results = []                      # an empty list to collect the results
 for i in range(10):
     card = random.choice(pool)
     results.append(card)          # put every card we drew into the list

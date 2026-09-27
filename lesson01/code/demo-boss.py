@@ -9,13 +9,13 @@ BOSS_MAX_HP = 120
 
 
 def say(text):
-    """Print one line, then pause 暫停 so the fight has a rhythm."""
+    """Print one line, then pause so the fight has a rhythm."""
     print(text)
     time.sleep(SPEED)
 
 
 def bar(hp, max_hp):
-    """Draw the HP as 20 blocks 方塊"""
+    """Draw the HP as 20 blocks"""
     blocks = int(hp / max_hp * 20)
     if blocks < 0:
         blocks = 0
@@ -24,10 +24,10 @@ def bar(hp, max_hp):
 
 # ---------- character data: all just variables ----------
 name = input("Hero, what is your name? ")
-hp = MAX_HP            # hp 血量
-atk = 18               # attack power 攻擊力
+hp = MAX_HP
+atk = 18
 
-boss = "Slime King"    # slime 史萊姆
+boss = "Slime King"
 boss_hp = BOSS_MAX_HP
 boss_atk = 15
 
@@ -38,12 +38,13 @@ say(f"  {boss}  HP {boss_hp}  ATK {boss_atk}")
 say("=" * 38)
 print()
 
-# ---------- one turn 回合: you choose what to do ----------
+# ---------- one turn: you choose what to do ----------
 say(f"The {boss} blocks your way!")
 print()
 print("  1) Attack")
-print("  2) Power strike  (double damage, but no guard this turn)")   # power strike 蓄力一擊
-print("  3) Drink a potion  (heal 30 HP, but no attack this turn)")   # heal 回復
+print("  2) Power strike  (double damage, but no guard this turn)")
+print("  3) Drink a potion  (heal 30 HP, but no attack this turn)")
+#   power strike 蓄力一擊 · guard 格擋 · heal 回復
 choice = input("\nWhat do you do? Type 1, 2 or 3: ")
 
 print()
@@ -77,11 +78,11 @@ if damage > 0:
 
 print()
 
-# ---------- the boss strikes back 反擊 ----------
+# ---------- the boss strikes back ----------
 if boss_hp > 0:
     boss_damage = boss_atk
     if guarding:
-        boss_damage = int(boss_damage / 2)    # guarding 格擋 cuts the damage in half
+        boss_damage = int(boss_damage / 2)    # guarding cuts the damage in half
         say("You raise your shield and block half of it")
     hp = hp - boss_damage
     say(f"The {boss} hits back for {boss_damage} damage!")

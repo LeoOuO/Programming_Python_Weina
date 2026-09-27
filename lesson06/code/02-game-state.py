@@ -1,14 +1,15 @@
 # ===== Example 2: keeping the whole game in one place =====
 #
 # All the data of a game in progress goes into one dictionary:
-# the game state 狀態.
+# the game state.
 # Saving, restarting, showing the status - all of them only touch this one box.
+#   game state 遊戲狀態
 
 game = {
     "hero": {"name": "Luna", "hp": 100, "max_hp": 100, "atk": 15},
     "gold": 50,
     "bag": ["Potion"],
-    "room": 1,                     # which room 房間 we are in
+    "room": 1,                     # which room we are in
     "wins": 0,                     # battles won so far
 }
 

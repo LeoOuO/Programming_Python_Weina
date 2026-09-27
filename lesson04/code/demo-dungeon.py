@@ -3,6 +3,7 @@
 # The whole program is built out of functions: each one does a single job,
 # and the main program just puts them together.
 # This is what real game code looks like.
+#   dungeon 地城 · mana 魔力 · goblin 哥布林
 # Run it with:  python3 demo-dungeon.py
 import random
 import time
@@ -19,14 +20,14 @@ def say(text):
 
 
 def bar(hp, max_hp):
-    """Draw the HP as 20 blocks 方塊"""
+    """Draw the HP as 20 blocks"""
     blocks = int(hp / max_hp * 20)
     if blocks < 0:
         blocks = 0
     return "█" * blocks + "░" * (20 - blocks)
 
 
-# ---------- skills 技能: each one is a function returning (damage, message) ----------
+# ---------- skills: each one is a function returning (damage, message) ----------
 def slash(atk):
     damage = random.randint(atk - 2, atk + 2)
     return damage, f"Slash! {damage} damage"
@@ -48,7 +49,7 @@ def is_alive(hp):
     return hp > 0
 
 
-# ---------- one battle 戰鬥: also just a function ----------
+# ---------- one battle: also just a function ----------
 def fight(hero_hp, mana, monster_name, monster_hp, monster_atk):
     """Fight one monster. Returns the (hp, mana) you are left with."""
     say(f"\nA {monster_name} appears!  HP {monster_hp}")
@@ -88,8 +89,8 @@ print("           DUNGEON  QUEST")
 print("=" * 40)
 
 hero_hp = MAX_HP
-mana = 6                                                             # only 6 mana for the whole dungeon 地城
-rooms = [("Slime", 30, 9), ("Goblin", 45, 12), ("Dragon", 65, 15)]   # goblin 哥布林; harder each room
+mana = 6                                                             # only 6 mana for the whole dungeon
+rooms = [("Slime", 30, 9), ("Goblin", 45, 12), ("Dragon", 65, 15)]   # harder each room
 
 for i in range(len(rooms)):
     name, monster_hp, monster_atk = rooms[i]

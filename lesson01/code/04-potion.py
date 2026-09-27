@@ -1,11 +1,11 @@
 # ===== Example 4: when should you drink a potion? (and / or / not) =====
 
-hp = int(input("How much HP do you have? "))          # hp 血量
+hp = int(input("How much HP do you have? "))
 potions = int(input("How many potions are in your bag? "))   # potion 藥水
 
 # and : both sides must be true
 # or  : at least one side must be true
-# not : the opposite 相反
+# not : the opposite
 
 if hp < 30 and potions > 0:
     print("Drink a potion, your HP is too low!")
