@@ -1,4 +1,15 @@
 # ===== Lesson 3 practice - reference answers (TEACHER ONLY) =====
+# --- Practice 1（填空）解答 ------------------------------------------
+# 1. bag[0]  /  bag[2]     （bag[-1] 印出 Shield）
+# 2. len(bag)
+# 3. bag.append("Iron Sword")  /  bag.remove("Bread")
+# 4. print(f"{i + 1}. {party[i]}")
+# 5. sum / max / min / len
+# 6. results = []   /   results.append(card)
+#    想一想：results = [] 搬進迴圈 -> 每輪都清空，最後只剩一張。
+#
+# 第 1 題讓她自己數格子：四樣東西的位置是 0、1、2、3，沒有 4。
+
 import random
 
 # --- Question 1 ----------------------------------------------------

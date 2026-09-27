@@ -1,0 +1,241 @@
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>第 4 堂 · 把功能包起來</h1>
+  <h2>函式 function</h2>
+  <p>今天的目標：用函式組出一座<b>三個房間的地城</b>。</p>
+  <aside class="notes">前三堂學的是「語法」，今天開始學「怎麼組織程式」——這是從寫小程式到做遊戲的分水嶺。
+  <br>課前先自己跑一次 <code>demo-dungeon.py</code>（選 1 和選 2 各試一次）。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 回顧＋問題</td><td>15 分</td><td>看她改的轉蛋機，發現「重複的程式」很難改</td></tr>
+    <tr><td>2. 第一個函式</td><td>25 分</td><td><code>def</code>、呼叫、為什麼要包起來</td></tr>
+    <tr><td>3. 參數與回傳</td><td>25 分</td><td>把資料傳進去、把答案拿回來</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
+    <tr class="hi"><td>4. 練習兩階段</td><td>30 分</td><td>填空 → 自己寫</td></tr>
+    <tr><td>5. Demo &amp; 收尾</td><td>20 分</td><td>地城闖關，自己加一個技能</td></tr>
+  </table>
+  <aside class="notes">今天觀念比較抽象，所以第 2、3 段都要<b>先看到問題再給工具</b>，不要先講定義。
+  <br>時間不夠：第 3 段的預設參數（<code>amount=30</code>）可以砍。<code>return</code> 不能砍。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>一個很煩的問題</h2>
+  <div class="cols">
+    <div class="box bd"><h3>現在的寫法</h3>
+<pre><code>print("=" * 30)
+print("  WELCOME, HERO!")
+print("=" * 30)
+
+# ...中間一堆程式...
+
+print("=" * 30)
+print("  WELCOME, HERO!")
+print("=" * 30)</code></pre>
+      <p><small>想把框線改成 <code>*</code>？<b>兩個地方都要改</b>，漏掉一個就不一致</small></p></div>
+    <div class="box gd"><h3>用函式</h3>
+<pre><code>def greet():
+    print("=" * 30)
+    print("  WELCOME, HERO!")
+    print("=" * 30)
+
+greet()
+# ...中間一堆程式...
+greet()</code></pre>
+      <p><small>改一個地方，<b>所有用到的地方一起變</b></small></p></div>
+  </div>
+  <div class="callout">函式 = 把幾行程式<b>包起來、取一個名字</b>。之後叫名字就會執行。</div>
+  <aside class="notes">開場先問她：「上禮拜的轉蛋機，如果要在三個地方都印同樣的標題，你會怎麼做？」——複製貼上是自然的答案，讓她說出來。
+  <br>然後問：「那如果要改標題呢？」痛點出來了，函式才有意義。
+  <br>這一頁不要講語法細節，只講「為什麼」。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>第一個函式</h2></section>
+
+<section class="slide sm">
+  <h2>定義與呼叫</h2>
+  <div class="pg">打開 <span class="k">01-my-first-function.py</span><b>執行看看，再多呼叫幾次</b></div>
+  <div class="cols">
+    <div>
+<pre><code>def greet():            # ① 定義（define）
+    print("WELCOME!")
+    print("=" * 20)
+
+
+greet()                 # ② 呼叫（call）
+greet()                 # 想叫幾次就叫幾次</code></pre>
+    </div>
+    <div class="box ac"><h3>四個規則</h3>
+      <ul style="font-size:18px">
+        <li><code>def</code> + 名字 + <code>()</code> + <b>冒號</b></li>
+        <li>裡面的程式要<b>縮排</b></li>
+        <li>定義<b>不會執行</b>，只是先寫好放著</li>
+        <li>要<b>呼叫</b>（打名字加括號）才會動</li>
+      </ul></div>
+  </div>
+  <div class="quiz" data-answer="0">
+    <p class="q">如果只有 <code>def greet(): ...</code>，後面<b>沒有</b>寫 <code>greet()</code>，執行後會印出幾行字？</p>
+    <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
+    <div class="fb"></div>
+  </div>
+  <aside class="notes">答案 0。<b>「定義 ≠ 執行」是今天第一個坎</b>，現場示範：把 <code>greet()</code> 那兩行註解掉，執行 → 什麼都沒有。
+  <br>比喻：定義＝寫食譜，呼叫＝照食譜做菜。寫好食譜不會自己生出菜來。
+  <br>函式名稱的規矩跟變數一樣：英文小寫、用底線連接，例如 <code>show_title</code>。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>參數與回傳</h2></section>
+
+<section class="slide sm">
+  <h2>把資料傳進去：參數</h2>
+  <div class="pg">打開 <span class="k">02-parameters.py</span><b>加一個自己的角色進去</b></div>
+  <pre><code>def attack(name, damage):            # 括號裡是「參數」parameter
+    print(f"{name} attacks for {damage} damage!")
+
+
+attack("Hero", 12)                   # Hero attacks for 12 damage!
+attack("Slime King", 20)             # Slime King attacks for 20 damage!</code></pre>
+  <div class="cols">
+    <div class="box ac"><h3>參數是什麼</h3><p>函式裡面的<b>空格</b>，呼叫的時候才填進去。<br>同一個函式可以用在<b>任何角色</b>身上。</p></div>
+    <div class="box gd"><h3>預設值</h3>
+      <pre style="margin:4px 0"><code>def heal(name, amount=30):</code></pre>
+      <p><small>呼叫時不給 amount 就用 30</small></p></div>
+  </div>
+  <aside class="notes">先讓她看只有一行 print 的版本，再問「那要印十個角色呢？」→ 參數的必要性。
+  <br>順序很重要：<code>attack("Hero", 12)</code> 的 "Hero" 對到 <code>name</code>、12 對到 <code>damage</code>，位置對應。可以故意寫反 <code>attack(12, "Hero")</code> 看結果多好笑。
+  <br>常見錯誤：定義時忘了寫參數，函式裡卻用了那個名字 → <code>NameError</code>。練習第 2 題就是這個。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>把答案拿回來：return</h2>
+  <div class="pg">打開 <span class="k">03-return.py</span><b>最後一個 Try it 一定要試</b></div>
+  <div class="cols">
+    <div>
+<pre><code>def damage_of(atk, defense):
+    damage = atk - defense
+    if damage &lt; 1:
+        damage = 1
+    return damage        # 把答案交回去
+
+
+d = damage_of(20, 5)     # d 收到 15
+total = damage_of(20, 5) + damage_of(15, 3)</code></pre>
+    </div>
+    <div>
+      <table>
+        <tr><th></th><th>做什麼</th></tr>
+        <tr><td><code>print</code></td><td>印出來<b>給人看</b>，程式拿不到</td></tr>
+        <tr><td><code>return</code></td><td>把值<b>交回程式</b>，可以再拿去算</td></tr>
+      </table>
+      <div class="box gd" style="margin-top:10px"><h3>回傳 True / False</h3>
+        <pre style="margin:4px 0"><code>def is_alive(hp):
+    return hp &gt; 0
+
+if is_alive(35):
+    print("still standing!")</code></pre></div>
+    </div>
+  </div>
+  <aside class="notes"><b>print 和 return 的差別是今天第二個坎</b>，而且最容易混。
+  <br>示範：把 <code>return damage</code> 改成 <code>print(damage)</code>，然後 <code>d = damage_of(20, 5)</code> → d 變成 <code>None</code>，<code>d + 3</code> 直接報錯。看到才會懂。
+  <br><code>is_alive</code> 這種回傳 True/False 的函式，讓程式讀起來像英文句子，Demo 裡用了很多次。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>一次回傳兩個東西</h2>
+  <div class="pg">打開 <span class="k">04-skills.py</span><b>加一個自己的技能</b></div>
+  <div class="cols">
+    <div>
+<pre><code>def fireball(atk):
+    if random.randint(1, 100) &lt;= 25:
+        return 0, "Fireball misses!"
+    damage = atk * 2
+    return damage, f"FIREBALL! {damage}"
+
+
+damage, text = fireball(12)   # 一次收兩個
+print(text)</code></pre>
+    </div>
+    <div class="box ac"><h3>技能系統的做法</h3>
+      <p>每個技能 = <b>一個函式</b>，都回傳 <code>(傷害, 訊息)</code>。</p>
+      <p>要加新技能？<b>再寫一個函式就好</b>，戰鬥的程式完全不用動。</p>
+      <p><small>這就是為什麼真的遊戲可以有幾百個技能</small></p></div>
+  </div>
+  <aside class="notes">回傳兩個值用逗號隔開，接的時候也用逗號：<code>damage, text = fireball(12)</code>。她上一堂看過 <code>for i in range(len(...))</code>，這個也是「一次拿兩個」的概念。
+  <br>讓她照著 <code>slash</code> 的樣子寫一個自己的技能（名字、倍率、機率自己定），寫完馬上在 Demo 裡用得到——這是今天最有成就感的一步。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>換你寫</h2></section>
+
+<section class="slide sm">
+  <h2>換你寫 ①：填空</h2>
+  <div class="pg">打開 <span class="k">practice-1.py</span><b>把每個 ____ 填掉，填一個執行一次</b></div>
+  <pre><code>____ show_title():        # 定義函式要用哪個關鍵字？
+    print("*** DUNGEON QUEST ***")
+
+show_title()              # 這行是「呼叫」，已經幫你寫好</code></pre>
+  <div class="callout"><b>今天會看到兩種錯誤訊息：</b>
+  <code>SyntaxError</code> = 關鍵字那格還沒填；
+  <code>NameError</code> = 這一行的值還沒填。兩種都會告訴你行號。</div>
+  <aside class="notes">第一階段 12 分鐘。六個小題：<code>def</code> · 參數 · <code>return</code> · 用回傳值 · True/False · 兩個回傳值。
+  <br>兩種錯誤訊息的差別要當場講一次——這是她第一次遇到 SyntaxError 以外的分類。
+  <br>解答在 <code>notes/lesson04-solutions.py</code> 最上面。</aside>
+</section>
+
+<section class="slide">
+  <h2>換你寫 ②：自己完成</h2>
+  <div class="pg">打開 <span class="k">practice-2.py</span><b>這次從空白開始寫</b></div>
+  <ul class="check two">
+    <li><div><b>1. welcome(name)</b><small>印歡迎詞，用三個名字各叫一次</small></div></li>
+    <li><div><b>2. exp_needed(level)</b><small>回傳 level × 100，用迴圈印 1~5 級</small></div></li>
+    <li><div><b>3. damage_of(atk, defense)</b><small>傷害最少是 1，要 return</small></div></li>
+    <li><div><b>4. is_critical(roll)</b><small>回傳 True/False，擲 10 次數暴擊</small></div></li>
+    <li><div><b>5. 自己的技能</b><small>回傳 (傷害, 訊息)，呼叫 5 次</small></div></li>
+    <li><div><b>6. 挑戰：串起來</b><small>attack() 裡面用 3 和 4 兩個函式</small></div></li>
+  </ul>
+  <aside class="notes">第二階段 18 分鐘。第 5 題是重點，寫完的技能等一下可以直接貼進 Demo。
+  <br>第 6 題（函式呼叫函式）是進階概念，寫不完沒關係，當回家玩的。
+  <br>常見卡點：函式定義完忘了呼叫、<code>return</code> 縮排跑掉、以為 <code>print</code> 就等於 <code>return</code>。</aside>
+</section>
+
+<!-- ========== Part 4 ========== -->
+<section class="slide lead"><h1>Part 4</h1><h2>今天的成果</h2></section>
+
+<section class="slide sm">
+  <h2>地城闖關</h2>
+  <div class="pg">打開 <span class="k">demo-dungeon.py</span><b>直接執行，三個房間</b></div>
+  <div class="term">--- Room 3 of 3 ---
+
+A Dragon appears!  HP 65
+
+  1) Slash      2) Fireball (costs 3 mana, you have 4)
+  Your move? <b>2</b>
+  FIREBALL! 28 damage
+  Dragon hits you for 17 damage
+  You  ███████░░░░░░░░░░░░░ 33/90
+
+  VICTORY! You cleared the dungeon!</div>
+  <p><small>整支程式由 <b>7 個函式</b>組成，主程式只有十幾行。</small></p>
+  <aside class="notes">先玩一次（會輸大約三成，輸了她會想再來一次）。
+  <br>魔力設計要指出來：火球強但只有 6 點魔力，<b>「什麼時候用」變成一個選擇</b>——這就是遊戲設計。問她第一關該不該用火球。
+  <br>然後看程式：指出 <code>fight()</code> 這個函式裡面又呼叫了 <code>slash()</code>、<code>fireball()</code>、<code>is_alive()</code>——函式可以呼叫函式。
+  <br><b>最後 10 分鐘讓她把自己寫的技能加進去</b>：貼進技能區、在 <code>fight()</code> 的選項多一行、改 <code>if choice == "3"</code>。這是今天的高潮。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天做了什麼</h2>
+  <ul class="check">
+    <li>用 <code>def</code> 把重複的程式包起來，改一次全部一起變</li>
+    <li>用<b>參數</b>讓同一個函式服務不同角色</li>
+    <li>用 <code>return</code> 把答案交回程式，不只是印出來</li>
+    <li>知道函式可以一次回傳兩個東西，也可以呼叫別的函式</li>
+    <li>把自己寫的技能加進一個真的能玩的地城</li>
+  </ul>
+  <div class="callout"><b>下一堂：</b>字典 dict——讓每個角色、每件道具有<b>自己的一整組資料</b>，做出商店。</div>
+  <aside class="notes">回家玩的：幫地城加第四個房間（最終王），數值自己定，下次帶來讓我打一次。
+  <br>下課前確認她的技能函式有存好。</aside>
+</section>

@@ -183,9 +183,30 @@ print(results.count("SSR Dragon Knight"))   # ③ 統計</code></pre>
   <br>常見錯誤：<code>results = []</code> 放進迴圈裡（每輪清空，最後只剩一張）。可以故意示範。</aside>
 </section>
 
+<section class="slide sm">
+  <h2>換你寫 ①：填空</h2>
+  <div class="pg">打開 <span class="k">practice-1.py</span><b>把每個 ____ 填掉，填一個執行一次</b></div>
+  <div class="cols">
+    <div>
+<pre><code>bag = ["Wooden Sword", "Red Potion",
+       "Bread", "Shield"]
+
+print(bag[____])     # 想印出 Wooden Sword
+print(bag[____])     # 想印出 Bread</code></pre>
+    </div>
+    <div class="box ac"><h3>六個小題</h3>
+      <p>索引位置 · <code>len</code> · <code>append</code> / <code>remove</code> ·
+      走訪編號 · <code>sum</code>/<code>max</code>/<code>min</code> · 空清單 + 收集</p>
+      <p><small>第 1 題讓她自己數格子：四樣東西的位置是 0、1、2、3</small></p></div>
+  </div>
+  <aside class="notes">第一階段 10～12 分鐘。第 6 題（空清單 + append）是 Demo 的骨架，一定要做出來。
+  <br>最後的「想一想」（<code>results = []</code> 搬進迴圈會怎樣）務必問，可以現場改給她看。
+  <br>解答在 <code>notes/lesson03-solutions.py</code> 最上面。</aside>
+</section>
+
 <section class="slide">
-  <h2>換你寫</h2>
-  <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
+  <h2>換你寫 ②：自己完成</h2>
+  <div class="pg">打開 <span class="k">practice-2.py</span><b>這次從空白開始寫</b></div>
   <ul class="check two">
     <li><div><b>1. 我的背包</b><small>建清單、append、remove，每步印一次</small></div></li>
     <li><div><b>2. 隊伍報到</b><small>for 印成「1. 劍士」，編號從 1 開始</small></div></li>
@@ -193,7 +214,7 @@ print(results.count("SSR Dragon Knight"))   # ③ 統計</code></pre>
     <li><div><b>4. 只留下強的</b><small>for + if，把 &gt; 80 的放進新清單</small></div></li>
     <li><div><b>5. 挑戰：自己的卡池</b><small>抽 100 次，數稀有卡幾張</small></div></li>
   </ul>
-  <aside class="notes">25 分鐘。第 4 題是「空清單 + append」的第二次練習，做得出來就代表今天的骨架學起來了。
+  <aside class="notes">第二階段 15～18 分鐘。第 4 題是「空清單 + append」的第二次練習，做得出來就代表今天的骨架學起來了。
   <br>第 5 題讓她自己設計卡池（角色她自己想），她會做得很起勁；做完問她「抽到幾張？跟你設定的機率差多少？」
   <br>參考解答在 <code>notes/lesson03-solutions.py</code>。</aside>
 </section>

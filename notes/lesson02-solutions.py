@@ -1,4 +1,16 @@
 # ===== Lesson 2 practice - reference answers (TEACHER ONLY) =====
+# --- Practice 1（填空）解答 ------------------------------------------
+# 1. range(5)
+# 2. range(1, 6)        終點不會被印出來，所以要寫 6
+# 3. damage = atk * i
+# 4. total = 0   /   total = total + damage
+# 5. random.randint(1, 6)   /   random.choice(drops)
+# 6. stop_at = 0
+#    想一想：把 hp = hp - 10 刪掉 -> 無窮迴圈，要按 Control + C。
+#
+# 第 4 題最容易錯：total 的起點要在迴圈「外面」設成 0。
+# 如果她填錯成 total = damage，讓她執行看看數字對不對，自己發現。
+
 import random
 
 # --- Question 1 ----------------------------------------------------

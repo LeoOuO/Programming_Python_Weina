@@ -1,0 +1,204 @@
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>第 5 堂 · 角色資料與商店</h1>
+  <h2>字典 dict</h2>
+  <p>今天的目標：做出<b>打怪 → 賺錢 → 買裝備</b>的循環。</p>
+  <aside class="notes">字典是遊戲程式的骨幹：角色、道具、怪物、存檔，全部都是字典。
+  <br>課前跑一次 <code>demo-shop.py</code>，第一次進商店買 Sharp Sword，體驗一下「買對東西才過得了關」。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 回顧＋問題</td><td>15 分</td><td>看她加的技能，發現「角色資料散在一堆變數裡」</td></tr>
+    <tr><td>2. 字典</td><td>25 分</td><td>用名稱存取資料、改值、加新項目</td></tr>
+    <tr><td>3. 清單裡放字典</td><td>25 分</td><td>一整隊角色、一整本怪物圖鑑</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
+    <tr class="hi"><td>4. 練習兩階段</td><td>30 分</td><td>填空 → 自己寫</td></tr>
+    <tr><td>5. Demo &amp; 收尾</td><td>20 分</td><td>商店闖關，自己加商品</td></tr>
+  </table>
+  <aside class="notes">第 3 段（清單裡放字典）是今天的關鍵，Demo 和之後的專題都靠它。時間不夠寧可砍第 2 段的細節。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>又一個很煩的問題</h2>
+  <div class="cols">
+    <div class="box bd"><h3>現在的寫法</h3>
+<pre><code>hero_name = "Luna"
+hero_hp = 100
+hero_atk = 18
+hero_gold = 50
+
+boss_name = "Dragon"
+boss_hp = 200
+boss_atk = 25
+boss_gold = 500</code></pre>
+      <p><small>再加十隻怪呢？<b>四十個變數</b>？</small></p></div>
+    <div class="box gd"><h3>用字典</h3>
+<pre><code>hero = {"name": "Luna",
+        "hp": 100,
+        "atk": 18,
+        "gold": 50}
+
+boss = {"name": "Dragon",
+        "hp": 200,
+        "atk": 25,
+        "gold": 500}</code></pre>
+      <p><small>一個角色 = <b>一包資料</b></small></p></div>
+  </div>
+  <div class="callout"><b>清單</b>是一排東西，用<b>位置</b>（0、1、2）拿。<br>
+  <b>字典</b>是一組有名稱的資料，用<b>名稱</b>拿——像查字典一樣。</div>
+  <aside class="notes">開場問她：「上禮拜的地城，如果每隻怪都要有名字、血量、攻擊力、掉落金幣，你會怎麼存？」
+  <br>她可能會說用清單 <code>["Slime", 30, 9, 25]</code>——很好！那就追問「30 是血量還是攻擊力？」<b>數字沒有名字，很容易記錯</b>，字典就是來解決這個的。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>字典怎麼用</h2></section>
+
+<section class="slide sm">
+  <h2>用名稱存取</h2>
+  <div class="pg">打開 <span class="k">01-dict.py</span><b>改成你自己的角色</b></div>
+  <div class="cols">
+    <div>
+<pre><code>hero = {
+    "name": "Luna",      # "名稱": 值
+    "hp": 100,
+    "atk": 18,
+}
+
+print(hero["name"])      # Luna
+hero["hp"] = 70          # 改一項
+hero["level"] = 5        # 加一項（本來沒有）</code></pre>
+    </div>
+    <div class="box ac"><h3>三個規則</h3>
+      <ul style="font-size:18px">
+        <li>用<b>大括號</b> <code>{ }</code>，清單是中括號 <code>[ ]</code></li>
+        <li>每項是 <code>"名稱": 值</code>，名稱要加引號</li>
+        <li>取值用 <code>hero["hp"]</code>，<b>不是數字位置</b></li>
+      </ul>
+      <p><small>名稱的正式說法叫 <b>key</b>（鍵），值叫 <b>value</b></small></p></div>
+  </div>
+  <div class="quiz" data-answer="KeyError">
+    <p class="q">字典裡沒有 <code>"mana"</code> 這一項，卻寫 <code>print(hero["mana"])</code>，<br>會看到哪一種錯誤？（填錯誤的名字）</p>
+    <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
+    <div class="fb"></div>
+  </div>
+  <aside class="notes">答案 <code>KeyError</code>：找不到這個鍵。讓她真的執行一次看訊息——她已經認得 NameError、IndexError，這是第三種。
+  <br>注意 f-string 裡面要用不同的引號：<code>f"{hero['name']}"</code>（外面雙引號、裡面單引號），她一定會踩到。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>一整隊、一整本圖鑑</h2></section>
+
+<section class="slide sm">
+  <h2>清單裡面放字典</h2>
+  <div class="pg">打開 <span class="k">02-list-of-dicts.py</span><b>加第四個角色進去</b></div>
+  <pre><code>party = [
+    {"name": "Luna",  "hp": 100, "atk": 18},
+    {"name": "Borin", "hp": 140, "atk": 12},
+    {"name": "Sera",  "hp": 80,  "atk": 24},
+]
+
+print(party[0]["name"])            # 第 0 個角色的名字 -> Luna
+
+for member in party:               # 一個一個拿出來，每個都是字典
+    print(f"{member['name']} has {member['hp']} HP")</code></pre>
+  <div class="callout"><b>這是遊戲資料的標準做法。</b>怪物圖鑑、道具表、隊伍、排行榜——全部都是「清單裡放字典」。</div>
+  <aside class="notes"><code>party[0]["name"]</code> 兩層要拆開念：先拿第 0 個（一個字典），再拿它的 name。可以在互動模式裡一層一層印給她看。
+  <br>「找最強的」那段（用 best 存目前最好的，再一個一個比）是第三堂學過的招數換個包裝，指出來讓她有「我學過」的感覺。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>商店：名稱對價格</h2>
+  <div class="pg">打開 <span class="k">03-shop.py</span><b>加兩樣新商品</b></div>
+  <div class="cols">
+    <div>
+<pre><code>prices = {
+    "Potion": 20,
+    "Iron Sword": 80,
+    "Shield": 60,
+}
+
+for item in prices:        # 跑字典會拿到「名稱」
+    print(item, prices[item])
+
+if prices["Shield"] &lt;= gold:
+    gold = gold - prices["Shield"]
+    bag.append("Shield")</code></pre>
+    </div>
+    <div class="box ac"><h3>買東西的三步驟</h3>
+      <p>① 錢夠不夠？<code>if 價格 &lt;= gold</code><br>
+      ② 扣錢 <code>gold = gold - 價格</code><br>
+      ③ 放進背包 <code>bag.append(...)</code></p>
+      <p><small>任何遊戲的商店都是這三步</small></p></div>
+  </div>
+  <aside class="notes"><code>for item in prices</code> 拿到的是<b>名稱</b>不是值，這點要講清楚，她會以為拿到價格。
+  <br>三步驟的順序不能亂：先檢查再扣錢。問她「如果先扣錢再檢查會怎樣？」→ 錢變負的，這是真的遊戲會出的 bug。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>換你寫</h2></section>
+
+<section class="slide sm">
+  <h2>換你寫 ①：填空</h2>
+  <div class="pg">打開 <span class="k">practice-1.py</span><b>把每個 ____ 填掉，填一個執行一次</b></div>
+  <pre><code>monster = {"name": "Goblin", "hp": 45, "atk": 12}
+
+print(monster[____])          # 想印出 Goblin
+monster["hp"] = monster["hp"] - ____    # 被打了 10 點</code></pre>
+  <p><small>七個小題：取值 · 改值 · 加新項目 · 清單裡的字典 · 走訪 · 總和 · 買得起嗎</small></p>
+  <aside class="notes">第一階段 12 分鐘。第 6 題（總血量）是累加＋字典的組合，做得出來代表今天通了。
+  <br>解答在 <code>notes/lesson05-solutions.py</code> 最上面。</aside>
+</section>
+
+<section class="slide">
+  <h2>換你寫 ②：自己完成</h2>
+  <div class="pg">打開 <span class="k">practice-2.py</span><b>這次從空白開始寫</b></div>
+  <ul class="check two">
+    <li><div><b>1. 你的角色</b><small>name / hp / atk / gold 四項</small></div></li>
+    <li><div><b>2. 受傷與回血</b><small>回血不能超過上限</small></div></li>
+    <li><div><b>3. 怪物圖鑑</b><small>清單裡放三個字典，印成表</small></div></li>
+    <li><div><b>4. 找最肥的怪</b><small>gold 最多的那一隻</small></div></li>
+    <li><div><b>5. 打怪賺錢</b><small>for 跑完，金幣累加</small></div></li>
+    <li><div><b>6. 商店</b><small>印商品、買一樣</small></div></li>
+    <li><div><b>7. 挑戰：買得起的都買</b><small>把買東西放進迴圈</small></div></li>
+  </ul>
+  <aside class="notes">第二階段 18 分鐘。做到第 5 題就達標，6、7 沒寫完可以帶回家。
+  <br>第 7 題有個陷阱：邊買邊扣錢，所以後面的東西可能就買不起了——這正是要她體會的。</aside>
+</section>
+
+<!-- ========== Part 4 ========== -->
+<section class="slide lead"><h1>Part 4</h1><h2>今天的成果</h2></section>
+
+<section class="slide sm">
+  <h2>打怪 · 賺錢 · 買裝備</h2>
+  <div class="pg">打開 <span class="k">demo-shop.py</span><b>第一次進商店就決定勝負</b></div>
+  <div class="term">  SHOP        you have 60 gold
+  1) Potion        20g   (heal +30)
+  2) Sharp Sword   55g   (atk +5)
+  3) Armor         70g   (maxhp +25)
+  0) Leave
+  Buy which? <b>2</b>
+  Bought Sharp Sword!
+  Hero  ████████████████████ 85/85  ATK 18  5g  potions 1</div>
+  <p><small>三個字典撐起整個遊戲：<code>hero</code>、<code>monsters</code>、<code>shop</code>。</small></p>
+  <aside class="notes">先讓她自己玩一次，<b>不要提示買什麼</b>。買劍幾乎一定贏，什麼都不買大約只有一半機會——讓她自己發現。
+  <br>玩完問：「你覺得哪一步決定了輸贏？」再打開程式看 <code>shop</code> 字典。
+  <br>然後看程式結構：資料（三個字典）在最上面，函式在中間，主程式在最下面十幾行。<b>這就是遊戲程式的標準長相</b>。
+  <br>最後 10 分鐘讓她加一樣商品：在 <code>shop</code> 裡加一項、在 <code>visit_shop</code> 的選項清單加一個編號。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天做了什麼</h2>
+  <ul class="check">
+    <li>字典：用<b>名稱</b>存取一整組資料</li>
+    <li>改值、加新項目、<code>KeyError</code> 是什麼意思</li>
+    <li>清單裡放字典＝怪物圖鑑、隊伍、道具表</li>
+    <li>商店三步驟：檢查錢 → 扣錢 → 放進背包</li>
+    <li>玩到一個有經濟系統的遊戲</li>
+  </ul>
+  <div class="callout"><b>下一堂是專題：</b>把第 1～5 堂全部組起來，做出<b>一個完整、可以玩到破關的遊戲</b>。</div>
+  <aside class="notes">回家玩的：在 <code>shop</code> 加一樣你自己想的商品（效果自己定），下次帶來。
+  <br>下一堂是專題課，事前問她想做什麼主題（打怪／養成／解謎都行），我可以照她的想法調整專題的骨架。</aside>
+</section>

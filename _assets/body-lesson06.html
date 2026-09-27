@@ -1,0 +1,197 @@
+<!-- ========== 封面 ========== -->
+<section class="slide lead">
+  <h1>第 6 堂 · 專題：你的第一個完整遊戲</h1>
+  <h2>Slime Tower</h2>
+  <p>今天不學新語法，把<b>前五堂全部組起來</b>，做一個能玩到破關的遊戲。</p>
+  <aside class="notes">這堂是里程碑：她要意識到「我已經會做遊戲了」。
+  <br>課前先自己完整玩一次 <code>game.py</code>（會贏，大約 8～10 分鐘），確認她的電腦跑得動。
+  <br><b>今天最重要的產出是「她改過的那一版遊戲」</b>，不是進度。</aside>
+</section>
+
+<section class="slide">
+  <h2>今天要做的事</h2>
+  <table>
+    <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
+    <tr><td>1. 先玩一次</td><td>15 分</td><td>玩 Slime Tower，邊玩邊猜它怎麼寫的</td></tr>
+    <tr><td>2. 拆開來看</td><td>25 分</td><td>資料／函式／主程式三層結構</td></tr>
+    <tr><td>3. 遊戲主迴圈</td><td>20 分</td><td>選單迴圈、遊戲狀態字典</td></tr>
+    <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
+    <tr class="hi"><td>4. 練習兩階段</td><td>30 分</td><td>填空迷你版 → 改造成自己的遊戲</td></tr>
+    <tr><td>5. 展示</td><td>20 分</td><td>她玩你的、你玩她的</td></tr>
+  </table>
+  <aside class="notes">最後 20 分鐘的互相試玩不要砍——這是整個階段的收尾儀式。你要<b>認真玩她的版本並給具體回饋</b>（哪一層太難、哪句話好笑）。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>先玩一次</h2>
+  <div class="pg">打開 <span class="k">game.py</span><b>直接執行，玩到破關或倒下</b></div>
+  <div class="term">==============================================
+            S L I M E   T O W E R
+==============================================
+What is your name, hero? <b>Luna</b>
+
+  FLOOR 3
+  SHOP                       you have 85g
+   1) Potion         25g   +1 potion
+   2) Sharp Sword    50g   ATK +4
+   3) Big Shield     60g   max HP +20, full heal
+   0) Leave the shop
+   > <b>2</b>
+  Bought Sharp Sword!
+
+  A Goblin blocks the stairs!  HP 36  ATK 10
+   1) Attack    2) Potion (2)    3) Run away</div>
+  <aside class="notes">讓她玩，你在旁邊<b>只看不說</b>。玩完問三個問題：
+  <br>① 你覺得哪一步決定輸贏？（答案通常是「有沒有買劍」）
+  <br>② 這個遊戲裡有幾種資料？（角色、怪物、商品）
+  <br>③ 如果要加第六層，你覺得要改幾個地方？（她可能會說很多，其實只要一個）
+  <br>什麼都不買的話幾乎一定會輸，買了裝備就贏得了——這是刻意設計的，讓商店有意義。</aside>
+</section>
+
+<!-- ========== Part 1 ========== -->
+<section class="slide lead"><h1>Part 1</h1><h2>拆開來看</h2></section>
+
+<section class="slide sm">
+  <h2>每個遊戲都是這三層</h2>
+  <div class="cols w3">
+    <div class="box pk"><h3>① 資料</h3>
+      <p><code>game</code>　主角現在的狀態<br>
+      <code>MONSTERS</code>　怪物圖鑑<br>
+      <code>SHOP</code>　商品表</p>
+      <p><small>第 5 堂的<b>字典</b></small></p></div>
+    <div class="box ac"><h3>② 函式</h3>
+      <p><code>battle()</code>　打一場<br>
+      <code>shop()</code>　逛商店<br>
+      <code>show_status()</code>　顯示<br>
+      <code>bar()</code> <code>say()</code> <code>is_alive()</code>…</p>
+      <p><small>第 4 堂的<b>函式</b></small></p></div>
+    <div class="box gd"><h3>③ 主程式</h3>
+      <p>只有十幾行：<br>跑過每一層 → 逛商店 → 打一場 → 判斷輸贏</p>
+      <p><small>第 2 堂的<b>迴圈</b></small></p></div>
+  </div>
+  <div class="callout"><b>為什麼要分三層？</b>改數值只動①，改玩法只動②，改流程只動③——
+  不會「改一個地方，壞三個地方」。</div>
+  <aside class="notes">打開 <code>game.py</code> 用 <b>O 鍵式的快速捲動</b>帶她看一遍：上面是資料、中間是函式、最下面是主程式。
+  <br>問她「<code>battle()</code> 裡面有沒有用到今天以前學的東西？」→ while、if、random、字典，全部都有。讓她自己找出來，會很有成就感。
+  <br>不要逐行講解整支程式，重點是<b>看懂結構</b>。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>遊戲狀態：把進度放在一個字典裡</h2>
+  <div class="pg">打開 <span class="k">02-game-state.py</span><b>執行看看</b></div>
+  <pre><code>game = {
+    "hero": {"name": "Luna", "hp": 100, "max_hp": 100, "atk": 15},
+    "gold": 50,
+    "potions": 1,
+    "floor": 1,
+}
+
+print(game["hero"]["name"])       # 字典裡面還有字典，一層一層拿
+game["gold"] = game["gold"] + 40  # 打贏一場，金幣增加</code></pre>
+  <div class="callout">整個遊戲的「現在進度」都在這一包。<b>之後要做存檔，也只要把這一包存起來。</b></div>
+  <aside class="notes"><code>game["hero"]["hp"]</code> 兩層要拆開念：先拿 hero（一個字典），再拿它的 hp。
+  <br>可以順口提一下：存檔就是把這個字典寫進檔案，讀檔就是讀回來——下一個階段會學。不用展開。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>主迴圈：遊戲為什麼不會停</h2>
+  <div class="pg">打開 <span class="k">01-menu-loop.py</span><b>執行，玩到你按 3 為止</b></div>
+  <div class="cols">
+    <div>
+<pre><code>playing = True
+
+while playing:
+    print("1) Work  2) Rest  3) Quit")
+    choice = input("Choose: ")
+
+    if choice == "1":
+        gold = gold + 30
+    elif choice == "3":
+        playing = False     # 條件變 False -> 停
+    else:
+        print("That is not an option.")</code></pre>
+    </div>
+    <div class="box ac"><h3>所有遊戲都長這樣</h3>
+      <p>顯示畫面 → 等玩家輸入 → 照著做 → <b>回到第一步</b></p>
+      <p>手機遊戲一秒鐘跑 60 次這個迴圈，只是快到你看不見。</p>
+      <p><small><code>else:</code> 那段很重要：玩家一定會亂按</small></p></div>
+  </div>
+  <aside class="notes">「遊戲迴圈 game loop」是遊戲程式最核心的概念，之後學 pygame 第一件事就是它。今天先用文字版建立直覺。
+  <br>讓她故意亂按（輸入 9、輸入空白），看 <code>else</code> 接住——<b>好的程式要預期玩家亂按</b>。</aside>
+</section>
+
+<!-- ========== Part 2 ========== -->
+<section class="slide lead"><h1>Part 2</h1><h2>換你寫</h2></section>
+
+<section class="slide sm">
+  <h2>換你寫 ①：填空（迷你版）</h2>
+  <div class="pg">打開 <span class="k">practice-1.py</span><b>填完就能玩的迷你塔</b></div>
+  <pre><code>def battle(monster):
+    hp = monster["hp"]
+    while hp &gt; 0 and game["hero"]["hp"] &gt; ____:   # 兩邊都還活著才繼續
+        ...
+    return ____                  # 打贏了要回傳什麼？</code></pre>
+  <p><small>八個小題，填完是一個<b>兩層樓的完整遊戲</b>——大版本的所有零件它都有。</small></p>
+  <aside class="notes">第一階段 12～15 分鐘。這份是 game.py 的骨架縮小版，填完她就等於「讀懂了大版本」。
+  <br>填完一定要執行玩一次，讓她看到自己填的東西真的變成一個遊戲。
+  <br>解答在 <code>notes/lesson06-solutions.py</code>。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>換你寫 ②：把遊戲變成你的</h2>
+  <div class="pg">打開 <span class="k">practice-2.py</span><b>照清單改 game.py，改一項玩一次</b></div>
+  <ul class="check two">
+    <li><div><b>1. 換皮</b><small>名稱、怪物、商品換成你的主題</small></div></li>
+    <li><div><b>2. 第六層</b><small>MONSTERS 加一隻，主程式不用改</small></div></li>
+    <li><div><b>3. 新商品</b><small>SHOP 加一項 + 一個 elif</small></div></li>
+    <li><div><b>4. 新技能</b><small>戰鬥選單加第 4 個選項</small></div></li>
+    <li><div><b>5. 難度調整</b><small>玩三次，調到「有點難但打得過」</small></div></li>
+    <li><div><b>6. 挑戰：戰績畫面</b><small>通關時印打贏幾場、賺多少</small></div></li>
+    <li><div><b>7. 挑戰：寶箱事件</b><small>每層 30% 機率撿到金幣</small></div></li>
+  </ul>
+  <aside class="notes">第二階段 20 分鐘起跳，做不完是正常的，<b>1、2、5 一定要做到</b>（換皮最有動力、第六層證明結構的好處、調難度是遊戲設計）。
+  <br>第 5 項是今天的靈魂：讓她自己玩三次、自己決定數值——這是她第一次做「遊戲設計師」的工作。
+  <br>她一定會問「可以加＿＿嗎？」——只要她說得出做法就讓她做，做壞了正好練除錯。</aside>
+</section>
+
+<!-- ========== Part 3 ========== -->
+<section class="slide lead"><h1>Part 3</h1><h2>互相試玩</h2></section>
+
+<section class="slide sm">
+  <h2>展示時間</h2>
+  <div class="cols">
+    <div class="box ac"><h3>你玩她的版本</h3>
+      <p>認真玩完一輪，然後給<b>具體</b>的回饋：</p>
+      <ul style="font-size:17px">
+        <li>哪一層最卡</li>
+        <li>哪個商品最想買</li>
+        <li>哪句台詞最好笑</li>
+      </ul></div>
+    <div class="box gd"><h3>她玩你的版本</h3>
+      <p>問她三個問題：</p>
+      <ul style="font-size:17px">
+        <li>你會怎麼改這個遊戲？</li>
+        <li>哪一段程式你看得懂？</li>
+        <li>下一個想做什麼遊戲？</li>
+      </ul></div>
+  </div>
+  <div class="callout">做遊戲的人一定要看別人玩自己的遊戲——<b>卡住的地方，玩的人不會說，但看得出來</b>。</div>
+  <aside class="notes">你的版本先改幾個地方（多一層、換個主題），讓她有得比較。
+  <br>「下一個想做什麼遊戲」的答案記下來，那是下一階段（pygame）的專題方向。</aside>
+</section>
+
+<section class="slide">
+  <h2>六堂課，你做到了</h2>
+  <ul class="check">
+    <li>變數、型別、<code>if</code> 判斷</li>
+    <li><code>for</code> / <code>while</code> 迴圈、<code>random</code> 亂數</li>
+    <li>清單 list：背包、卡池、圖鑑</li>
+    <li>函式 <code>def</code>：把功能包起來、參數、<code>return</code></li>
+    <li>字典 dict：角色資料、商店、遊戲狀態</li>
+    <li><b>一個從頭到尾自己改過、可以玩到破關的遊戲</b></li>
+  </ul>
+  <div class="callout">這些就是做文字遊戲需要的<b>全部</b>基本功。下一站：<b>讓它有畫面</b>。</div>
+  <aside class="notes">這頁停久一點，一項一項唸過去，讓她感受到六堂課走了多遠。
+  <br>可以把第一堂的 <code>01-character.py</code> 和今天的 <code>game.py</code> 並排打開——從 5 行到 200 行。
+  <br>下一階段（pygame：視窗、圖片、鍵盤、碰撞）什麼時候開始，看她的狀況和電腦決定，這頁不要承諾時間。</aside>
+</section>

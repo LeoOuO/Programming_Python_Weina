@@ -1,4 +1,5 @@
 # ===== Lesson 1 final demo: your first boss fight =====
+# 生字：boss 王 · hero 勇者 · turn 回合 · guard 防禦 · strike 攻擊 · defeat 打敗
 # Everything here is from today: variables, int(), maths, if / elif / else.
 # Run it with:  python3 demo-boss.py
 import time
@@ -9,20 +10,20 @@ BOSS_MAX_HP = 120
 
 
 def say(text):
-    """Print one line, then pause so the fight has a rhythm."""
+    """印一行字然後停一下，讓畫面有節奏（pause 暫停）"""
     print(text)
     time.sleep(SPEED)
 
 
 def bar(hp, max_hp):
-    """Draw the HP as 20 blocks, like ######--------------"""
+    """把血量畫成 20 格方塊（blocks 方塊）"""
     blocks = int(hp / max_hp * 20)
     if blocks < 0:
         blocks = 0
     return "█" * blocks + "░" * (20 - blocks)
 
 
-# ---------- character data: all just variables ----------
+# ---------- 角色資料：全部都只是變數 ----------
 name = input("Hero, what is your name? ")
 hp = MAX_HP
 atk = 18
@@ -38,17 +39,17 @@ say(f"  {boss}  HP {boss_hp}  ATK {boss_atk}")
 say("=" * 38)
 print()
 
-# ---------- one turn: you choose what to do ----------
+# ---------- 一個回合（turn）：你選要做什麼 ----------
 say(f"The {boss} blocks your way!")
 print()
 print("  1) Attack")
-print("  2) Power strike  (double damage, but no guard this turn)")
-print("  3) Drink a potion  (heal 30 HP, but no attack this turn)")
+print("  2) Power strike  (double damage, but no guard this turn)")   # power strike 蓄力一擊
+print("  3) Drink a potion  (heal 30 HP, but no attack this turn)")   # heal 回復
 choice = input("\nWhat do you do? Type 1, 2 or 3: ")
 
 print()
 
-# input() gives us text, so we compare with text
+# input() 給我們的是文字，所以這裡拿文字來比對
 if choice == "1":
     damage = atk
     guarding = True
@@ -61,7 +62,7 @@ elif choice == "3":
     damage = 0
     guarding = True
     hp = hp + 30
-    if hp > MAX_HP:                 # never heal above full health
+    if hp > MAX_HP:                 # 不會補超過滿血
         hp = MAX_HP
     say(f"{name} drinks a potion. HP is back to {hp}")
 else:
@@ -69,7 +70,7 @@ else:
     guarding = False
     say("Wrong key! You stand there doing nothing...")
 
-# ---------- the boss takes damage ----------
+# ---------- 王掉血 ----------
 if damage > 0:
     boss_hp = boss_hp - damage
     say(f"   {damage} damage!")
@@ -77,11 +78,11 @@ if damage > 0:
 
 print()
 
-# ---------- the boss strikes back ----------
+# ---------- 王反擊（strike back 反擊）----------
 if boss_hp > 0:
     boss_damage = boss_atk
     if guarding:
-        boss_damage = int(boss_damage / 2)    # guarding cuts the damage in half
+        boss_damage = int(boss_damage / 2)    # 有防禦，傷害砍一半（half 一半）
         say("You raise your shield and block half of it")
     hp = hp - boss_damage
     say(f"The {boss} hits back for {boss_damage} damage!")
@@ -89,7 +90,7 @@ if boss_hp > 0:
 
 print()
 
-# ---------- who is winning after this turn? ----------
+# ---------- 這個回合結束，誰佔上風？ ----------
 if boss_hp <= 0:
     say(f"The {boss} is defeated! {name} wins!")
 elif hp <= 0:

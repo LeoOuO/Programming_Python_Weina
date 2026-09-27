@@ -1,12 +1,13 @@
 # ===== Lesson 3 final demo: the gacha machine =====
-# Lists everywhere: the card pool, the bag, and the stats at the end.
+# 生字：gacha 轉蛋 · machine 機器 · spin 轉動 · lucky 幸運 · stats 統計
+# 到處都是清單：卡池、背包、最後的統計。
 # Run it with:  python3 demo-gacha.py
 import random
 import time
 
 SPEED = 0.25
 
-# ---------- the card pool: few rare copies, many common ones ----------
+# ---------- 卡池：稀有卡少少幾張，普通卡很多張 ----------
 POOL = (["SSR Dragon Knight"] * 1
         + ["SSR Unicorn"] * 1
         + ["SR Fire Mage"] * 4
@@ -18,9 +19,9 @@ POOL = (["SSR Dragon Knight"] * 1
 
 
 def spin():
-    """Spinning animation: flash random cards, then stop on the real one."""
+    """轉動的動畫：快速閃過隨機的卡，最後停在真正抽到的那張（flash 閃過）"""
     card = random.choice(POOL)
-    for i in range(8):          # flash 8 times to make it feel like spinning
+    for i in range(8):          # 閃 8 次，做出「在轉」的感覺
         print("\r   [ " + random.choice(POOL) + " ]" + " " * 20, end="", flush=True)
         time.sleep(SPEED / 3)
     print("\r   * " + card + " *" + " " * 20)
@@ -32,7 +33,7 @@ print("            GACHA MACHINE")
 print("=" * 44)
 
 ssr_in_pool = 0
-for card in POOL:                  # count how many SSR cards are in the pool
+for card in POOL:                  # 數數看卡池裡有幾張 SSR
     if "SSR" in card:
         ssr_in_pool = ssr_in_pool + 1
 
@@ -44,14 +45,14 @@ name = input("What is your name? ")
 input("Press Enter for ten draws...")
 print()
 
-bag = []                       # the bag starts as an empty list
+bag = []                       # 背包一開始是空清單
 for i in range(10):
     print(f"Draw {i + 1}")
     card = spin()
-    bag.append(card)           # every card we draw goes into the bag
+    bag.append(card)           # 每張抽到的卡都放進背包
     time.sleep(SPEED / 2)
 
-# ---------- stats ----------
+# ---------- 統計 stats ----------
 print()
 print("=" * 44)
 print(f"  {name}'s ten draws")
@@ -59,7 +60,7 @@ print("=" * 44)
 
 ssr = 0
 sr = 0
-for card in bag:               # look at every card in the bag
+for card in bag:               # 把背包裡的卡一張一張看過
     if "SSR" in card:
         ssr = ssr + 1
     elif "SR" in card:

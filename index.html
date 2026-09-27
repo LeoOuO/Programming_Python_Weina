@@ -74,7 +74,7 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-si
   <h1>Python 遊戲程式設計</h1>
   <p>從零開始，每一堂做出一個會動的東西，最後做出一款自己的遊戲。</p>
   <div class="st">
-    <span>已完成 <b>3</b> 堂教材</span>
+    <span>已完成 <b>6</b> 堂教材</span>
     <span>每堂 <b>120</b> 分鐘</span>
     <span>語言：<b>Python 3</b></span>
   </div>
@@ -135,20 +135,36 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-si
       <span class="tag">教材完成</span>
     </a>
 
-    <a class="card todo">
+    <a class="card" href="lesson04/slides.html">
       <div class="n">第 4 堂</div>
-      <h3>函式：把功能包起來</h3>
-      <p><code>def</code> · 參數與回傳值 · 把前三堂組成一支程式</p>
-      <span class="demo">▶ Demo：完整的文字 RPG</span>
-      <span class="tag">尚未製作</span>
+      <h3>把功能包起來</h3>
+      <p>函式 <code>def</code> · 參數 · <code>return</code> · 回傳兩個值 · 函式呼叫函式</p>
+      <span class="demo">▶ Demo：<code>demo-dungeon.py</code> 三房間地城</span>
+      <span class="tag">教材完成</span>
+    </a>
+
+    <a class="card" href="lesson05/slides.html">
+      <div class="n">第 5 堂</div>
+      <h3>角色資料與商店</h3>
+      <p>字典 dict · 清單裡放字典 · <code>KeyError</code> · 買賣三步驟</p>
+      <span class="demo">▶ Demo：<code>demo-shop.py</code> 打怪賺錢買裝備</span>
+      <span class="tag">教材完成</span>
+    </a>
+
+    <a class="card" href="lesson06/slides.html">
+      <div class="n">第 6 堂</div>
+      <h3>專題：你的第一個完整遊戲</h3>
+      <p>遊戲主迴圈 · 遊戲狀態 · 資料／函式／主程式三層結構</p>
+      <span class="demo">▶ Demo：<code>game.py</code> Slime Tower（可破關）</span>
+      <span class="tag">教材完成</span>
     </a>
 
     <a class="card todo">
-      <div class="n">之後</div>
+      <div class="n">下一階段</div>
       <h3>有畫面的遊戲</h3>
       <p>pygame：視窗、圖片、鍵盤控制、碰撞</p>
       <span class="demo">▶ Demo：可以玩的 2D 小遊戲</span>
-      <span class="tag">尚未製作</span>
+      <span class="tag">看第 6 堂成果再規劃</span>
     </a>
 
   </div>
@@ -162,8 +178,11 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-si
         <td>上課簡報。<b>N</b> 教師備註、<b>O</b> 總覽、<b>F</b> 全螢幕、<b>← →</b> 翻頁</td><td>上課</td></tr>
     <tr><td><code>lessonNN/code/01-*.py</code></td>
         <td>課堂範例，照號碼順序講。每支最後都有「Try it」可以改</td><td>學生</td></tr>
-    <tr><td><code>lessonNN/code/practice.py</code></td>
-        <td>課堂練習，<b>只有題目沒有答案</b></td><td>學生</td></tr>
+    <tr><td><code>lessonNN/code/practice-1.py</code></td>
+        <td><b>練習第一階段：填空</b>。骨架都在，把 <code>____</code> 填掉；
+            執行時的錯誤訊息會告訴她還差哪一行</td><td>學生</td></tr>
+    <tr><td><code>lessonNN/code/practice-2.py</code></td>
+        <td><b>練習第二階段：自己完成</b>。同樣的觀念，但從空白開始寫</td><td>學生</td></tr>
     <tr><td><code>lessonNN/code/demo-*.py</code></td>
         <td>當堂的成果 Demo，直接執行就會動</td><td>學生</td></tr>
     <tr><td><code>notes/lessonNN-solutions.py</code></td>
@@ -173,6 +192,7 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-si
   </table>
   <div class="callout"><span class="tag">程式碼都是英文</span>
     變數名稱、註解、印出來的訊息都用英文寫，順便練英文；投影片與說明維持中文。
+    比較難的單字會在註解裡附中文，每個檔案開頭也有一行「生字」。
   </div>
 </section>
 
@@ -182,7 +202,7 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-si
     <li>在學生電腦的終端機打 <code>python3 --version</code>，有版本號就 OK。</li>
     <li><code>cd</code> 到今天的 <code>lessonNN/code/</code>，隨便跑一個範例。</li>
     <li>打開今天的 <code>slides.html</code>，按 <b>N</b> 確認教師備註看得到。</li>
-    <li>先自己執行一次今天的 <code>demo-*.py</code>，確認沒問題。</li>
+    <li>先自己執行一次今天的 <code>demo-*.py</code>（第 6 堂是 <code>game.py</code>），確認沒問題。</li>
   </ol>
   <div class="callout"><span class="tag">改教材</span>
     投影片內容在 <code>_assets/body-lessonNN.html</code>，改完跑 <code>python3 tools-build-decks.py</code> 重新組版；

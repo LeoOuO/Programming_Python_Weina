@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Python 第 3 堂 · 清單與背包</title>
+<title>Python 第 6 堂 · 專題：完整遊戲</title>
 
 <!--
 ================================================================
@@ -258,276 +258,200 @@ body.ov #hud{display:none}
 
 <!-- ========== 封面 ========== -->
 <section class="slide lead">
-  <h1>第 3 堂 · 背包與抽卡</h1>
-  <h2>清單 list</h2>
-  <p>今天的目標：做一台<b>會轉的轉蛋機</b>，抽完還會統計。</p>
-  <aside class="notes">清單是今天唯一的新概念，但它會一路用到做遊戲的最後。
-  <br>抽卡是她最有感的題材，前面的教學都往這裡鋪。</aside>
+  <h1>第 6 堂 · 專題：你的第一個完整遊戲</h1>
+  <h2>Slime Tower</h2>
+  <p>今天不學新語法，把<b>前五堂全部組起來</b>，做一個能玩到破關的遊戲。</p>
+  <aside class="notes">這堂是里程碑：她要意識到「我已經會做遊戲了」。
+  <br>課前先自己完整玩一次 <code>game.py</code>（會贏，大約 8～10 分鐘），確認她的電腦跑得動。
+  <br><b>今天最重要的產出是「她改過的那一版遊戲」</b>，不是進度。</aside>
 </section>
 
 <section class="slide">
   <h2>今天要做的事</h2>
   <table>
     <tr><th>段落</th><th>大約</th><th>做什麼</th></tr>
-    <tr><td>1. 回顧</td><td>10 分</td><td>看她調的戰鬥數值</td></tr>
-    <tr><td>2. 背包</td><td>30 分</td><td>清單、索引、append / remove</td></tr>
-    <tr><td>3. 走訪隊伍</td><td>25 分</td><td>for + 清單、len / sum / max</td></tr>
+    <tr><td>1. 先玩一次</td><td>15 分</td><td>玩 Slime Tower，邊玩邊猜它怎麼寫的</td></tr>
+    <tr><td>2. 拆開來看</td><td>25 分</td><td>資料／函式／主程式三層結構</td></tr>
+    <tr><td>3. 遊戲主迴圈</td><td>20 分</td><td>選單迴圈、遊戲狀態字典</td></tr>
     <tr><td colspan="3" style="text-align:center;color:var(--soft)">休息 5 分鐘</td></tr>
-    <tr class="hi"><td>4. 卡池與機率</td><td>25 分</td><td>抽卡是怎麼做出來的</td></tr>
-    <tr><td>5. Demo &amp; 收尾</td><td>25 分</td><td>轉蛋機，改機率</td></tr>
+    <tr class="hi"><td>4. 練習兩階段</td><td>30 分</td><td>填空迷你版 → 改造成自己的遊戲</td></tr>
+    <tr><td>5. 展示</td><td>20 分</td><td>她玩你的、你玩她的</td></tr>
   </table>
-  <aside class="notes">第 2 段的索引從 0 開始要讓她真的踩一次（<code>bag[3]</code> 越界），錯誤訊息她上堂學過怎麼看。
-  <br>時間不夠：第 3 段的 <code>sorted</code> 可以砍，第 4 段不能砍——那是 Demo 的原理。</aside>
+  <aside class="notes">最後 20 分鐘的互相試玩不要砍——這是整個階段的收尾儀式。你要<b>認真玩她的版本並給具體回饋</b>（哪一層太難、哪句話好笑）。</aside>
 </section>
 
 <section class="slide sm">
-  <h2>一個問題</h2>
-  <div class="cols">
-    <div class="box bd"><h3>如果背包有 10 樣東西</h3>
-<pre><code>item1 = "Wooden Sword"
-item2 = "Red Potion"
-item3 = "Bread"
-item4 = "Shield"
-...</code></pre>
-      <p><small>撿到第 11 樣怎麼辦？要怎麼「印出全部」？</small></p></div>
-    <div class="box gd"><h3>用清單</h3>
-<pre><code>bag = ["Wooden Sword", "Red Potion",
-       "Bread", "Shield"]</code></pre>
-      <p><small>一個盒子裝<b>一整排</b>東西，數量可以變</small></p></div>
-  </div>
-  <div class="callout">上一堂的 <code>drops = ["Rusty Sword", "Red Potion", ...]</code> 其實就是清單——今天正式學它。</div>
-  <aside class="notes">先問她：「你玩的遊戲，背包裡有幾格？」→ 很多格，而且會變多 → 十個變數顯然不行。讓問題自己浮出來。
-  <br>回顧上堂的 <code>drops</code>，讓她發現「我上週就用過了」，接受度會高很多。</aside>
+  <h2>先玩一次</h2>
+  <div class="pg">打開 <span class="k">game.py</span><b>直接執行，玩到破關或倒下</b></div>
+  <div class="term">==============================================
+            S L I M E   T O W E R
+==============================================
+What is your name, hero? <b>Luna</b>
+
+  FLOOR 3
+  SHOP                       you have 85g
+   1) Potion         25g   +1 potion
+   2) Sharp Sword    50g   ATK +4
+   3) Big Shield     60g   max HP +20, full heal
+   0) Leave the shop
+   > <b>2</b>
+  Bought Sharp Sword!
+
+  A Goblin blocks the stairs!  HP 36  ATK 10
+   1) Attack    2) Potion (2)    3) Run away</div>
+  <aside class="notes">讓她玩，你在旁邊<b>只看不說</b>。玩完問三個問題：
+  <br>① 你覺得哪一步決定輸贏？（答案通常是「有沒有買劍」）
+  <br>② 這個遊戲裡有幾種資料？（角色、怪物、商品）
+  <br>③ 如果要加第六層，你覺得要改幾個地方？（她可能會說很多，其實只要一個）
+  <br>什麼都不買的話幾乎一定會輸，買了裝備就贏得了——這是刻意設計的，讓商店有意義。</aside>
 </section>
 
 <!-- ========== Part 1 ========== -->
-<section class="slide lead"><h1>Part 1</h1><h2>背包：清單怎麼用</h2></section>
+<section class="slide lead"><h1>Part 1</h1><h2>拆開來看</h2></section>
 
 <section class="slide sm">
-  <h2>拿出其中一樣：編號從 0 開始</h2>
-  <div class="pg">打開 <span class="k">01-bag.py</span><b>執行，然後試 bag[10] 看錯誤訊息</b></div>
-  <div class="cols">
-    <div>
-<pre><code>bag = ["Wooden Sword", "Red Potion", "Bread"]
-
-print(bag[0])    # Wooden Sword
-print(bag[1])    # Red Potion
-print(bag[-1])   # Bread（倒數第一個）
-print(len(bag))  # 3（有幾樣）</code></pre>
-    </div>
-    <div>
-      <table style="font-size:18px">
-        <tr><th>編號</th><td>0</td><td>1</td><td>2</td></tr>
-        <tr><th>東西</th><td>Wooden Sword</td><td>Red Potion</td><td>Bread</td></tr>
-        <tr><th>倒數</th><td>-3</td><td>-2</td><td>-1</td></tr>
-      </table>
-      <p><small><b>三樣東西，編號是 0、1、2</b>——沒有 3。<br>跟上堂 <code>range(3)</code> 一樣的規矩。</small></p>
-    </div>
+  <h2>每個遊戲都是這三層</h2>
+  <div class="cols w3">
+    <div class="box pk"><h3>① 資料</h3>
+      <p><code>game</code>　主角現在的狀態<br>
+      <code>MONSTERS</code>　怪物圖鑑<br>
+      <code>SHOP</code>　商品表</p>
+      <p><small>第 5 堂的<b>字典</b></small></p></div>
+    <div class="box ac"><h3>② 函式</h3>
+      <p><code>battle()</code>　打一場<br>
+      <code>shop()</code>　逛商店<br>
+      <code>show_status()</code>　顯示<br>
+      <code>bar()</code> <code>say()</code> <code>is_alive()</code>…</p>
+      <p><small>第 4 堂的<b>函式</b></small></p></div>
+    <div class="box gd"><h3>③ 主程式</h3>
+      <p>只有十幾行：<br>跑過每一層 → 逛商店 → 打一場 → 判斷輸贏</p>
+      <p><small>第 2 堂的<b>迴圈</b></small></p></div>
   </div>
-  <aside class="notes">讓她真的打 <code>bag[3]</code> 執行 → <code>IndexError: list index out of range</code> → 一起讀這行英文。她已經看過工坊的中文翻譯，現在看原文剛好。
-  <br><code>bag[-1]</code> 很實用（最後一個），她會很喜歡。</aside>
+  <div class="callout"><b>為什麼要分三層？</b>改數值只動①，改玩法只動②，改流程只動③——
+  不會「改一個地方，壞三個地方」。</div>
+  <aside class="notes">打開 <code>game.py</code> 用 <b>O 鍵式的快速捲動</b>帶她看一遍：上面是資料、中間是函式、最下面是主程式。
+  <br>問她「<code>battle()</code> 裡面有沒有用到今天以前學的東西？」→ while、if、random、字典，全部都有。讓她自己找出來，會很有成就感。
+  <br>不要逐行講解整支程式，重點是<b>看懂結構</b>。</aside>
 </section>
 
 <section class="slide sm">
-  <h2>撿東西、用東西</h2>
+  <h2>遊戲狀態：把進度放在一個字典裡</h2>
+  <div class="pg">打開 <span class="k">02-game-state.py</span><b>執行看看</b></div>
+  <pre><code>game = {
+    "hero": {"name": "Luna", "hp": 100, "max_hp": 100, "atk": 15},
+    "gold": 50,
+    "potions": 1,
+    "floor": 1,
+}
+
+print(game["hero"]["name"])       # 字典裡面還有字典，一層一層拿
+game["gold"] = game["gold"] + 40  # 打贏一場，金幣增加</code></pre>
+  <div class="callout">整個遊戲的「現在進度」都在這一包。<b>之後要做存檔，也只要把這一包存起來。</b></div>
+  <aside class="notes"><code>game["hero"]["hp"]</code> 兩層要拆開念：先拿 hero（一個字典），再拿它的 hp。
+  <br>可以順口提一下：存檔就是把這個字典寫進檔案，讀檔就是讀回來——下一個階段會學。不用展開。</aside>
+</section>
+
+<section class="slide sm">
+  <h2>主迴圈：遊戲為什麼不會停</h2>
+  <div class="pg">打開 <span class="k">01-menu-loop.py</span><b>執行，玩到你按 3 為止</b></div>
   <div class="cols">
     <div>
-<pre><code>bag.append("Iron Sword")   # 撿到 → 加到最後面
-bag.remove("Red Potion")   # 用掉 → 拿走這一個
-bag[0] = "Steel Sword"     # 換掉第 0 格</code></pre>
-      <div class="term">['Wooden Sword', 'Red Potion', 'Bread']
-['Wooden Sword', 'Red Potion', 'Bread', 'Iron Sword']
-['Wooden Sword', 'Bread', 'Iron Sword']
-['Steel Sword', 'Bread', 'Iron Sword']</div>
+<pre><code>playing = True
+
+while playing:
+    print("1) Work  2) Rest  3) Quit")
+    choice = input("Choose: ")
+
+    if choice == "1":
+        gold = gold + 30
+    elif choice == "3":
+        playing = False     # 條件變 False -> 停
+    else:
+        print("That is not an option.")</code></pre>
     </div>
-    <div class="box ac"><h3>常用動作</h3>
-      <table style="font-size:17px">
-        <tr><td><code>.append(x)</code></td><td>加到最後</td></tr>
-        <tr><td><code>.remove(x)</code></td><td>拿掉那一個</td></tr>
-        <tr><td><code>len(清單)</code></td><td>有幾個</td></tr>
-        <tr><td><code>x in 清單</code></td><td>在不在裡面</td></tr>
-      </table>
-      <p><small><code>.append()</code> 前面是<b>清單的名字</b>，不是 print</small></p></div>
+    <div class="box ac"><h3>所有遊戲都長這樣</h3>
+      <p>顯示畫面 → 等玩家輸入 → 照著做 → <b>回到第一步</b></p>
+      <p>手機遊戲一秒鐘跑 60 次這個迴圈，只是快到你看不見。</p>
+      <p><small><code>else:</code> 那段很重要：玩家一定會亂按</small></p></div>
   </div>
-  <aside class="notes"><code>bag.append(...)</code> 的「點」句型她第一次看到，說法：「叫這個清單去做一件事」，不要講方法／物件。
-  <br>示範 <code>remove</code> 一個不存在的東西 → ValueError，順便複習讀錯誤。
-  <br>空清單 <code>bag = []</code> 要特別講，Demo 的背包就是從空的開始。</aside>
+  <aside class="notes">「遊戲迴圈 game loop」是遊戲程式最核心的概念，之後學 pygame 第一件事就是它。今天先用文字版建立直覺。
+  <br>讓她故意亂按（輸入 9、輸入空白），看 <code>else</code> 接住——<b>好的程式要預期玩家亂按</b>。</aside>
 </section>
 
 <!-- ========== Part 2 ========== -->
-<section class="slide lead"><h1>Part 2</h1><h2>走訪：一次處理一整排</h2></section>
+<section class="slide lead"><h1>Part 2</h1><h2>換你寫</h2></section>
 
 <section class="slide sm">
-  <h2>for 直接把清單跑一遍</h2>
-  <div class="pg">打開 <span class="k">02-party.py</span><b>執行，看兩種寫法差在哪</b></div>
-  <div class="cols">
-    <div>
-      <h4 style="margin-top:0">只要內容</h4>
-<pre><code>for member in party:
-    print(f"- {member}")</code></pre>
-      <p><small>member 每輪裝一個隊員</small></p>
-    </div>
-    <div>
-      <h4 style="margin-top:0">要編號也要內容</h4>
-<pre><code>for i in range(len(party)):
-    print(f"{i + 1}. {party[i]}")</code></pre>
-      <p><small>i 是位置，<code>party[i]</code> 是內容</small></p>
-    </div>
-  </div>
-  <div class="quiz" data-answer="4">
-    <p class="q"><code>party = ["Swordsman", "Mage", "Archer", "Healer"]</code>，<br><code>for x in party:</code> 這個迴圈會跑<b>幾輪</b>？</p>
-    <div class="row"><input placeholder="打在這裡"><button class="pri">看看對不對</button></div>
-    <div class="fb"></div>
-  </div>
-  <aside class="notes">答案 4：有幾個就跑幾輪，不用自己數。
-  <br>兩種寫法都要會：只印內容用左邊，要編號（或要同時對照另一個清單）用右邊。<code>hp_list[i]</code> 就是右邊的典型用途。</aside>
+  <h2>換你寫 ①：填空（迷你版）</h2>
+  <div class="pg">打開 <span class="k">practice-1.py</span><b>填完就能玩的迷你塔</b></div>
+  <pre><code>def battle(monster):
+    hp = monster["hp"]
+    while hp &gt; 0 and game["hero"]["hp"] &gt; ____:   # 兩邊都還活著才繼續
+        ...
+    return ____                  # 打贏了要回傳什麼？</code></pre>
+  <p><small>八個小題，填完是一個<b>兩層樓的完整遊戲</b>——大版本的所有零件它都有。</small></p>
+  <aside class="notes">第一階段 12～15 分鐘。這份是 game.py 的骨架縮小版，填完她就等於「讀懂了大版本」。
+  <br>填完一定要執行玩一次，讓她看到自己填的東西真的變成一個遊戲。
+  <br>解答在 <code>notes/lesson06-solutions.py</code>。</aside>
 </section>
 
 <section class="slide sm">
-  <h2>一行算出統計</h2>
-  <pre><code>hp_list = [120, 70, 90, 80]
-
-print(len(hp_list))      # 4      幾個
-print(sum(hp_list))      # 360    總和
-print(max(hp_list))      # 120    最大
-print(min(hp_list))      # 70     最小
-print(sum(hp_list) / len(hp_list))   # 90.0   平均</code></pre>
-  <div class="callout">上一堂要用迴圈慢慢累加的總和，清單一個 <code>sum()</code> 就好。<br>
-  但<b>「只算血量大於 80 的總和」</b>還是要 for + if——工具愈多，選擇愈多。</div>
-  <aside class="notes">對照上堂的累加，讓她感覺到「工具會越來越省事」。
-  <br>但要強調 sum/max 只能做固定的事，有條件時還是得自己寫迴圈——這就是練習 4。
-  <br><code>sorted()</code> 快速帶過：排名榜用得到。</aside>
+  <h2>換你寫 ②：把遊戲變成你的</h2>
+  <div class="pg">打開 <span class="k">practice-2.py</span><b>照清單改 game.py，改一項玩一次</b></div>
+  <ul class="check two">
+    <li><div><b>1. 換皮</b><small>名稱、怪物、商品換成你的主題</small></div></li>
+    <li><div><b>2. 第六層</b><small>MONSTERS 加一隻，主程式不用改</small></div></li>
+    <li><div><b>3. 新商品</b><small>SHOP 加一項 + 一個 elif</small></div></li>
+    <li><div><b>4. 新技能</b><small>戰鬥選單加第 4 個選項</small></div></li>
+    <li><div><b>5. 難度調整</b><small>玩三次，調到「有點難但打得過」</small></div></li>
+    <li><div><b>6. 挑戰：戰績畫面</b><small>通關時印打贏幾場、賺多少</small></div></li>
+    <li><div><b>7. 挑戰：寶箱事件</b><small>每層 30% 機率撿到金幣</small></div></li>
+  </ul>
+  <aside class="notes">第二階段 20 分鐘起跳，做不完是正常的，<b>1、2、5 一定要做到</b>（換皮最有動力、第六層證明結構的好處、調難度是遊戲設計）。
+  <br>第 5 項是今天的靈魂：讓她自己玩三次、自己決定數值——這是她第一次做「遊戲設計師」的工作。
+  <br>她一定會問「可以加＿＿嗎？」——只要她說得出做法就讓她做，做壞了正好練除錯。</aside>
 </section>
 
 <!-- ========== Part 3 ========== -->
-<section class="slide lead"><h1>Part 3</h1><h2>抽卡的祕密</h2></section>
+<section class="slide lead"><h1>Part 3</h1><h2>互相試玩</h2></section>
 
 <section class="slide sm">
-  <h2>機率是怎麼做出來的？</h2>
-  <div class="pg">打開 <span class="k">03-gacha.py</span><b>執行十連抽</b></div>
+  <h2>展示時間</h2>
   <div class="cols">
-    <div>
-<pre><code>pool = (["SSR Dragon Knight"] * 2
-      + ["SR Fire Mage"] * 8
-      + ["R Archer"] * 30
-      + ["N Villager"] * 60)
-
-card = random.choice(pool)</code></pre>
-      <p><small><code>["A"] * 3</code> → <code>["A", "A", "A"]</code><br>清單也可以用乘法複製</small></p>
-    </div>
-    <div class="box ac"><h3>原理超簡單</h3>
-      <p>把卡池做成 <b>100 張</b>的清單：<br>
-      SSR 放 2 張、SR 放 8 張、R 放 30 張、N 放 60 張。</p>
-      <p>然後 <code>random.choice</code> 隨便抽一張——<br>抽到 SSR 的機率自然就是 <b>2%</b>。</p></div>
+    <div class="box ac"><h3>你玩她的版本</h3>
+      <p>認真玩完一輪，然後給<b>具體</b>的回饋：</p>
+      <ul style="font-size:17px">
+        <li>哪一層最卡</li>
+        <li>哪個商品最想買</li>
+        <li>哪句台詞最好笑</li>
+      </ul></div>
+    <div class="box gd"><h3>她玩你的版本</h3>
+      <p>問她三個問題：</p>
+      <ul style="font-size:17px">
+        <li>你會怎麼改這個遊戲？</li>
+        <li>哪一段程式你看得懂？</li>
+        <li>下一個想做什麼遊戲？</li>
+      </ul></div>
   </div>
-  <aside class="notes">這頁是今天的高潮，她會有「原來是這樣！」的反應。
-  <br>問她：「如果要做 0.5% 的機率呢？」→ 卡池放 1000 張、SSR 放 5 張。她就懂了比例。
-  <br>可以聊一下真實遊戲的保底機制（抽 N 次必出），問她要怎麼做——答案是「數抽了幾次」，也就是上堂的累加。<b>不用真的實作</b>，讓她知道她已經有工具了。</aside>
-</section>
-
-<section class="slide sm">
-  <h2>把抽到的收進背包</h2>
-  <pre><code>results = []                       # ① 空清單
-
-for i in range(10):
-    card = random.choice(pool)
-    results.append(card)           # ② 抽到就放進去
-    print(f"{i + 1}. {card}")
-
-print(results.count("SSR Dragon Knight"))   # ③ 統計</code></pre>
-  <div class="callout">這就是上一堂<b>累加</b>的清單版：空清單 → 迴圈裡 append → 迴圈外統計。
-  <code>.count(x)</code> 數某個東西出現幾次。</div>
-  <aside class="notes">三步驟的結構跟上堂的 <code>total = 0</code> 完全一樣，明講出來：<b>「準備 → 迴圈裡累積 → 迴圈外結算」是寫程式最常見的骨架。</b>
-  <br>常見錯誤：<code>results = []</code> 放進迴圈裡（每輪清空，最後只剩一張）。可以故意示範。</aside>
-</section>
-
-<section class="slide sm">
-  <h2>換你寫 ①：填空</h2>
-  <div class="pg">打開 <span class="k">practice-1.py</span><b>把每個 ____ 填掉，填一個執行一次</b></div>
-  <div class="cols">
-    <div>
-<pre><code>bag = ["Wooden Sword", "Red Potion",
-       "Bread", "Shield"]
-
-print(bag[____])     # 想印出 Wooden Sword
-print(bag[____])     # 想印出 Bread</code></pre>
-    </div>
-    <div class="box ac"><h3>六個小題</h3>
-      <p>索引位置 · <code>len</code> · <code>append</code> / <code>remove</code> ·
-      走訪編號 · <code>sum</code>/<code>max</code>/<code>min</code> · 空清單 + 收集</p>
-      <p><small>第 1 題讓她自己數格子：四樣東西的位置是 0、1、2、3</small></p></div>
-  </div>
-  <aside class="notes">第一階段 10～12 分鐘。第 6 題（空清單 + append）是 Demo 的骨架，一定要做出來。
-  <br>最後的「想一想」（<code>results = []</code> 搬進迴圈會怎樣）務必問，可以現場改給她看。
-  <br>解答在 <code>notes/lesson03-solutions.py</code> 最上面。</aside>
+  <div class="callout">做遊戲的人一定要看別人玩自己的遊戲——<b>卡住的地方，玩的人不會說，但看得出來</b>。</div>
+  <aside class="notes">你的版本先改幾個地方（多一層、換個主題），讓她有得比較。
+  <br>「下一個想做什麼遊戲」的答案記下來，那是下一階段（pygame）的專題方向。</aside>
 </section>
 
 <section class="slide">
-  <h2>換你寫 ②：自己完成</h2>
-  <div class="pg">打開 <span class="k">practice-2.py</span><b>這次從空白開始寫</b></div>
-  <ul class="check two">
-    <li><div><b>1. 我的背包</b><small>建清單、append、remove，每步印一次</small></div></li>
-    <li><div><b>2. 隊伍報到</b><small>for 印成「1. 劍士」，編號從 1 開始</small></div></li>
-    <li><div><b>3. 血量統計</b><small>總和、最高、最低、平均</small></div></li>
-    <li><div><b>4. 只留下強的</b><small>for + if，把 &gt; 80 的放進新清單</small></div></li>
-    <li><div><b>5. 挑戰：自己的卡池</b><small>抽 100 次，數稀有卡幾張</small></div></li>
-  </ul>
-  <aside class="notes">第二階段 15～18 分鐘。第 4 題是「空清單 + append」的第二次練習，做得出來就代表今天的骨架學起來了。
-  <br>第 5 題讓她自己設計卡池（角色她自己想），她會做得很起勁；做完問她「抽到幾張？跟你設定的機率差多少？」
-  <br>參考解答在 <code>notes/lesson03-solutions.py</code>。</aside>
-</section>
-
-<!-- ========== Part 4 ========== -->
-<section class="slide lead"><h1>Part 4</h1><h2>今天的成果</h2></section>
-
-<section class="slide sm">
-  <h2>轉蛋機</h2>
-  <div class="pg">打開 <span class="k">demo-gacha.py</span><b>直接執行，十連抽</b></div>
-  <div class="term">The pool has 100 cards, 2 of them SSR
-Draw 3
-   [ R Archer ]
-   * SSR Dragon Knight *
-
-  Amy's ten draws
-  SSR: 1   SR: 2   other: 7
-   1. N Piglet
-   2. SR Fire Mage
-   ...
-  Nice, you got an SSR</div>
-  <p><small>轉動的動畫也是迴圈——跳 8 次，每次印一張不同的卡。</small></p>
-  <aside class="notes">先讓她抽，抽到滿意為止（每次結果不同，她會一直想再抽——這正是抽卡遊戲的設計）。
-  <br>再看程式：① <code>POOL</code> 的張數 ② <code>spin()</code> 裡的 for 跳動 ③ 統計那段 for + if。
-  <br><b>重點活動</b>：讓她改 POOL——把自己喜歡的角色加進去、調整每種的張數、看機率變化。改完抽十次，體感差很多。
-  <br><code>\r</code>（回到行首覆蓋）她會問，回答「讓下一行印在同一個位置，看起來就像在動」。</aside>
-</section>
-
-<section class="slide">
-  <h2>今天做了什麼</h2>
+  <h2>六堂課，你做到了</h2>
   <ul class="check">
-    <li>清單：一個盒子裝一整排東西</li>
-    <li>編號從 0 開始，<code>[-1]</code> 是最後一個</li>
-    <li><code>append</code> / <code>remove</code> / <code>len</code> / <code>in</code></li>
-    <li><code>for</code> 走訪整個清單、<code>sum</code> / <code>max</code> / <code>count</code></li>
-    <li>做出有機率、有動畫、有統計的轉蛋機</li>
+    <li>變數、型別、<code>if</code> 判斷</li>
+    <li><code>for</code> / <code>while</code> 迴圈、<code>random</code> 亂數</li>
+    <li>清單 list：背包、卡池、圖鑑</li>
+    <li>函式 <code>def</code>：把功能包起來、參數、<code>return</code></li>
+    <li>字典 dict：角色資料、商店、遊戲狀態</li>
+    <li><b>一個從頭到尾自己改過、可以玩到破關的遊戲</b></li>
   </ul>
-  <div class="callout"><b>三堂課下來，你已經有：</b>變數、判斷、迴圈、亂數、清單——<br>
-  這五樣就是做一個文字遊戲需要的<b>全部</b>基本功。</div>
-  <aside class="notes">這頁要停久一點，讓她意識到自己走了多遠：三堂課從 print 到一台會統計的轉蛋機。</aside>
-</section>
-
-<section class="slide sm">
-  <h2>接下來</h2>
-  <div class="flow">
-    <div class="st e">前三堂<br><small>變數、判斷、迴圈、清單</small></div><div class="ar">→</div>
-    <div class="st d">下一階段<br><small>函式：把功能包起來<br>做出完整的小遊戲</small></div><div class="ar">→</div>
-    <div class="st"><small>有畫面的遊戲<br>（pygame）</small></div>
-  </div>
-  <details class="reveal"><summary>回家可以玩的</summary>
-    <div class="body"><p>把轉蛋機的卡池換成<b>你自己的角色</b>（名字、稀有度自己定），抽十次給家人看。
-    想挑戰的話：加一個「抽 10 次必出 SR」的保底。</p></div>
-  </details>
-  <aside class="notes">下一階段的主軸：用 <code>def</code> 把前三堂的東西包成函式，然後把王戰＋背包＋抽卡組成一個完整的文字 RPG。那會是她第一個「真的遊戲」。
-  <br>pygame 什麼時候開始，看她的進度和電腦狀況再決定，這頁不要承諾時間。</aside>
+  <div class="callout">這些就是做文字遊戲需要的<b>全部</b>基本功。下一站：<b>讓它有畫面</b>。</div>
+  <aside class="notes">這頁停久一點，一項一項唸過去，讓她感受到六堂課走了多遠。
+  <br>可以把第一堂的 <code>01-character.py</code> 和今天的 <code>game.py</code> 並排打開——從 5 行到 200 行。
+  <br>下一階段（pygame：視窗、圖片、鍵盤、碰撞）什麼時候開始，看她的狀況和電腦決定，這頁不要承諾時間。</aside>
 </section>
 
 </div></div>

@@ -14,6 +14,9 @@ TITLES = {
     "01": "Python 第 1 堂 · 角色與傷害",
     "02": "Python 第 2 堂 · 迴圈與隨機",
     "03": "Python 第 3 堂 · 清單與背包",
+    "04": "Python 第 4 堂 · 函式與地城",
+    "05": "Python 第 5 堂 · 字典與商店",
+    "06": "Python 第 6 堂 · 專題：完整遊戲",
 }
 
 head = open(os.path.join(ROOT, "_assets", "_deck-head.html"), encoding="utf-8").read()

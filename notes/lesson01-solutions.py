@@ -1,4 +1,15 @@
 # ===== Lesson 1 practice - reference answers (TEACHER ONLY) =====
+# --- Practice 1（填空）解答 ------------------------------------------
+# 1. name = "Luna"   job = "Mage"   hp = 80
+# 2. atk = 10 + level * 2
+# 3. potions = int(answer)
+# 4. elif hp >= 30:  /  print("Be careful")
+# 5. if hp < 30 and potions > 0:
+#    想一想：改成 or 的話，潛在問題是「沒有藥水也叫她喝藥水」。
+#
+# 提示方式：不要直接講填什麼，先問「這一行想做什麼？」再問「那要填哪一種東西？」
+# 第 3 題是整堂課最重要的：input() 回來的是文字，不轉成數字就不能算數學。
+
 # Each one lists the mistake students usually make. Give hints as questions,
 # never the code itself.
 

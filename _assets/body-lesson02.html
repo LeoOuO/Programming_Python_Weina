@@ -200,9 +200,30 @@ while hp &gt; 0:
   <br><code>break</code> 在這裡順帶講：迴圈裡遇到 break 就直接跳出去，不管條件成不成立。上堂的猜數字就用過。</aside>
 </section>
 
+<section class="slide sm">
+  <h2>換你寫 ①：填空</h2>
+  <div class="pg">打開 <span class="k">practice-1.py</span><b>把每個 ____ 填掉，填一個執行一次</b></div>
+  <div class="cols">
+    <div>
+<pre><code>total = ____            # 起點填多少？
+for i in range(1, 6):
+    damage = 8 * i
+    total = ____ + damage
+print(f"total {total}")</code></pre>
+    </div>
+    <div class="box ac"><h3>六個小題</h3>
+      <p>重複次數 · <code>range</code> 的終點 · 用 <code>i</code> 算傷害 ·
+      累加的起點 · <code>randint</code> / <code>choice</code> · <code>while</code> 的停止點</p>
+      <p><small>沒填的地方執行時會直接告訴你行號</small></p></div>
+  </div>
+  <aside class="notes">第一階段 10～12 分鐘。累加那題（第 4 題）是重點，填錯會直接看到數字不對。
+  <br>第 6 題的「想一想」（把 <code>hp = hp - 10</code> 刪掉會怎樣）一定要問她，接到無窮迴圈那一頁。
+  <br>解答在 <code>notes/lesson02-solutions.py</code> 最上面。</aside>
+</section>
+
 <section class="slide">
-  <h2>換你寫</h2>
-  <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
+  <h2>換你寫 ②：自己完成</h2>
+  <div class="pg">打開 <span class="k">practice-2.py</span><b>這次從空白開始寫</b></div>
   <ul class="check two">
     <li><div><b>1. 印 10 行 Attack!</b><small>暖身，確認 for 的寫法</small></div></li>
     <li><div><b>2. 經驗值總和</b><small>第 i 隻怪給 i × 15 點，印每隻＋總和</small></div></li>
@@ -210,8 +231,8 @@ while hp &gt; 0:
     <li><div><b>4. 怪物要打幾下</b><small>while + 隨機傷害，印「打了 N 下」</small></div></li>
     <li><div><b>5. 挑戰：運氣統計</b><small>擲 1000 次，數幾次 ≥ 95</small></div></li>
   </ul>
-  <aside class="notes">25 分鐘。第 5 題先讓她<b>猜</b>再跑（答案大約 50 次），猜完再驗證，印象最深。
-  <br>參考解答在 <code>notes/lesson02-solutions.py</code>。
+  <aside class="notes">第二階段 15～18 分鐘。第 5 題先讓她<b>猜</b>再跑（答案大約 60 次），猜完再驗證，印象最深。
+  <br>寫不出來時：先回去看 practice-1 的對應題，再看範例檔，最後才提示。
   <br>常見卡點：累加變數放錯位置、<code>print</code> 縮排、while 條件寫反、忘了 <code>import random</code>。</aside>
 </section>
 

@@ -516,19 +516,35 @@ elif hp &gt;= 80 or potions &gt;= 5:
   <br>常見錯誤：寫成 <code>if hp &lt; 30 and &gt; 0</code>（第二個條件沒寫完整的主詞）。她一定會犯，先不用預告，犯了再修。</aside>
 </section>
 
+<section class="slide sm">
+  <h2>換你寫 ①：填空</h2>
+  <div class="pg">打開 <span class="k">practice-1.py</span><b>把每個 ____ 填掉，填一個執行一次</b></div>
+  <pre><code>name = ____              # 填一個名字，記得加引號
+hp = ____                # 血量，填數字
+
+print(f"{name} is a {job} with {hp} HP")</code></pre>
+  <div class="callout"><b>執行就知道還差哪裡：</b>沒填的地方會說
+  <code>NameError: name '____' is not defined</code>，訊息裡就有行號。</div>
+  <p><small>六個小題：角色卡 · 攻擊力公式 · <code>int()</code> 轉換 · 三段判斷 · and/or</small></p>
+  <aside class="notes">第一階段 10～12 分鐘。程式都寫好了，她只要決定「填什麼」，不用從空白開始——先建立成功經驗。
+  <br><b>不要幫她填。</b>卡住時問「這一行想做什麼？」→「那要填哪一種東西？（數字還是文字）」。
+  <br>第 3 題（<code>int()</code>）是今天最重要的，錯了一定要當場弄懂。
+  <br>解答在 <code>notes/lesson01-solutions.py</code> 最上面。</aside>
+</section>
+
 <section class="slide">
-  <h2>換你寫</h2>
-  <div class="pg">打開 <span class="k">practice.py</span><b>做完一題就執行一次</b></div>
+  <h2>換你寫 ②：自己完成</h2>
+  <div class="pg">打開 <span class="k">practice-2.py</span><b>這次從空白開始寫</b></div>
   <ul class="check two">
     <li><div><b>1. 角色卡</b><small>四個變數，用 f-string 印成一行</small></div></li>
     <li><div><b>2. 問等級算攻擊</b><small>input + int，攻擊 = 10 + 等級 × 2</small></div></li>
     <li><div><b>3. 血量三段判斷</b><small>≥70 良好、≥30 小心、其他快喝藥水</small></div></li>
     <li><div><b>4. 挑戰：比戰力</b><small>戰力 = 攻擊×2 + 防禦，印出誰比較強</small></div></li>
   </ul>
-  <aside class="notes">20 分鐘，她自己寫，你只在她卡住超過 1 分鐘時給<b>提示</b>不給答案。
-  <br>參考解答在 <code>notes/lesson01-solutions.py</code>（老師用，不要給她）。
+  <aside class="notes">第二階段 12～15 分鐘。題目跟第一階段對應，但這次沒有骨架，要她自己從頭打。
+  <br>寫不出來時的順序：① 回去看 practice-1 對應的那一題 ② 看範例檔 ③ 才給提示。
   <br>常見卡點：忘了 <code>int(input(...))</code>、<code>if</code> 忘了冒號、縮排沒對齊、用了中文全形括號。
-  <br>第 4 題寫完的話，追問「平手怎麼辦」——她多半會漏掉。</aside>
+  <br>第 4 題寫完的話，追問「平手怎麼辦」——她多半會漏掉。時間不夠就把第 4 題當回家玩的。</aside>
 </section>
 
 <!-- ========== Part 5 ========== -->
