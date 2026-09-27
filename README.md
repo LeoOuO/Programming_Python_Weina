@@ -28,8 +28,19 @@
 | `lessonNN/code/practice-2.py` | 練習第二階段：**自己完成**（從空白開始寫） |
 | `lessonNN/code/demo-*.py` | 每堂最後的 Demo |
 | `lesson01-trial/` | 試教用的簡報與瀏覽器工坊（正式上課後不再使用） |
-| `notes/` | **老師用**：教學計畫、練習參考解答、選購建議 |
+| `mywork/` | **學生寫作業的地方**（教材更新不會動到這裡） |
+| `開始上課.command` / `更新教材.command` | 學生點兩下就執行的小工具 |
+| `../teacher-notes/python-junior/` | **老師用**：練習參考解答、教學計畫。另一個 repo，**刻意沒有 remote**，推不出去 |
 | `_assets/`、`tools-build-decks.py` | 簡報的共用引擎與組版script |
+
+## 學生那一端的流程（不會有 git 衝突）
+
+1. 點兩下 **開始上課.command** → 輸入堂數 → 今天的檔案被複製到 `mywork/lesson0N/`
+2. **所有練習都在 `mywork/` 裡改**，教材資料夾（`lesson01/` …）她完全不動
+3. 老師更新教材後，她點兩下 **更新教材.command**（就是 `git pull`）
+
+因為我們永遠不會去改 `mywork/` 底下的檔案，`git pull` 不可能跟她的作業打架。
+`開始上課.command` 也不會覆蓋已經存在的檔案，點幾次都安全。
 
 ## 上課前 2 分鐘檢查
 

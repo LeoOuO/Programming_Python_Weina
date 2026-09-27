@@ -93,8 +93,9 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-si
     </a>
   </div>
   <div class="callout"><span class="tag">每堂課的流程</span>
-    打開 <b>slides.html</b> 上課 → 跟著投影片打開 <code>code/</code> 裡的範例 → 做 <code>practice.py</code> →
-    最後執行當天的 <b>demo</b>，把數值改成自己喜歡的樣子。
+    學生點兩下 <b>開始上課.command</b> 選堂數 → 今天的檔案會被複製到 <code>mywork/lesson0N/</code> →
+    <b>所有練習都在 mywork 裡改</b> → 最後執行當天的 demo。
+    老師更新教材後，她點 <b>更新教材.command</b>（＝<code>git pull</code>）即可，<code>mywork/</code> 不會被動到。
   </div>
 </section>
 
@@ -185,10 +186,12 @@ footer{border-top:1px solid var(--line);margin-top:20px;padding-top:16px;font-si
         <td><b>練習第二階段：自己完成</b>。同樣的觀念，但從空白開始寫</td><td>學生</td></tr>
     <tr><td><code>lessonNN/code/demo-*.py</code></td>
         <td>當堂的成果 Demo，直接執行就會動</td><td>學生</td></tr>
-    <tr><td><code>notes/lessonNN-solutions.py</code></td>
-        <td>練習參考解答＋常見錯誤與提示方式</td><td><b>只有老師</b></td></tr>
-    <tr><td><code>notes/</code> 其他</td>
-        <td>教學計畫、選購建議等</td><td><b>只有老師</b></td></tr>
+    <tr><td><code>mywork/lessonNN/</code></td>
+        <td><b>學生寫作業的地方</b>。教材更新永遠不會動到這裡，所以不會有 git 衝突</td><td>學生</td></tr>
+    <tr><td><code>開始上課.command</code><br><code>更新教材.command</code></td>
+        <td>點兩下就執行：複製今天的練習到 mywork／抓老師的更新</td><td>學生</td></tr>
+    <tr><td><code>../teacher-notes/python-junior/</code></td>
+        <td>練習參考解答、教學計畫（<b>另一個 repo，沒有 remote，推不出去</b>）</td><td><b>只有老師</b></td></tr>
   </table>
   <div class="callout"><span class="tag">程式碼都是英文</span>
     變數名稱、註解、印出來的訊息都用英文寫，順便練英文；投影片與說明維持中文。
